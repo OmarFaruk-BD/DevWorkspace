@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:dio/dio.dart';
-import 'package:workspace/core/api/endpoints.dart';
 import 'package:workspace/core/api/api_exception.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+part 'endpoints.dart';
 part 'api_response.dart';
 
 class ApiClient {
@@ -126,6 +126,3 @@ class ApiClient {
     return await _request(path: path, method: 'DELETE', withToken: withToken);
   }
 }
-
-String demoToken =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM2M2JhNjU0LTY0MzgtNGU3Mi04MmYyLWI4OGY5YjNiNGFmMSIsImVtYWlsIjoicmlzaGFkQGdtYWlsLmNvbSIsIm5hbWUiOm51bGwsInR5cGUiOiJtZW1iZXIiLCJyb2xlX2lkIjpudWxsLCJyb2xlIjpudWxsLCJpYXQiOjE3NDM4NzI3NzEsImV4cCI6MTc0NDczNjc3MX0.U51ZcxDdoi07ESMvWsxwRE5YxUlmHH1fKlgWTJKSO7c';

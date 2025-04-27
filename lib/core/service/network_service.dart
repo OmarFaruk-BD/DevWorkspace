@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:workspace/core/api/endpoints.dart';
+import 'package:workspace/core/api/api_client.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 class NetworkService {

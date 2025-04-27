@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:workspace/core/utils/app_colors.dart';
 
-class AppSnkBar {
+class AppSnackBar {
   static void show(
     context,
     text, {

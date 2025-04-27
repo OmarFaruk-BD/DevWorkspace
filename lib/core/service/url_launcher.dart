@@ -1,6 +1,6 @@
 import 'package:logger/logger.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:workspace/core/api/endpoints.dart';
+import 'package:workspace/core/api/api_client.dart';
 
 class UrlLaunchService {
   Future<void> launchURL(String urlPath) async {

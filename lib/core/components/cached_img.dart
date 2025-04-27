@@ -39,10 +39,7 @@ class CachedNetImg extends StatelessWidget {
         height: height,
         width: width,
         fit: fit ?? BoxFit.cover,
-        placeholder: (context, url) => AppShimmer(
-          height: height,
-          width: width,
-        ),
+        placeholder: (context, url) => AppShimmer(height: height, width: width),
         errorWidget: (context, url, error) => _buildErrorWidget(),
       ),
     );
@@ -50,7 +47,8 @@ class CachedNetImg extends StatelessWidget {
 
   Widget _buildErrorWidget() {
     return Center(
-      child: errorWidget ??
+      child:
+          errorWidget ??
           Icon(
             Icons.image,
             color: Colors.grey,
