@@ -1,54 +1,107 @@
 part of 'api_client.dart';
 
-class ApiResponse {
-  final bool success;
-  final dynamic data;
-  final int statusCode;
-  final String? message;
-  final Response? response;
+abstract class ApiResponse {
+  const ApiResponse({required this.statusCode, this.response, this.data});
 
-  ApiResponse({
-    this.data,
-    this.message,
-    this.response,
-    required this.success,
-    required this.statusCode,
-  });
+  final int statusCode;
+  final Response? response;
+  final dynamic data;
+
+  bool get isSuccess;
+
+  String message();
 
   factory ApiResponse.process(Response response) {
-    final int statusCode = response.statusCode ?? 600;
-    final bool success = response.data?['success'] ?? false;
-    // final bool success = statusCode >= 200 && statusCode < 300;
+    final int statusCode = response.statusCode ?? 599;
+    bool isSuccess = response.data?['status'] == true;
 
-    return ApiResponse(
-      success: success,
-      response: response,
-      data: response.data,
-      statusCode: statusCode,
-      message: response.statusMessage,
-    );
+    if (isSuccess) {
+      return ApiSuccess(
+        response: response,
+        data: response.data,
+        statusCode: statusCode,
+      );
+    } else {
+      return ApiFailure(
+        response: response,
+        data: response.data,
+        statusCode: statusCode,
+        errorMessage: 'An API related error occurred.',
+      );
+    }
   }
 
-  factory ApiResponse.error(DioException? error, String? message) {
-    final int statusCode = error?.response?.statusCode ?? 600;
+  factory ApiResponse.error(DioException? exception, String message) {
+    final int statusCode = exception?.response?.statusCode ?? 599;
 
-    return ApiResponse(
-      success: false,
-      message: message,
+    return ApiFailure(
       statusCode: statusCode,
-      response: error?.response,
-      data: error?.response?.data,
+      response: exception?.response,
+      data: exception?.response?.data,
+      errorMessage: message,
     );
   }
+}
+
+class ApiSuccess extends ApiResponse {
+  const ApiSuccess({required super.statusCode, super.data, super.response});
+
+  @override
+  bool get isSuccess => true;
+
+  @override
+  String message() => ApiResponseMessage.message(data);
 
   @override
   String toString() {
     return '''
-Status: $statusCode
+✅ $statusCode
 Path: ${response?.requestOptions.path}
 Params: ${response?.requestOptions.queryParameters}
-Message: $message
 Data: $data
-    ''';
+''';
   }
+}
+
+class ApiFailure extends ApiResponse {
+  const ApiFailure({
+    required super.statusCode,
+    required this.errorMessage,
+    super.response,
+    super.data,
+  });
+
+  final String errorMessage;
+
+  @override
+  bool get isSuccess => false;
+
+  @override
+  String message() => ApiResponseMessage.extractErrors(data) ?? errorMessage;
+
+  @override
+  String toString() {
+    return '''
+❌ $statusCode
+Error: ${message()}
+Path: ${response?.requestOptions.path}
+Params: ${response?.requestOptions.queryParameters}
+Data: $data
+''';
+  }
+}
+
+extension ApiResponseExtension on ApiResponse {
+  R fold<R>(
+    R Function(ApiFailure failure) onFailure,
+    R Function(ApiSuccess success) onSuccess,
+  ) {
+    return isSuccess
+        ? onSuccess(this as ApiSuccess)
+        : onFailure(this as ApiFailure);
+  }
+
+  void print() => kDebugMode ? log(toString()) : null;
+
+  void printJSON() => kDebugMode ? log(jsonEncode(data)) : null;
 }

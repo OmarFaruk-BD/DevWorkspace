@@ -4,8 +4,10 @@ class Endpoints {
   Endpoints._();
 
   ///BASEURL
-  // static const String baseURL = 'https://google.com';
+  // static const String baseURL = '';
+  // static const String frontendURL = '';
 
-  ///STAGINGURL
-  static const String baseURL = 'https://google.com';
+  ///STAGINGBASEURL
+  static const String baseURL = '';
+  static const String frontendURL = '';
 }

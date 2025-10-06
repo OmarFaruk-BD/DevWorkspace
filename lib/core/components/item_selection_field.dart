@@ -1,3 +1,4 @@
+import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:workspace/core/utils/app_colors.dart';
 
@@ -8,12 +9,10 @@ class ItemSelectionField extends StatelessWidget {
     this.text,
     this.onTap,
     this.radius = 6,
-    this.hasIcon = true,
   });
 
   final String? icon;
   final String? text;
-  final bool hasIcon;
   final double radius;
   final VoidCallback? onTap;
 
@@ -29,7 +28,18 @@ class ItemSelectionField extends StatelessWidget {
           borderRadius: BorderRadius.circular(radius),
           border: Border.all(color: AppColors.grey),
         ),
-        child: Text(text ?? '', style: const TextStyle(color: AppColors.black)),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                text ?? '',
+                style: const TextStyle(color: AppColors.black),
+              ),
+            ),
+            if (icon != null) const SizedBox(width: 8),
+            if (icon != null) SvgPicture.asset(icon!, width: 16, height: 16),
+          ],
+        ),
       ),
     );
   }

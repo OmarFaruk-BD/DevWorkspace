@@ -1,7 +1,11 @@
 import 'dart:async';
 import 'package:dio/dio.dart';
+import 'dart:developer' show log;
+import 'dart:convert' show jsonEncode;
 import 'package:workspace/core/api/api_exception.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:workspace/core/api/api_response_message.dart';
 
 part 'endpoints.dart';
 part 'api_response.dart';
@@ -29,7 +33,6 @@ class ApiClient {
   Future<String?> _getToken() async {
     final prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
-    // print(token);
     return token;
   }
 
@@ -45,34 +48,32 @@ class ApiClient {
     return Options(method: method, headers: headers);
   }
 
-  Future<ApiResponse> _handleException(DioException error) async {
-    final message = await _apiException.getExceptionMessage(error);
-    return ApiResponse.error(error, message);
-  }
-
   Future<ApiResponse> _request({
     Object? data,
     required String path,
     bool withToken = true,
     required String method,
     Map<String, dynamic>? params,
-    Function(int, int)? onSendProgress,
-    Function(int, int)? onReceiveProgress,
+    // CancelToken? cancelToken,
+    // Function(int, int)? onSendProgress,
+    // Function(int, int)? onReceiveProgress,
   }) async {
     try {
       final response = await _dio.request(
         path,
         data: data,
         queryParameters: params,
-        onSendProgress: onSendProgress,
-        onReceiveProgress: onReceiveProgress,
+        // cancelToken: cancelToken,
+        // onSendProgress: onSendProgress,
+        // onReceiveProgress: onReceiveProgress,
         options: await _prepareOptions(withToken: withToken, method: method),
       );
       return ApiResponse.process(response);
-    } on DioException catch (e) {
-      return await _handleException(e);
-    } on TimeoutException {
-      return ApiResponse.error(null, 'API request timed out.');
+    } on DioException catch (exception) {
+      final message = await _apiException.message(exception);
+      return ApiResponse.error(exception, message);
+    } catch (e) {
+      return ApiResponse.error(null, 'An API related error occurred.');
     }
   }
 

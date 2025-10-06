@@ -38,22 +38,19 @@ class WifiAnimationState extends State<WifiAnimation>
   @override
   Widget build(BuildContext context) {
     return Stack(
-      children: List.generate(
-        6,
-        (index) {
-          return Container(
-            width: widget.size,
-            height: widget.size,
-            padding: EdgeInsets.all(index * (widget.size / 10)),
-            child: ShapesState(
-              index: index,
-              color: widget.color,
-              controller: _controller,
-              centered: widget.centered,
-            ),
-          );
-        },
-      ),
+      children: List.generate(6, (index) {
+        return Container(
+          width: widget.size,
+          height: widget.size,
+          padding: EdgeInsets.all(index * (widget.size / 10)),
+          child: ShapesState(
+            index: index,
+            color: widget.color,
+            controller: _controller,
+            centered: widget.centered,
+          ),
+        );
+      }),
     );
   }
 }
@@ -75,18 +72,12 @@ class ShapesState extends AnimatedWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      painter: DrawShapes(index, centered, controller.value),
-    );
+    return CustomPaint(painter: DrawShapes(index, centered, controller.value));
   }
 }
 
 class DrawShapes extends CustomPainter {
-  DrawShapes(
-    this.index,
-    this.centered,
-    this.controller,
-  );
+  DrawShapes(this.index, this.centered, this.controller);
   final int index;
   final bool centered;
   final double controller;
@@ -107,7 +98,6 @@ class DrawShapes extends CustomPainter {
     var startArc = (225 * 3.14) / 180;
     var endArc = (90 * 3.14) / 180;
 
-    //make the first as a circle
     if (index == 0 && centered) {
       brush.style = PaintingStyle.fill;
       canvas.drawCircle(Offset(size.height / 2, size.width / 2), 5, brush);
@@ -129,4 +119,62 @@ class DrawShapes extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => true;
+}
+
+class NoLocationPermissionAnimation extends StatefulWidget {
+  const NoLocationPermissionAnimation({super.key});
+
+  @override
+  State<NoLocationPermissionAnimation> createState() =>
+      _NoLocationPermissionAnimationState();
+}
+
+class _NoLocationPermissionAnimationState
+    extends State<NoLocationPermissionAnimation>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _shakeAnimation;
+  late Animation<Color?> _colorAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    )..repeat(reverse: true);
+
+    _shakeAnimation = Tween<double>(
+      begin: -4,
+      end: 4,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+
+    _colorAnimation = ColorTween(
+      begin: Colors.red,
+      end: Colors.red.shade900,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _shakeAnimation,
+      builder: (context, child) {
+        return Transform.translate(
+          offset: Offset(_shakeAnimation.value, 0),
+          child: Icon(
+            Icons.location_off,
+            color: _colorAnimation.value,
+            size: 100,
+          ),
+        );
+      },
+    );
+  }
 }

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:workspace/core/utils/app_colors.dart';
 
 class LoadingOrEmptyText extends StatelessWidget {
   const LoadingOrEmptyText({
     super.key,
     this.isEmpty = false,
     this.isLoading = false,
-    this.emptyText = 'No record found.',
+    this.emptyText = 'No items found.',
   });
 
   final bool isEmpty;
@@ -18,7 +19,10 @@ class LoadingOrEmptyText extends StatelessWidget {
       return const Center(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 15),
-          child: CircularProgressIndicator(color: Colors.green, strokeWidth: 6),
+          child: CircularProgressIndicator(
+            color: AppColors.primary,
+            strokeWidth: 6,
+          ),
         ),
       );
     } else if (isEmpty) {
@@ -27,7 +31,7 @@ class LoadingOrEmptyText extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 15),
           child: Text(
             emptyText,
-            style: const TextStyle(fontSize: 16, color: Colors.red),
+            style: const TextStyle(fontSize: 16, color: AppColors.red),
           ),
         ),
       );

@@ -1,50 +1,107 @@
 class AppValidator {
-  /// Validates if the provided [email] is in a valid email format.
-  bool emailValidator(String? email) {
-    if (email == null || email.isEmpty) return false;
-    return RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)*$')
-        .hasMatch(email);
+  String? validate(String? value, [String text = 'This field.']) {
+    if (value == null || value.trim().isEmpty) {
+      return '$text is required.';
+    }
+    return null;
   }
 
-  /// Checks if the provided [str] is a valid link.
-  bool isLink(String? str) {
-    if (str == null || str.isEmpty) return false;
-    return RegExp(
-            r'^(https?:\/\/)?([\w\d_-]+)\.([\w\d_\.-]+)\/?\??([^#\n\r]*)?#?([^\n\r]*)$')
-        .hasMatch(str);
+  String? validateName(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Please enter your name.';
+    }
+    if (value.length < 3) {
+      return 'Name must be at least 3 characters long.';
+    }
+    // if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value)) {
+    //   return 'Name can only contain letters and spaces.';
+    // }
+    return null;
   }
 
-  /// Validates if the provided [phoneNumber] matches a common phone number format.
-  bool phoneValidator(String? phoneNumber) {
-    if (phoneNumber == null || phoneNumber.isEmpty) return false;
-    return RegExp(r'^\+?[0-9]{7,15}$').hasMatch(phoneNumber);
+  String? validatePhoneNo(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Please enter your phone number.';
+    }
+    if (value.length < 8 || value.length > 14) {
+      return 'Please enter valid phone number.';
+    }
+    int? number = int.tryParse(value);
+    if (number == null) {
+      return 'Please enter valid phone number.';
+    }
+    return null;
   }
 
-  /// Checks if the provided [password] is strong enough.
-  /// Criteria: At least 8 characters, includes a number, a letter, and a special character.
-  bool passwordValidator(String? password) {
-    if (password == null || password.isEmpty) return false;
-    return RegExp(
-            r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$')
-        .hasMatch(password);
+  String? validateOTP(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Please enter your OTP.';
+    }
+    if (value.length != 4) {
+      return 'Please enter valid OTP.';
+    }
+    int? number = int.tryParse(value);
+    if (number == null) {
+      return 'Please enter valid OTP.';
+    }
+    return null;
   }
 
-  /// Validates if the provided [name] is a valid name.
-  /// Criteria: Only letters and spaces, at least 2 characters.
-  bool nameValidator(String? name) {
-    if (name == null || name.isEmpty) return false;
-    return RegExp(r'^[a-zA-Z\s]{2,}$').hasMatch(name);
+  String? validateNoOfPeople(int? value) {
+    if (value == null) {
+      return 'Please enter number of people.';
+    }
+    if (value < 1 || value > 100) {
+      return 'Please enter valid number of people between 1 to 100.';
+    }
+    return null;
   }
 
-  /// Validates if the provided [number] is a numeric value.
-  bool isNumeric(String? number) {
-    if (number == null || number.isEmpty) return false;
-    return RegExp(r'^-?[0-9]+$').hasMatch(number);
+  String? validateBabySitters(int? value) {
+    if (value == null) {
+      return 'Please enter number of baby sitters.';
+    }
+    if (value < 1 || value > 20) {
+      return 'Please enter valid number of baby sitters between 1 to 100.';
+    }
+    return null;
   }
 
-  /// Validates if the provided [text] matches a given [pattern].
-  bool customValidator(String? text, String pattern) {
-    if (text == null || text.isEmpty) return false;
-    return RegExp(pattern).hasMatch(text);
+  String? validateEmail(String? value) {
+    if (value == null || value.isEmpty) return 'Please enter your email';
+    final regex = RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+    );
+    if (!regex.hasMatch(value)) {
+      return 'Please enter a valid email';
+    }
+    return null;
+  }
+
+  String? validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Password cannot be empty.';
+    }
+
+    RegExp regex = RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$');
+
+    if (!regex.hasMatch(value)) {
+      return 'Password must contain:\n'
+          '- At least one uppercase letter\n'
+          '- At least one lowercase letter\n'
+          '- At least one digit\n'
+          '- Be at least 6 characters long';
+    }
+    return null;
+  }
+
+  String? validateConfirmPassword(String? value, String? password) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Please enter confirm password';
+    }
+    if (value != password?.trim()) {
+      return 'Password and confirm password do not match';
+    }
+    return null;
   }
 }

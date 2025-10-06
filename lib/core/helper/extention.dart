@@ -1,58 +1,55 @@
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-extension PaddingExtension on Widget {
-  Padding paddingAll(double padding) {
-    return Padding(padding: EdgeInsets.all(padding), child: this);
+extension StringExtensions on String? {
+  String? capitalize() {
+    if (this == null || this!.isEmpty) return null;
+    return "${this![0].toUpperCase()}${this!.substring(1)}";
   }
 
-  Padding paddingOnly({
-    double left = 0,
-    double top = 0,
-    double right = 0,
-    double bottom = 0,
-  }) {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: left,
-        top: top,
-        right: right,
-        bottom: bottom,
-      ),
-      child: this,
-    );
+  String? shorten([int count = 15]) {
+    if (this == null || this!.isEmpty) return null;
+    return this!.length >= count ? this!.substring(0, count) : this!;
   }
 
-  Padding paddingSym({double? h, double? v}) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: h ?? 0, vertical: v ?? 0),
-      child: this,
-    );
-  }
-}
-
-extension StringExtensions on String {
-  String capitalize() {
-    return "${this[0].toUpperCase()}${substring(1)}";
+  String? ellipsis([int count = 15]) {
+    if (this == null || this!.isEmpty) return null;
+    return this!.length >= count ? '${this!.substring(0, count)}...' : this!;
   }
 
-  String shorten([int count = 15]) {
-    return length >= count ? substring(0, count) : this;
+  String? truncateFromEnd([int count = 15]) {
+    if (this == null || this!.isEmpty) return null;
+    final bool isLong = this!.length > count;
+    return isLong ? '...${this!.substring(this!.length - count)}' : this!;
   }
 
-  String ellipsis([int count = 15]) {
-    return length >= count ? '${substring(0, count)}...' : this;
+  String? toDateString() {
+    if (this == null || this!.isEmpty) return null;
+    final time = DateFormat("HH:mm:ss").tryParse(this!);
+    return time != null ? DateFormat.jm().format(time) : null;
   }
 
-  String truncateFromEnd([int count = 15]) {
-    return length >= count ? '...${substring(length - count)}' : this;
+  TimeOfDay? toTimeOfDay() {
+    if (this == null || this!.isEmpty) return null;
+    final format = DateFormat('hh:mm a');
+    DateTime? dateTime = format.tryParse(this!);
+    if (dateTime == null) return null;
+    return TimeOfDay.fromDateTime(dateTime);
   }
 }
 
 extension DateTimeFormatting on DateTime? {
-  String? toDateString(String format) {
+  String? toDateString([String? format]) {
     if (this == null) return null;
-    final DateFormat formatter = DateFormat(format);
+    String getFormat = format ?? 'MM-dd-yyyy';
+    final DateFormat formatter = DateFormat(getFormat);
+    return formatter.format(this!);
+  }
+
+  String? showDate([String? format]) {
+    if (this == null) return null;
+    String getFormat = format ?? 'dd MMM yyyy';
+    final DateFormat formatter = DateFormat(getFormat);
     return formatter.format(this!);
   }
 
@@ -60,12 +57,4 @@ extension DateTimeFormatting on DateTime? {
   /// - `'dd-MM-yyyy'` → `01-01-2024`
   /// - `'dd-MM-yyyy hh:mm a'` → `01-01-2024 12:30 PM`
   /// - `'dd-MM-yyyy hh:mm:ss a'` → `01-01-2024 12:30:45 PM`
-}
-
-extension DateTimeFormatting2 on DateTimeRange? {
-  String? toDateRangeString() {
-    if (this == null) return null;
-    final DateFormat formatter = DateFormat('dd-MM-yyyy');
-    return '${formatter.format(this!.start)} - ${formatter.format(this!.end)}';
-  }
 }

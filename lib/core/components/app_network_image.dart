@@ -2,16 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:workspace/core/components/app_shimmer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-class CachedNetImg extends StatelessWidget {
-  const CachedNetImg(
+class AppNetworkImage extends StatelessWidget {
+  const AppNetworkImage(
     this.url, {
     this.fit,
     super.key,
     this.width,
     this.height,
-    this.demoUrl,
     this.radius = 0,
-    this.errorWidget,
   });
 
   final String? url;
@@ -19,23 +17,17 @@ class CachedNetImg extends StatelessWidget {
   final double? width;
   final double radius;
   final double? height;
-  final String? demoUrl;
-  final Widget? errorWidget;
-
-  String? get effectiveUrl => url ?? demoUrl;
 
   @override
   Widget build(BuildContext context) {
-    return effectiveUrl == null || effectiveUrl!.isEmpty
-        ? _buildErrorWidget()
-        : _buildImage();
+    return url == null || url!.isEmpty ? _buildErrorWidget() : _buildImage();
   }
 
   Widget _buildImage() {
     return ClipRRect(
       borderRadius: BorderRadius.circular(radius),
       child: CachedNetworkImage(
-        imageUrl: effectiveUrl!,
+        imageUrl: url!,
         height: height,
         width: width,
         fit: fit ?? BoxFit.cover,
@@ -46,14 +38,28 @@ class CachedNetImg extends StatelessWidget {
   }
 
   Widget _buildErrorWidget() {
-    return Center(
-      child:
-          errorWidget ??
-          Icon(
-            Icons.image,
-            color: Colors.grey,
-            size: width != null ? width! * 0.5 : 24,
-          ),
-    );
+    return SizedBox(width: width, height: height, child: Icon(Icons.image));
   }
+}
+
+class AppCachedImage extends AppNetworkImage {
+  const AppCachedImage(
+    String super.url, {
+    super.key,
+    super.fit,
+    super.width,
+    super.height,
+    super.radius,
+  });
+}
+
+class AppCachedNetworkImage extends AppNetworkImage {
+  const AppCachedNetworkImage(
+    String super.url, {
+    super.key,
+    super.fit,
+    super.width,
+    super.height,
+    super.radius,
+  });
 }

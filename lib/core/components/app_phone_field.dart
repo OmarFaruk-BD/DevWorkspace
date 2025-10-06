@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/phone_number.dart';
+import 'package:workspace/core/utils/app_colors.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
-class PhoneNoField extends StatelessWidget {
-  const PhoneNoField({
+class AppPhoneField extends StatelessWidget {
+  const AppPhoneField({
     super.key,
     this.hintText,
     this.onChanged,
@@ -19,7 +20,7 @@ class PhoneNoField extends StatelessWidget {
       showCountryFlag: false,
       controller: controller,
       initialCountryCode: "BD",
-      cursorColor: Colors.black,
+      cursorColor: AppColors.black,
       onChanged: (phone) {
         onChanged?.call(phone);
       },
@@ -43,17 +44,17 @@ class PhoneNoField extends StatelessWidget {
   }
 
   OutlineInputBorder _buildBorder() => OutlineInputBorder(
-    borderSide: const BorderSide(color: Colors.grey),
+    borderSide: const BorderSide(color: AppColors.black),
     borderRadius: BorderRadius.circular(10),
   );
 
   TextStyle _textStyle() {
-    return const TextStyle(color: Colors.black);
+    return const TextStyle(color: AppColors.black);
   }
 
   TextStyle _hintTextStyle() {
     return const TextStyle(
-      color: Colors.black,
+      color: AppColors.black,
       overflow: TextOverflow.ellipsis,
     );
   }

@@ -20,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void _navigateToLandingPage() async {
     await Future.delayed(const Duration(seconds: 1));
     if (!mounted) return;
-    AppNav.pushAndRemoveUntil(context, const HomePage());
+    AppNavigator.pushAndRemoveUntil(context, const HomePage());
   }
 
   @override

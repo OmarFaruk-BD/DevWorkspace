@@ -3,8 +3,10 @@ import 'package:workspace/core/api/api_client.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 class NetworkService {
-  Future<bool> isNetworkConnected() async {
-    final connectivityResult = await Connectivity().checkConnectivity();
+  final Connectivity _connectivity = Connectivity();
+
+  Future<bool> hasConnection() async {
+    final connectivityResult = await _connectivity.checkConnectivity();
     return !connectivityResult.contains(ConnectivityResult.none);
   }
 
@@ -12,13 +14,13 @@ class NetworkService {
     try {
       final result = await InternetAddress.lookup(host);
       return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
-    } on SocketException {
+    } catch (_) {
       return false;
     }
   }
 
-  Future<String> internetAccess() async {
-    if (!await isNetworkConnected()) {
+  Future<String?> message() async {
+    if (!await hasConnection()) {
       return 'Device is not connected to any network.';
     }
     if (!await hasInternetAccess()) {
@@ -27,6 +29,6 @@ class NetworkService {
     if (!await hasInternetAccess(Endpoints.baseURL)) {
       return 'We could not connect to the server.';
     }
-    return 'We have encountered internet issues.';
+    return null;
   }
 }

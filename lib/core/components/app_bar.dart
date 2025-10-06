@@ -23,22 +23,20 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: actions,
       centerTitle: true,
       shadowColor: AppColors.white,
-      backgroundColor: AppColors.white,
-      surfaceTintColor: AppColors.white,
+      backgroundColor: AppColors.primary,
       automaticallyImplyLeading: hasBackButton,
-      leading:
-          hasBackButton
-              ? IconButton(
-                icon: const Icon(Icons.arrow_back_ios, color: AppColors.black),
-                onPressed: () => Navigator.pop(context),
-              )
-              : const SizedBox(),
+      leading: hasBackButton
+          ? IconButton(
+              icon: const Icon(Icons.arrow_back_ios, color: AppColors.white),
+              onPressed: () => Navigator.pop(context),
+            )
+          : const SizedBox(),
       title: Text(
         title,
         style: const TextStyle(
           fontSize: 20,
+          color: AppColors.white,
           fontWeight: FontWeight.w600,
-          color: AppColors.black,
         ),
       ),
     );

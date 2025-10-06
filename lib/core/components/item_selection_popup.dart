@@ -28,32 +28,20 @@ class ItemSelectionPopUp extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 10),
-                const Text(
-                  'Select Option',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.black,
-                  ),
-                ),
+                const FilterHeader(),
                 const SizedBox(height: 10),
                 ...List.generate(
                   list.length,
-                  (index) => CheckboxListTile(
-                    title: Text(
-                      list[index],
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black,
-                      ),
+                  (index) => SizedBox(
+                    width: double.infinity,
+                    child: PopupItem(
+                      title: list[index],
+                      isSelected: selectedItem == list[index],
+                      onSelected: () {
+                        Navigator.pop(context);
+                        onSelected?.call(list[index]);
+                      },
                     ),
-                    value: selectedItem == list[index],
-                    onChanged: (value) {
-                      Navigator.pop(context);
-                      onSelected?.call(list[index]);
-                    },
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -66,138 +54,68 @@ class ItemSelectionPopUp extends StatelessWidget {
   }
 }
 
-// class ItemSelectionPopUpV2 extends StatefulWidget {
-//   const ItemSelectionPopUpV2({
-//     super.key,
-//     this.onSelected,
-//     this.selectedItem,
-//     required this.list,
-//   });
+class FilterHeader extends StatelessWidget {
+  const FilterHeader({super.key, this.title = 'Select Option'});
+  final String title;
 
-//   final List<String> list;
-//   final String? selectedItem;
-//   final Function(String?)? onSelected;
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const SizedBox(width: 15),
+        Text(
+          title,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+        ),
+        InkWell(
+          onTap: () => Navigator.pop(context),
+          child: const Padding(
+            padding: EdgeInsets.symmetric(vertical: 8),
+            child: Text('Close'),
+          ),
+        ),
+      ],
+    );
+  }
+}
 
-//   @override
-//   State<ItemSelectionPopUpV2> createState() => _ItemSelectionPopUpV2State();
-// }
+class PopupItem extends StatelessWidget {
+  const PopupItem({
+    super.key,
+    required this.title,
+    required this.isSelected,
+    required this.onSelected,
+  });
+  final String title;
+  final bool isSelected;
+  final VoidCallback onSelected;
 
-// class _ItemSelectionPopUpV2State extends State<ItemSelectionPopUpV2> {
-//   final controller = TextEditingController();
-//   List<String> searchItemList = [];
-//   List<String> allItemList = [];
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     allItemList = widget.list;
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Center(
-//       child: Card(
-//         margin: const EdgeInsets.all(15),
-//         child: Container(
-//           padding: const EdgeInsets.all(15),
-//           constraints: BoxConstraints(
-//             maxHeight: MediaQuery.of(context).size.height * 0.75,
-//           ),
-//           child: Column(
-//             mainAxisSize: MainAxisSize.min,
-//             children: [
-//               const Text(
-//                 'Select Option',
-//                 style: TextStyle(
-//                   fontSize: 16,
-//                   color: Colors.black,
-//                   fontWeight: FontWeight.w600,
-//                 ),
-//               ),
-//               const SizedBox(height: 10),
-//               Container(
-//                 decoration: BoxDecoration(
-//                   color: Colors.white,
-//                   borderRadius: BorderRadius.circular(4),
-//                   border: Border.all(color: Colors.grey),
-//                 ),
-//                 child: ListTile(
-//                   dense: true,
-//                   leading: const Icon(Icons.search),
-//                   title: TextFormField(
-//                     controller: controller,
-//                     decoration: const InputDecoration(
-//                       hintText: 'Search',
-//                       isDense: true,
-//                       border: InputBorder.none,
-//                       contentPadding: EdgeInsets.all(0),
-//                     ),
-//                     onChanged: _onSearchTextChanged,
-//                   ),
-//                   trailing: InkWell(
-//                     onTap: () {
-//                       controller.clear();
-//                       _onSearchTextChanged('');
-//                     },
-//                     child: const Icon(Icons.cancel),
-//                   ),
-//                 ),
-//               ),
-//               const SizedBox(height: 10),
-//               Expanded(
-//                 child: searchItemList.isNotEmpty || controller.text.isNotEmpty
-//                     ? ListView.builder(
-//                         padding: EdgeInsets.zero,
-//                         itemCount: searchItemList.length,
-//                         itemBuilder: (context, index) {
-//                           return _buildItem(searchItemList[index]);
-//                         },
-//                       )
-//                     : ListView.builder(
-//                         padding: EdgeInsets.zero,
-//                         itemCount: allItemList.length,
-//                         itemBuilder: (context, index) {
-//                           return _buildItem(allItemList[index]);
-//                         },
-//                       ),
-//               ),
-//               const SizedBox(height: 10),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-
-//   _onSearchTextChanged(String text) async {
-//     searchItemList.clear();
-//     if (text.isEmpty) {
-//       setState(() {});
-//       return;
-//     }
-//     for (var item in allItemList) {
-//       if (item.toLowerCase().contains(text) || item.contains(text)) {
-//         searchItemList.add(item);
-//       }
-//     }
-//     setState(() {});
-//   }
-
-//   Widget _buildItem(String item) {
-//     return CheckboxListTile(
-//       title: Text(
-//         item,
-//         style: const TextStyle(
-//           fontSize: 16,
-//           color: Colors.black,
-//           fontWeight: FontWeight.w600,
-//         ),
-//       ),
-//       value: item == widget.selectedItem,
-//       onChanged: (value) {
-//         widget.onSelected?.call(item);
-//         Navigator.pop(context);
-//       },
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 15),
+      child: InkWell(
+        onTap: onSelected,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          decoration: BoxDecoration(
+            color: isSelected ? Colors.cyan.shade50 : Colors.white,
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(color: isSelected ? Colors.cyan : Colors.grey),
+          ),
+          child: Text(
+            title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontSize: 16,
+              color: Colors.black,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class AssetImageView extends StatelessWidget {
-  const AssetImageView(
+class AppImageView extends StatelessWidget {
+  const AppImageView(
     this.fileName, {
     super.key,
     this.fit,
@@ -17,25 +17,25 @@ class AssetImageView extends StatelessWidget {
   final double? height;
   final String fileName;
 
-  String? get mimeType =>
+  String? get _mimeType =>
       fileName.contains('.') ? fileName.split('.').last.toLowerCase() : null;
+
+  ColorFilter? get _colorFilter =>
+      color == null ? null : ColorFilter.mode(color!, BlendMode.srcIn);
+
+  Widget get _defaultIcon =>
+      Icon(Icons.error_outline, color: color, size: width);
 
   @override
   Widget build(BuildContext context) {
-    return _getView();
-  }
-
-  Widget _getView() {
-    switch (mimeType) {
+    switch (_mimeType) {
       case "svg":
         return SvgPicture.asset(
           fileName,
           width: width,
           height: height,
-          colorFilter:
-              color == null ? null : ColorFilter.mode(color!, BlendMode.srcIn),
-          placeholderBuilder: (context) =>
-              Icon(Icons.error_outline, color: color),
+          colorFilter: _colorFilter,
+          placeholderBuilder: (context) => _defaultIcon,
         );
       case "png":
       case "jpg":
@@ -47,15 +47,10 @@ class AssetImageView extends StatelessWidget {
           width: width,
           height: height,
           fit: fit,
-          errorBuilder: (context, error, stackTrace) =>
-              Icon(Icons.error_outline, color: color, size: width),
+          errorBuilder: (context, error, stackTrace) => _defaultIcon,
         );
       default:
-        return Icon(
-          Icons.image_not_supported_outlined,
-          size: width,
-          color: color,
-        );
+        return _defaultIcon;
     }
   }
 }

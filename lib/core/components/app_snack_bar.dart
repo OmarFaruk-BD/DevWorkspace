@@ -4,8 +4,8 @@ import 'package:workspace/core/utils/app_colors.dart';
 
 class AppSnackBar {
   static void show(
-    context,
-    text, {
+    BuildContext context,
+    String text, {
     int seconds = 4,
     String? actionText,
     bool isError = false,
@@ -16,37 +16,48 @@ class AppSnackBar {
       ..showSnackBar(
         SnackBar(
           elevation: 0,
-          backgroundColor: isError ? AppColors.red : AppColors.primary,
           behavior: SnackBarBehavior.floating,
           duration: Duration(seconds: seconds),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
+          backgroundColor: isError ? AppColors.red : AppColors.green,
           content: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
                 child: Text(
                   text,
-                  style: const TextStyle(color: AppColors.white),
-                ),
-              ),
-              if (actionText != null) const SizedBox(width: 10),
-              if (actionText != null)
-                InkWell(
-                  onTap: onAction,
-                  child: Text(
-                    actionText,
-                    style: const TextStyle(
-                      color: AppColors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: AppColors.white,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
+              ),
+              const SizedBox(width: 10),
+              InkWell(
+                onTap: () {
+                  onAction != null
+                      ? onAction.call()
+                      : ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                },
+                child: Text(
+                  actionText ?? 'OK',
+                  style: const TextStyle(
+                    color: AppColors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             ],
           ),
         ),
       );
+  }
+
+  static void error(BuildContext context, String text, {int seconds = 5}) {
+    show(context, text, seconds: seconds, isError: true);
   }
 
   static void flushbar(
@@ -64,27 +75,26 @@ class AppSnackBar {
       titleColor: AppColors.white,
       messageColor: AppColors.white,
       margin: const EdgeInsets.all(8),
-      animationDuration: Durations.long1,
+      animationDuration: Durations.short4,
       duration: Duration(seconds: seconds),
       forwardAnimationCurve: Curves.easeIn,
       reverseAnimationCurve: Curves.easeOut,
       flushbarStyle: FlushbarStyle.FLOATING,
       flushbarPosition: FlushbarPosition.TOP,
       borderRadius: BorderRadius.circular(8),
-      backgroundColor: isError ? AppColors.red : AppColors.primary,
-      mainButton:
-          actionText == null
-              ? null
-              : InkWell(
-                onTap: onAction,
-                child: Text(
-                  actionText,
-                  style: const TextStyle(
-                    color: AppColors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+      backgroundColor: isError ? AppColors.red : AppColors.green,
+      mainButton: InkWell(
+        onTap: () {
+          onAction != null ? onAction.call() : Navigator.pop(context);
+        },
+        child: Text(
+          actionText ?? 'OK  ',
+          style: const TextStyle(
+            color: AppColors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
     ).show(context);
   }
 }
