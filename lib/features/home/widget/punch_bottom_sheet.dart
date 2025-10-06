@@ -17,30 +17,32 @@ class BottomSheetWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<HomeCubit, HomeState>(
       builder: (context, state) {
-        return Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: ActionSlider.standard(
-            width: MediaQuery.of(context).size.width,
-            sliderBehavior: SliderBehavior.move,
-            backgroundColor: AppColors.red,
-            toggleColor: Colors.white,
-            boxShadow: const [],
-            icon: SvgPicture.asset(AppImages.arrow),
-            action: (controller) {
-              _punch(state: state, context: context, controller: controller);
-            },
-            child: Center(
-              child: CommonText(
-                state.punchedIn == true
-                    ? '   Swipe Left to Punch Out'
-                    : '   Swipe Right to Punch In',
-                color: AppColors.white,
-                fontWeight: FontWeight.w500,
+        return SafeArea(
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: ActionSlider.standard(
+              width: MediaQuery.of(context).size.width,
+              sliderBehavior: SliderBehavior.move,
+              backgroundColor: AppColors.red,
+              toggleColor: Colors.white,
+              boxShadow: const [],
+              icon: SvgPicture.asset(AppImages.arrow),
+              action: (controller) {
+                _punch(state: state, context: context, controller: controller);
+              },
+              child: Center(
+                child: CommonText(
+                  state.punchedIn == true
+                      ? '   Swipe Left to Punch Out'
+                      : '   Swipe Right to Punch In',
+                  color: AppColors.white,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ),

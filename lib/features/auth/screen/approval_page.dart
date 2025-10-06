@@ -58,7 +58,7 @@ class _ApprovalPageState extends State<ApprovalPage> {
             padding: const EdgeInsets.all(24),
             children: [
               const SizedBox(height: 70),
-              SvgPicture.asset(AppImages.search),
+              SvgPicture.asset(AppImages.successful),
               const SizedBox(height: 70),
               Text(
                 context.tr('your_account_is_pending_approval'),

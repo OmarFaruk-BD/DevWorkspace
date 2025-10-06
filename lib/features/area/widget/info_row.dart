@@ -14,21 +14,21 @@ class InfoRow extends StatelessWidget {
       children: [
         Column(
           children: [
-            SvgPicture.asset(AppImages.search),
+            SvgPicture.asset(AppImages.punch_1),
             CommonText('09:08 AM', fontWeight: FontWeight.w600),
             CommonText('Punch In', color: AppColors.grey),
           ],
         ),
         Column(
           children: [
-            SvgPicture.asset(AppImages.search),
+            SvgPicture.asset(AppImages.punch_2),
             CommonText('08:13 ', fontWeight: FontWeight.w600),
             CommonText('Total Hours', color: AppColors.grey),
           ],
         ),
         Column(
           children: [
-            SvgPicture.asset(AppImages.search),
+            SvgPicture.asset(AppImages.punch_3),
             CommonText('--:--', fontWeight: FontWeight.w600),
             CommonText('Punch Out', color: AppColors.grey),
           ],

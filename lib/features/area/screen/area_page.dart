@@ -67,7 +67,7 @@ class _AreaPageState extends State<AreaPage> {
                     children: [
                       WidgetSpan(
                         child: Image.asset(
-                          AppImages.apple,
+                          AppImages.alert,
                           width: 40,
                           fit: BoxFit.fitWidth,
                         ),
