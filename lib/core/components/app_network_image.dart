@@ -44,7 +44,7 @@ class AppNetworkImage extends StatelessWidget {
 
 class AppCachedImage extends AppNetworkImage {
   const AppCachedImage(
-    String super.url, {
+    super.url, {
     super.key,
     super.fit,
     super.width,
@@ -55,7 +55,7 @@ class AppCachedImage extends AppNetworkImage {
 
 class AppCachedNetworkImage extends AppNetworkImage {
   const AppCachedNetworkImage(
-    String super.url, {
+    super.url, {
     super.key,
     super.fit,
     super.width,

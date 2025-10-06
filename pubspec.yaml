@@ -72,6 +72,10 @@ dependencies:
 
   #WEBVIEW
   flutter_widget_from_html: ^0.17.1
+  google_maps_flutter: ^2.13.1
+  geolocator: ^14.0.1
+  syncfusion_flutter_datepicker: ^31.1.22
+  action_slider: ^0.7.0
 
 dev_dependencies:
   flutter_test:

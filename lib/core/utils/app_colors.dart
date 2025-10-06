@@ -9,5 +9,6 @@ class AppColors {
   static const Color primary = Colors.green;
   static const Color grey = Colors.grey;
   static const Color red = Colors.red;
+  static const Color yellow = Colors.yellow;
   static const Color green = Colors.green;
 }
