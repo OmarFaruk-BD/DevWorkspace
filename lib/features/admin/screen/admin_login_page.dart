@@ -10,7 +10,7 @@ import 'package:workspace/core/components/app_snack_bar.dart';
 import 'package:workspace/core/components/app_text_field.dart';
 import 'package:workspace/features/auth/cubit/auth_cubit.dart';
 import 'package:workspace/features/home/screen/landing_page.dart';
-import 'package:workspace/features/auth/service/auth_service.dart';
+import 'package:workspace/features/admin/service/admin_auth_service.dart';
 
 class AdminLoginPage extends StatefulWidget {
   const AdminLoginPage({super.key});
@@ -23,8 +23,8 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
   final TextEditingController _passwordTEC = TextEditingController();
   final TextEditingController _emailTEC = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final AdminAuthService _authService = AdminAuthService();
   final AppValidator _validator = AppValidator();
-  final AuthService _authService = AuthService();
   bool obscureText = true;
   bool isLoading = false;
 
@@ -92,10 +92,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
   void _userLogin() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => isLoading = true);
-    final result = await _authService.login(
-      email: _emailTEC.text.trim(),
-      password: _passwordTEC.text.trim(),
-    );
+    final result = await _authService.signIn(_emailTEC.text, _passwordTEC.text);
     if (!mounted) return;
     setState(() => isLoading = false);
     result.fold((f) => AppSnackBar.error(context, f), (s) {

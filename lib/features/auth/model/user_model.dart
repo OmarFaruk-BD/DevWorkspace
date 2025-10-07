@@ -2,98 +2,115 @@ import 'dart:convert';
 
 class UserModel {
   final int? id;
-  final String? firstName;
-  final String? lastName;
-  final String? username;
+  final String? name;
   final String? email;
   final String? phone;
-  final dynamic position;
-  final dynamic department;
-  final dynamic birthDate;
-  final dynamic companyEmail;
-  final dynamic workingYears;
-  final dynamic avatar;
+  final String? position;
+  final String? department;
+  final String? birthDate;
+  final String? avatar;
   final String? approved;
-
   UserModel({
     this.id,
-    this.firstName,
-    this.lastName,
-    this.username,
+    this.name,
     this.email,
     this.phone,
     this.position,
     this.department,
     this.birthDate,
-    this.companyEmail,
-    this.workingYears,
     this.avatar,
     this.approved,
   });
 
   UserModel copyWith({
     int? id,
-    String? firstName,
-    String? lastName,
-    String? username,
+    String? name,
     String? email,
     String? phone,
-    dynamic position,
-    dynamic department,
-    dynamic birthDate,
-    dynamic companyEmail,
-    dynamic workingYears,
-    dynamic avatar,
+    String? position,
+    String? department,
+    String? birthDate,
+    String? avatar,
     String? approved,
-  }) => UserModel(
-    id: id ?? this.id,
-    firstName: firstName ?? this.firstName,
-    lastName: lastName ?? this.lastName,
-    username: username ?? this.username,
-    email: email ?? this.email,
-    phone: phone ?? this.phone,
-    position: position ?? this.position,
-    department: department ?? this.department,
-    birthDate: birthDate ?? this.birthDate,
-    companyEmail: companyEmail ?? this.companyEmail,
-    workingYears: workingYears ?? this.workingYears,
-    avatar: avatar ?? this.avatar,
-    approved: approved ?? this.approved,
-  );
+  }) {
+    return UserModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      phone: phone ?? this.phone,
+      position: position ?? this.position,
+      department: department ?? this.department,
+      birthDate: birthDate ?? this.birthDate,
+      avatar: avatar ?? this.avatar,
+      approved: approved ?? this.approved,
+    );
+  }
 
-  factory UserModel.fromJson(String str) => UserModel.fromMap(json.decode(str));
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'id': id,
+      'name': name,
+      'email': email,
+      'phone': phone,
+      'position': position,
+      'department': department,
+      'birthDate': birthDate,
+      'avatar': avatar,
+      'approved': approved,
+    };
+  }
+
+  factory UserModel.fromMap(Map<String, dynamic> map) {
+    return UserModel(
+      id: map['id'] != null ? map['id'] as int : null,
+      name: map['name'] != null ? map['name'] as String : null,
+      email: map['email'] != null ? map['email'] as String : null,
+      phone: map['phone'] != null ? map['phone'] as String : null,
+      position: map['position'] != null ? map['position'] as String : null,
+      department: map['department'] != null
+          ? map['department'] as String
+          : null,
+      birthDate: map['birthDate'] != null ? map['birthDate'] as String : null,
+      avatar: map['avatar'] != null ? map['avatar'] as String : null,
+      approved: map['approved'] != null ? map['approved'] as String : null,
+    );
+  }
 
   String toJson() => json.encode(toMap());
 
-  factory UserModel.fromMap(Map<String, dynamic> json) => UserModel(
-    id: json["id"],
-    firstName: json["first_name"],
-    lastName: json["last_name"],
-    username: json["username"],
-    email: json["email"],
-    phone: json["phone"],
-    position: json["position"],
-    department: json["department"],
-    birthDate: json["birth_date"],
-    companyEmail: json["company_email"],
-    workingYears: json["working_years"],
-    avatar: json["avatar"],
-    approved: json["approved"],
-  );
+  factory UserModel.fromJson(String source) =>
+      UserModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
-  Map<String, dynamic> toMap() => {
-    "id": id,
-    "first_name": firstName,
-    "last_name": lastName,
-    "username": username,
-    "email": email,
-    "phone": phone,
-    "position": position,
-    "department": department,
-    "birth_date": birthDate,
-    "company_email": companyEmail,
-    "working_years": workingYears,
-    "avatar": avatar,
-    "approved": approved,
-  };
+  @override
+  String toString() {
+    return 'UserModel(id: $id, name: $name, email: $email, phone: $phone, position: $position, department: $department, birthDate: $birthDate, avatar: $avatar, approved: $approved)';
+  }
+
+  @override
+  bool operator ==(covariant UserModel other) {
+    if (identical(this, other)) return true;
+
+    return other.id == id &&
+        other.name == name &&
+        other.email == email &&
+        other.phone == phone &&
+        other.position == position &&
+        other.department == department &&
+        other.birthDate == birthDate &&
+        other.avatar == avatar &&
+        other.approved == approved;
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+        name.hashCode ^
+        email.hashCode ^
+        phone.hashCode ^
+        position.hashCode ^
+        department.hashCode ^
+        birthDate.hashCode ^
+        avatar.hashCode ^
+        approved.hashCode;
+  }
 }
