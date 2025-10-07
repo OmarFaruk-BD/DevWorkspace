@@ -67,10 +67,11 @@ class _AttendanceDetailPageState extends State<AttendanceDetailPage> {
               ),
               SizedBox(height: 20),
               DottedBorder(
-                color: AppColors.yellow,
-                radius: Radius.circular(8),
-                borderType: BorderType.RRect,
-                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+                options: const RoundedRectDottedBorderOptions(
+                  color: AppColors.yellow,
+                  radius: Radius.circular(8),
+                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

@@ -55,12 +55,13 @@ class _AreaPageState extends State<AreaPage> {
               ),
               Spacer(),
               DottedBorder(
-                strokeWidth: 1,
-                borderType: BorderType.RRect,
-                strokeCap: StrokeCap.round,
-                color: AppColors.green,
-                radius: Radius.circular(15),
-                padding: EdgeInsets.all(10),
+                options: const RoundedRectDottedBorderOptions(
+                  strokeWidth: 1,
+                  strokeCap: StrokeCap.round,
+                  color: AppColors.green,
+                  radius: Radius.circular(15),
+                  padding: EdgeInsets.all(10),
+                ),
                 child: Text.rich(
                   TextSpan(
                     text: '',
@@ -95,23 +96,27 @@ class _AreaPageState extends State<AreaPage> {
                 builder: (context, state) {
                   return state.punchedIn != true
                       ? Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 24),
-                            child: DutyLocation(),
-                          ),
-                          SizedBox(height: 15),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 24),
-                            child: AppButton(
-                              text: 'Start Visit',
-                              btnColor: Colors.white,
-                              textColor: AppColors.red,
-                              onTap: () => _punch(context),
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24,
+                              ),
+                              child: DutyLocation(),
                             ),
-                          ),
-                        ],
-                      )
+                            SizedBox(height: 15),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24,
+                              ),
+                              child: AppButton(
+                                text: 'Start Visit',
+                                btnColor: Colors.white,
+                                textColor: AppColors.red,
+                                onTap: () => _punch(context),
+                              ),
+                            ),
+                          ],
+                        )
                       : SizedBox();
                 },
               ),

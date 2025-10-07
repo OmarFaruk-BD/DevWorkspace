@@ -21,10 +21,11 @@ class TimeWidget extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: DottedBorder(
-              color: AppColors.yellow,
-              borderType: BorderType.RRect,
-              radius: Radius.circular(20),
-              padding: EdgeInsets.zero,
+              options: const RoundedRectDottedBorderOptions(
+                color: AppColors.yellow,
+                radius: Radius.circular(20),
+                padding: EdgeInsets.zero,
+              ),
               child: Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
