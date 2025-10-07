@@ -49,7 +49,6 @@ class AppTextField extends StatelessWidget {
       cursorColor: AppColors.black,
       textAlignVertical: TextAlignVertical.center,
       decoration: InputDecoration(
-        filled: true,
         isDense: true,
         hintMaxLines: 1,
         enabled: enabled,
@@ -64,10 +63,9 @@ class AppTextField extends StatelessWidget {
         errorStyle: _errorTextStyle(),
         disabledBorder: _buildBorder(),
         contentPadding: const EdgeInsets.fromLTRB(0, 15, 18, 15),
-        prefix:
-            prefixIcon == null
-                ? const Padding(padding: EdgeInsets.only(left: 20))
-                : null,
+        prefix: prefixIcon == null
+            ? const Padding(padding: EdgeInsets.only(left: 20))
+            : null,
       ),
     );
   }
@@ -94,10 +92,11 @@ class AppTextField extends StatelessWidget {
   }
 }
 
-class PreFixIcon extends StatelessWidget {
-  const PreFixIcon({super.key, this.onTap, required this.image});
+class TextFieldIcon extends StatelessWidget {
+  const TextFieldIcon({super.key, this.onTap, this.image, this.icon});
   final VoidCallback? onTap;
-  final String image;
+  final String? image;
+  final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +105,13 @@ class PreFixIcon extends StatelessWidget {
       child: SizedBox(
         width: 18,
         height: 18,
-        child: Center(child: SvgPicture.asset(image, width: 18, height: 18)),
+        child: Center(
+          child: image != null
+              ? SvgPicture.asset(image!, width: 18, height: 18)
+              : icon != null
+              ? Icon(icon, size: 18, color: AppColors.grey)
+              : SizedBox(),
+        ),
       ),
     );
   }

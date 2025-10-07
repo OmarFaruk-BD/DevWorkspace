@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:workspace/core/utils/app_images.dart';
 import 'package:workspace/core/helper/navigation.dart';
-import 'package:workspace/features/home/screen/home_page.dart';
+import 'package:workspace/features/admin/screen/admin_login_page.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -20,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void _navigateToLandingPage() async {
     await Future.delayed(const Duration(seconds: 1));
     if (!mounted) return;
-    AppNavigator.pushAndRemoveUntil(context, const HomePage());
+    AppNavigator.pushAndRemoveUntil(context, const AdminLoginPage());
   }
 
   @override
