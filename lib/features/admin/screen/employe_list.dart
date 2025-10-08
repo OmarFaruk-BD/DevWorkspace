@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:workspace/core/components/app_bar.dart';
+import 'package:workspace/core/helper/extention.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
 import 'package:workspace/features/admin/service/employee_service.dart';
 
@@ -51,6 +52,7 @@ class _EmployeeListState extends State<EmployeeList> {
                         Text('Phone: ${employee.phone}'),
                         Text('Position: ${employee.position}'),
                         Text('Department: ${employee.department}'),
+                        Text('Joined: ${employee.createdAt?.showDate() ?? ''}'),
                       ],
                     ),
                   ),

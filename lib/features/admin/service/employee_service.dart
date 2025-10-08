@@ -64,7 +64,7 @@ class EmployeeService {
           phone: doc['phone'],
           position: doc['position'],
           department: doc['department'],
-          
+          createdAt: (doc['createdAt'] as Timestamp).toDate(),
         );
       }).toList();
 
