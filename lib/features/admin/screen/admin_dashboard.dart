@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:workspace/core/helper/navigation.dart';
 import 'package:workspace/core/components/app_bar.dart';
 import 'package:workspace/core/components/app_button.dart';
+import 'package:workspace/features/admin/screen/add_employee.dart';
 
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
@@ -18,9 +20,15 @@ class _AdminDashboardState extends State<AdminDashboard> {
         child: ListView(
           padding: EdgeInsets.all(25),
           children: [
-            AppButton(text: 'Dashboard', onTap: () {}),
+            AppButton(
+              text: 'Dashboard',
+              onTap: () => AppNavigator.push(context, AddEmployeePage()),
+            ),
             SizedBox(height: 20),
-            AppButton(text: 'Add Employee', onTap: () {}),
+            AppButton(
+              text: 'Add Employee',
+              onTap: () => AppNavigator.push(context, AddEmployeePage()),
+            ),
             SizedBox(height: 20),
             AppButton(text: 'Area Management', onTap: () {}),
             SizedBox(height: 20),
