@@ -42,7 +42,6 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Profile',
-        hasMenuButton: false,
         onBackTap: () => Navigator.pop(context),
       ),
       body: ListView(

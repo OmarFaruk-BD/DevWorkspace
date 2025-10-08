@@ -35,30 +35,29 @@ class AppButton extends StatelessWidget {
         width: width,
         padding: EdgeInsets.symmetric(vertical: vPadding, horizontal: hPadding),
         decoration: BoxDecoration(
-          color: btnColor ?? Color(0xFFBCD8D5),
+          color: btnColor ?? AppColors.primary,
           borderRadius: BorderRadius.circular(radius),
         ),
-        child:
-            isLoading
-                ? Center(
-                  child: SizedBox(
-                    width: textSize * 1.45,
-                    height: textSize * 1.45,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 3,
-                      color: textColor ?? AppColors.black,
-                    ),
-                  ),
-                )
-                : Text(
-                  text,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: textSize,
-                    fontWeight: FontWeight.w700,
-                    color: textColor ?? AppColors.black,
+        child: isLoading
+            ? Center(
+                child: SizedBox(
+                  width: textSize * 1.45,
+                  height: textSize * 1.45,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 3,
+                    color: textColor ?? AppColors.white,
                   ),
                 ),
+              )
+            : Text(
+                text,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: textSize,
+                  fontWeight: FontWeight.w700,
+                  color: textColor ?? AppColors.white,
+                ),
+              ),
       ),
     );
   }

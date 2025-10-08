@@ -9,7 +9,7 @@ import 'package:workspace/core/components/app_button.dart';
 import 'package:workspace/core/components/app_snack_bar.dart';
 import 'package:workspace/core/components/app_text_field.dart';
 import 'package:workspace/features/auth/cubit/auth_cubit.dart';
-import 'package:workspace/features/home/screen/landing_page.dart';
+import 'package:workspace/features/admin/screen/admin_dashboard.dart';
 import 'package:workspace/features/admin/service/admin_auth_service.dart';
 
 class AdminLoginPage extends StatefulWidget {
@@ -44,7 +44,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 50,
-                  color: AppColors.green,
+                  color: AppColors.primary,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -98,7 +98,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
     result.fold((f) => AppSnackBar.error(context, f), (s) {
       context.read<AuthCubit>().updateUser(s);
       AppSnackBar.show(context, 'Login successfully.');
-      AppNavigator.pushAndRemoveUntil(context, const LandingPage());
+      AppNavigator.pushAndRemoveUntil(context, const AdminDashboard());
     });
   }
 }
