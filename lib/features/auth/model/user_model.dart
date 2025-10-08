@@ -10,6 +10,7 @@ class UserModel {
   final String? birthDate;
   final String? avatar;
   final String? approved;
+  final String? createdAt;
   UserModel({
     this.id,
     this.name,
@@ -20,6 +21,7 @@ class UserModel {
     this.birthDate,
     this.avatar,
     this.approved,
+    this.createdAt,
   });
 
   UserModel copyWith({
@@ -32,6 +34,7 @@ class UserModel {
     String? birthDate,
     String? avatar,
     String? approved,
+    String? createdAt,
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -43,6 +46,7 @@ class UserModel {
       birthDate: birthDate ?? this.birthDate,
       avatar: avatar ?? this.avatar,
       approved: approved ?? this.approved,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 
@@ -57,6 +61,7 @@ class UserModel {
       'birthDate': birthDate,
       'avatar': avatar,
       'approved': approved,
+      'createdAt': createdAt,
     };
   }
 
@@ -73,6 +78,7 @@ class UserModel {
       birthDate: map['birthDate'] != null ? map['birthDate'] as String : null,
       avatar: map['avatar'] != null ? map['avatar'] as String : null,
       approved: map['approved'] != null ? map['approved'] as String : null,
+      createdAt: map['createdAt'] != null ? map['createdAt'] as String : null,
     );
   }
 
@@ -83,6 +89,6 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(id: $id, name: $name, email: $email, phone: $phone, position: $position, department: $department, birthDate: $birthDate, avatar: $avatar, approved: $approved)';
+    return 'UserModel(id: $id, name: $name, email: $email, phone: $phone, position: $position, department: $department, birthDate: $birthDate, avatar: $avatar, approved: $approved createdAt: $createdAt)';
   }
 }

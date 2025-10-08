@@ -21,12 +21,12 @@ class _AdminDashboardState extends State<AdminDashboard> {
           padding: EdgeInsets.all(25),
           children: [
             AppButton(
-              text: 'Dashboard',
+              text: 'Add Employee',
               onTap: () => AppNavigator.push(context, AddEmployeePage()),
             ),
             SizedBox(height: 20),
             AppButton(
-              text: 'Add Employee',
+              text: 'Employee List',
               onTap: () => AppNavigator.push(context, AddEmployeePage()),
             ),
             SizedBox(height: 20),
