@@ -96,7 +96,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
     if (!mounted) return;
     setState(() => isLoading = false);
     result.fold((f) => AppSnackBar.error(context, f), (s) {
-      context.read<AuthCubit>().updateUser(s.user);
+      context.read<AuthCubit>().updateUser(s);
       AppSnackBar.show(context, 'Login successfully.');
       AppNavigator.pushAndRemoveUntil(context, const LandingPage());
     });

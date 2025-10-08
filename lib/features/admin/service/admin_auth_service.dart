@@ -5,7 +5,10 @@ import 'package:workspace/features/auth/model/user_model.dart';
 class AdminAuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<Either<String, User>> signIn(String email, String password) async {
+  Future<Either<String, UserModel>> signIn(
+    String email,
+    String password,
+  ) async {
     try {
       UserCredential result = await _auth.signInWithEmailAndPassword(
         email: email,
@@ -15,8 +18,13 @@ class AdminAuthService {
       if (result.user == null) {
         return left('No user found for that email.');
       } else {
-        final UserModel user = UserModel(result.user);
-        return right(result.user!);
+        final UserModel user = UserModel(
+          id: result.user?.uid,
+          name: result.user!.displayName,
+          email: result.user!.email,
+          phone: result.user!.phoneNumber,
+        );
+        return right(user);
       }
     } on FirebaseAuthException catch (e) {
       switch (e.code) {

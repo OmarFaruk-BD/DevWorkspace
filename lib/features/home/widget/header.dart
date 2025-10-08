@@ -48,7 +48,7 @@ class HeaderWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       CommonText(
-                        '${state.user?.firstName ?? ''} ${state.user?.lastName ?? ''}',
+                        state.user?.name ?? '',
                         maxLines: 2,
                         fontSize: 18,
                         color: AppColors.white,
@@ -65,8 +65,8 @@ class HeaderWidget extends StatelessWidget {
                   ),
                 ),
                 IconButton(
-                  onPressed:
-                      () => AppNavigator.push(context, NotificationPage()),
+                  onPressed: () =>
+                      AppNavigator.push(context, NotificationPage()),
                   icon: SvgPicture.asset(AppImages.notification),
                 ),
                 IconButton(

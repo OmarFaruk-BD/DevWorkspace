@@ -30,21 +30,10 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _getProfile() async {
-    final user1 = context.read<AuthCubit>().state.user;
-    userModel = user1;
+    userModel = context.read<AuthCubit>().state.user;
     setState(() {});
     final user2 = await AuthService().getUserProfile();
-    final user3 = UserModel(
-      firstName: user1?.firstName ?? user2?.firstName,
-      lastName: user1?.lastName ?? user2?.lastName,
-      username: user1?.username ?? user2?.username,
-      email: user1?.email ?? user2?.email,
-      companyEmail: user1?.companyEmail ?? user2?.companyEmail,
-      position: user1?.position ?? user2?.position,
-      department: user1?.department ?? user2?.department,
-      workingYears: user1?.workingYears ?? user2?.workingYears,
-    );
-    userModel = user3;
+    userModel = user2;
     setState(() {});
   }
 
@@ -87,15 +76,15 @@ class _ProfilePageState extends State<ProfilePage> {
           SizedBox(height: 20),
           Center(
             child: Text(
-              userModel?.username ?? '',
+              userModel?.name ?? '',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
             ),
           ),
           Center(child: Text(userModel?.position ?? 'N/A')),
           SizedBox(height: 20),
-          _buildItem('First Name', userModel?.firstName ?? 'N/A'),
+          _buildItem('First Name', userModel?.name ?? 'N/A'),
           _buildDivider(),
-          _buildItem('Last Name', userModel?.lastName ?? 'N/A'),
+          _buildItem('Last Name', userModel?.name ?? 'N/A'),
           _buildDivider(),
           _buildItem('Password', '*********'),
           _buildDivider(),
@@ -107,9 +96,7 @@ class _ProfilePageState extends State<ProfilePage> {
           _buildDivider(),
           _buildItem('Personal E-mail', userModel?.email ?? 'N/A'),
           _buildDivider(),
-          _buildItem('Company E-mail', userModel?.companyEmail ?? 'N/A'),
-          _buildDivider(),
-          _buildItem('Working years', userModel?.workingYears ?? 'N/A'),
+          _buildItem('Company E-mail', userModel?.email ?? 'N/A'),
           Padding(
             padding: const EdgeInsets.all(35),
             child: AppButton(
