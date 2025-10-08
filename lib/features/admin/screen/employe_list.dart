@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:workspace/core/components/app_bar.dart';
+import 'package:workspace/features/auth/model/user_model.dart';
+import 'package:workspace/features/admin/service/employee_service.dart';
 
 class EmployeeList extends StatefulWidget {
   const EmployeeList({super.key});
@@ -9,6 +11,21 @@ class EmployeeList extends StatefulWidget {
 }
 
 class _EmployeeListState extends State<EmployeeList> {
+  final EmployeeService _employeeService = EmployeeService();
+  List<UserModel> employees = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchEmployees();
+  }
+
+  Future<void> fetchEmployees() async {
+    employees = await _employeeService.getAllEmployees();
+    setState(() => isLoading = false);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +34,28 @@ class _EmployeeListState extends State<EmployeeList> {
         child: ListView(
           padding: EdgeInsets.all(25),
           children: [
-           
+            if (isLoading)
+              Center(child: CircularProgressIndicator())
+            else if (employees.isEmpty)
+              Center(child: Text('No employees found.'))
+            else
+              ...employees.map((employee) {
+                return Card(
+                  margin: EdgeInsets.only(bottom: 15),
+                  child: ListTile(
+                    title: Text(employee.name ?? ''),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Email: ${employee.email}'),
+                        Text('Phone: ${employee.phone}'),
+                        Text('Position: ${employee.position}'),
+                        Text('Department: ${employee.department}'),
+                      ],
+                    ),
+                  ),
+                );
+              }),
           ],
         ),
       ),

@@ -42,8 +42,15 @@ class AdminAuthService {
     }
   }
 
-  User? getCurrentUser() {
-    return _auth.currentUser;
+  UserModel? getCurrentUser() {
+    User? result = _auth.currentUser;
+    final UserModel user = UserModel(
+      id: result?.uid,
+      email: result?.email,
+      phone: result?.phoneNumber,
+      name: result?.displayName,
+    );
+    return user;
   }
 
   Future<void> signOut() async {

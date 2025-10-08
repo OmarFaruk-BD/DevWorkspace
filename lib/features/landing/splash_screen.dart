@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:workspace/core/utils/app_images.dart';
 import 'package:workspace/core/helper/navigation.dart';
+import 'package:workspace/features/admin/screen/admin_dashboard.dart';
 import 'package:workspace/features/admin/screen/admin_login_page.dart';
+import 'package:workspace/features/admin/service/admin_auth_service.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -11,6 +13,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  final AdminAuthService _adminAuthService = AdminAuthService();
   @override
   void initState() {
     super.initState();
@@ -19,8 +22,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void _navigateToLandingPage() async {
     await Future.delayed(const Duration(seconds: 1));
+    final user = _adminAuthService.getCurrentUser();
     if (!mounted) return;
-    AppNavigator.pushAndRemoveUntil(context, const AdminLoginPage());
+    if (user != null) {
+      AppNavigator.pushAndRemoveUntil(context, const AdminDashboard());
+    } else {
+      AppNavigator.pushAndRemoveUntil(context, const AdminLoginPage());
+    }
   }
 
   @override

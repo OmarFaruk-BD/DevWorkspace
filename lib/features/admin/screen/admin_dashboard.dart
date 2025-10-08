@@ -3,6 +3,7 @@ import 'package:workspace/core/helper/navigation.dart';
 import 'package:workspace/core/components/app_bar.dart';
 import 'package:workspace/core/components/app_button.dart';
 import 'package:workspace/features/admin/screen/add_employee.dart';
+import 'package:workspace/features/admin/screen/employe_list.dart';
 
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
@@ -27,7 +28,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
             SizedBox(height: 20),
             AppButton(
               text: 'Employee List',
-              onTap: () => AppNavigator.push(context, AddEmployeePage()),
+              onTap: () => AppNavigator.push(context, EmployeeList()),
             ),
             SizedBox(height: 20),
             AppButton(text: 'Area Management', onTap: () {}),

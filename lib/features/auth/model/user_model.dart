@@ -10,7 +10,7 @@ class UserModel {
   final String? birthDate;
   final String? avatar;
   final String? approved;
-  final String? createdAt;
+  final DateTime? createdAt;
   UserModel({
     this.id,
     this.name,
@@ -34,7 +34,7 @@ class UserModel {
     String? birthDate,
     String? avatar,
     String? approved,
-    String? createdAt,
+    DateTime? createdAt,
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -78,7 +78,9 @@ class UserModel {
       birthDate: map['birthDate'] != null ? map['birthDate'] as String : null,
       avatar: map['avatar'] != null ? map['avatar'] as String : null,
       approved: map['approved'] != null ? map['approved'] as String : null,
-      createdAt: map['createdAt'] != null ? map['createdAt'] as String : null,
+      createdAt: map['createdAt'] != null
+          ? DateTime.parse(map['createdAt'] as String)
+          : null,
     );
   }
 

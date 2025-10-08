@@ -1,9 +1,11 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:logger/logger.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
 
 class EmployeeService {
+  final Logger _logger = Logger();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -31,8 +33,9 @@ class EmployeeService {
         'department': department,
         'createdAt': FieldValue.serverTimestamp(),
       });
-      return Right(uid);
+      return Right('Employee created successfully.');
     } on FirebaseAuthException catch (e) {
+      _logger.e("FirebaseAuthException: ${e.message}");
       if (e.code == 'email-already-in-use') {
         return Left("This email is already registered.");
       } else if (e.code == 'weak-password') {
@@ -45,7 +48,7 @@ class EmployeeService {
     }
   }
 
-  Future<Either<String, List<UserModel>>> getAllEmployees() async {
+  Future<List<UserModel>> getAllEmployees() async {
     try {
       final querySnapshot = await _firestore
           .collection('users')
@@ -53,7 +56,6 @@ class EmployeeService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      // Convert documents into a list of maps
       final employees = querySnapshot.docs.map((doc) {
         return UserModel(
           id: doc['uid'],
@@ -62,13 +64,14 @@ class EmployeeService {
           phone: doc['phone'],
           position: doc['position'],
           department: doc['department'],
-          createdAt: doc['createdAt'],
+          
         );
       }).toList();
 
-      return Right(employees);
+      return employees;
     } catch (e) {
-      return Left("Failed to fetch employees: $e");
+      _logger.e("Error fetching employees: $e");
+      return [];
     }
   }
 }
