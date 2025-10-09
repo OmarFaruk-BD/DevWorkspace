@@ -16,6 +16,7 @@ class EmployeeService {
     required String password,
     required String position,
     required String department,
+    required String role,
   }) async {
     try {
       UserCredential userCredential = await _auth
@@ -29,9 +30,9 @@ class EmployeeService {
         'email': email,
         'phone': phone,
         'password': password,
-        'role': 'employee',
         'position': position,
         'department': department,
+        'role': role.toLowerCase(),
         'createdAt': FieldValue.serverTimestamp(),
       });
       return Right('Employee created successfully.');
@@ -49,11 +50,11 @@ class EmployeeService {
     }
   }
 
-  Future<List<UserModel>> getAllEmployees() async {
+  Future<List<UserModel>> getAllEmployees([String role = 'employee']) async {
     try {
       final querySnapshot = await _firestore
           .collection('users')
-          .where('role', isEqualTo: 'employee')
+          .where('role', isEqualTo: role.toLowerCase())
           .orderBy('createdAt', descending: true)
           .get();
 

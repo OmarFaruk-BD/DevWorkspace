@@ -7,7 +7,8 @@ import 'package:workspace/features/auth/model/user_model.dart';
 import 'package:workspace/features/admin/service/employee_service.dart';
 
 class EmployeeList extends StatefulWidget {
-  const EmployeeList({super.key});
+  const EmployeeList({super.key, this.role = 'employee'});
+  final String role;
 
   @override
   State<EmployeeList> createState() => _EmployeeListState();
@@ -25,7 +26,7 @@ class _EmployeeListState extends State<EmployeeList> {
   }
 
   Future<void> fetchEmployees() async {
-    employees = await _employeeService.getAllEmployees();
+    employees = await _employeeService.getAllEmployees(widget.role);
     setState(() => isLoading = false);
   }
 
