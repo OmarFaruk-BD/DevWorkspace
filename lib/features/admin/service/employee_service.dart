@@ -1,7 +1,7 @@
 import 'package:fpdart/fpdart.dart';
+import 'package:logger/logger.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:logger/logger.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
 
 class EmployeeService {

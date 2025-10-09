@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:workspace/core/utils/app_colors.dart';
 import 'package:workspace/core/utils/app_images.dart';
+import 'package:workspace/core/helper/navigation.dart';
 import 'package:workspace/core/components/app_bar.dart';
+import 'package:workspace/core/components/app_button.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
 import 'package:workspace/core/components/app_network_image.dart';
+import 'package:workspace/features/admin/screen/add_employee_task.dart';
 
 class EmployeeDetailPage extends StatefulWidget {
   const EmployeeDetailPage({super.key, required this.userModel});
@@ -92,6 +95,55 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
           _buildItem('Personal E-mail', userModel?.email ?? 'N/A'),
           _buildDivider(),
           _buildItem('Company E-mail', userModel?.email ?? 'N/A'),
+          SizedBox(height: 40),
+          Row(
+            children: [
+              SizedBox(width: 20),
+              Expanded(
+                child: AppButton(
+                  text: 'Add Task',
+                  onTap: () {
+                    AppNavigator.push(context, const AddEmployeeTask());
+                  },
+                ),
+              ),
+              SizedBox(width: 20),
+              Expanded(
+                child: AppButton(
+                  text: 'See Tasks',
+                  onTap: () {
+                    AppNavigator.push(context, const AddEmployeeTask());
+                  },
+                ),
+              ),
+              SizedBox(width: 20),
+            ],
+          ),
+          SizedBox(height: 20),
+          Row(
+            children: [
+              SizedBox(width: 20),
+              Expanded(
+                child: AppButton(
+                  text: 'Send Message',
+                  onTap: () {
+                    AppNavigator.push(context, const AddEmployeeTask());
+                  },
+                ),
+              ),
+              SizedBox(width: 20),
+              Expanded(
+                child: AppButton(
+                  text: 'See Messages',
+                  onTap: () {
+                    AppNavigator.push(context, const AddEmployeeTask());
+                  },
+                ),
+              ),
+              SizedBox(width: 20),
+            ],
+          ),
+          SizedBox(height: MediaQuery.of(context).padding.bottom + 20),
         ],
       ),
     );
