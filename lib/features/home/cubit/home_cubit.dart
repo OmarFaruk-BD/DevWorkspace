@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:workspace/core/helper/extention.dart';
-import 'package:workspace/core/service/location_service.dart';
 import 'package:workspace/features/area/model/my_area_model.dart';
 import 'package:workspace/features/home/service/home_service.dart';
 import 'package:workspace/features/history/service/attendance_service.dart';
@@ -30,8 +29,8 @@ class HomeCubit extends Cubit<HomeState> {
   void updateMyArea() async {
     final myAreaModel = await HomeService().getMyArea();
     emit(state.copyWith(myArea: myAreaModel));
-    final address = await LocationService().getMyLocation();
-    emit(state.copyWith(address: address?.fullAddress));
+    // final address = await LocationService().getMyLocation();
+    // emit(state.copyWith(address: address?.fullAddress));
   }
 
   void _checkPunchIn() async {

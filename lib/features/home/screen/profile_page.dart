@@ -9,9 +9,9 @@ import 'package:workspace/core/components/app_button.dart';
 import 'package:workspace/features/auth/cubit/auth_cubit.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
 import 'package:workspace/core/components/approval_popup.dart';
-import 'package:workspace/features/auth/screen/login_page.dart';
 import 'package:workspace/core/components/app_network_image.dart';
 import 'package:workspace/features/auth/service/auth_service.dart';
+import 'package:workspace/features/admin/screen/admin_login_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -121,7 +121,7 @@ class _ProfilePageState extends State<ProfilePage> {
     context.read<AuthCubit>().signOut();
     await AuthService().removeData();
     if (!context.mounted) return;
-    AppNavigator.pushAndRemoveUntil(context, const LoginPage());
+    AppNavigator.pushAndRemoveUntil(context, const AdminLoginPage());
   }
 
   Container _buildDivider() {

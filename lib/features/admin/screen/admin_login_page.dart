@@ -11,6 +11,7 @@ import 'package:workspace/core/components/app_text_field.dart';
 import 'package:workspace/features/auth/cubit/auth_cubit.dart';
 import 'package:workspace/features/admin/screen/admin_dashboard.dart';
 import 'package:workspace/features/admin/service/admin_auth_service.dart';
+import 'package:workspace/features/home/screen/landing_page.dart';
 
 class AdminLoginPage extends StatefulWidget {
   const AdminLoginPage({super.key});
@@ -95,10 +96,11 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
     final result = await _authService.signIn(_emailTEC.text, _passwordTEC.text);
     if (!mounted) return;
     setState(() => isLoading = false);
-    result.fold((f) => AppSnackBar.error(context, f), (s) {
-      context.read<AuthCubit>().updateUser(s);
+    result.fold((f) => AppSnackBar.error(context, f), (user) {
+      context.read<AuthCubit>().updateUser(user);
       AppSnackBar.show(context, 'Login successfully.');
-      AppNavigator.pushAndRemoveUntil(context, const AdminDashboard());
+      final child = user.isAdmin ? const AdminDashboard() : const LandingPage();
+      AppNavigator.pushAndRemoveUntil(context, child);
     });
   }
 }

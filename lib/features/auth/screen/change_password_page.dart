@@ -6,8 +6,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:workspace/core/components/app_button.dart';
 import 'package:workspace/core/components/app_snack_bar.dart';
 import 'package:workspace/core/components/app_text_field.dart';
-import 'package:workspace/features/auth/screen/login_page.dart';
 import 'package:workspace/features/auth/service/auth_service.dart';
+import 'package:workspace/features/admin/screen/admin_login_page.dart';
 
 class ChangePasswordPage extends StatefulWidget {
   const ChangePasswordPage({super.key, this.email});
@@ -106,8 +106,6 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   }
 
   void _verifyInformation() {
-    AppNavigator.push(context, const LoginPage());
-
     if (passwordTEC.text.isEmpty) {
       AppSnackBar.show(context, 'Please enter a password.');
       return;
@@ -141,7 +139,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       },
       (data) {
         AppSnackBar.show(context, data);
-        AppNavigator.pushAndRemoveUntil(context, const LoginPage());
+        AppNavigator.pushAndRemoveUntil(context, const AdminLoginPage());
       },
     );
   }

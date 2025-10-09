@@ -6,6 +6,7 @@ class UserModel {
   final String? email;
   final String? password;
   final String? phone;
+  final String? role;
   final String? position;
   final String? department;
   final String? birthDate;
@@ -19,12 +20,16 @@ class UserModel {
     this.phone,
     this.password,
     this.position,
+    this.role,
     this.department,
     this.birthDate,
     this.avatar,
     this.approved,
     this.createdAt,
   });
+
+  bool get isAdmin => role == 'admin';
+  bool get isEmployee => role == 'employee';
 
   UserModel copyWith({
     String? id,
@@ -33,6 +38,7 @@ class UserModel {
     String? phone,
     String? password,
     String? position,
+    String? role,
     String? department,
     String? birthDate,
     String? avatar,
@@ -46,6 +52,7 @@ class UserModel {
       phone: phone ?? this.phone,
       password: password ?? this.password,
       position: position ?? this.position,
+      role: role ?? this.role,
       department: department ?? this.department,
       birthDate: birthDate ?? this.birthDate,
       avatar: avatar ?? this.avatar,
@@ -62,6 +69,7 @@ class UserModel {
       'phone': phone,
       'password': password,
       'position': position,
+      'role': role,
       'department': department,
       'birthDate': birthDate,
       'avatar': avatar,
@@ -78,6 +86,7 @@ class UserModel {
       phone: map['phone'] != null ? map['phone'] as String : null,
       password: map['password'] != null ? map['password'] as String : null,
       position: map['position'] != null ? map['position'] as String : null,
+      role: map['role'] != null ? map['role'] as String : null,
       department: map['department'] != null
           ? map['department'] as String
           : null,
@@ -97,6 +106,6 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(id: $id, name: $name, email: $email, phone: $phone, position: $position, department: $department, birthDate: $birthDate, avatar: $avatar, approved: $approved createdAt: $createdAt)';
+    return 'UserModel(id: $id, name: $name, email: $email, phone: $phone, position: $position, department: $department, birthDate: $birthDate, avatar: $avatar, approved: $approved createdAt: $createdAt role: $role)';
   }
 }

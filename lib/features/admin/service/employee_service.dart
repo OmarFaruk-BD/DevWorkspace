@@ -64,6 +64,7 @@ class EmployeeService {
           name: doc['name'],
           email: doc['email'],
           phone: doc['phone'],
+          role: doc['role'],
           password: doc['password'],
           position: doc['position'],
           department: doc['department'],
@@ -75,6 +76,32 @@ class EmployeeService {
     } catch (e) {
       _logger.e("Error fetching employees: $e");
       return [];
+    }
+  }
+
+  Future<UserModel?> getEmployeeDetail(String uid) async {
+    try {
+      final docSnapshot = await _firestore.collection('users').doc(uid).get();
+      if (!docSnapshot.exists) {
+        _logger.w("No employee found with UID: $uid");
+        return null;
+      }
+
+      final data = docSnapshot.data()!;
+      return UserModel(
+        id: data['uid'],
+        name: data['name'],
+        role: data['role'],
+        email: data['email'],
+        phone: data['phone'],
+        password: data['password'],
+        position: data['position'],
+        department: data['department'],
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+      );
+    } catch (e) {
+      _logger.e("Error fetching employee detail: $e");
+      return null;
     }
   }
 }

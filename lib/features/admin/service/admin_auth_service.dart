@@ -1,9 +1,11 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
+import 'package:workspace/features/admin/service/employee_service.dart';
 
 class AdminAuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final EmployeeService _employeeService = EmployeeService();
 
   Future<Either<String, UserModel>> signIn(
     String email,
@@ -15,17 +17,13 @@ class AdminAuthService {
         password: password,
       );
 
-      if (result.user == null) {
+      UserModel? user = await _employeeService.getEmployeeDetail(
+        result.user?.uid ?? '',
+      );
+      if (user == null) {
         return left('No user found for that email.');
-      } else {
-        final UserModel user = UserModel(
-          id: result.user?.uid,
-          name: result.user!.displayName,
-          email: result.user!.email,
-          phone: result.user!.phoneNumber,
-        );
-        return right(user);
       }
+      return right(user);
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'user-not-found':
@@ -42,14 +40,10 @@ class AdminAuthService {
     }
   }
 
-  UserModel? getCurrentUser() {
+  Future<UserModel?> getCurrentUser() async {
     User? result = _auth.currentUser;
-    final UserModel user = UserModel(
-      id: result?.uid,
-      email: result?.email,
-      phone: result?.phoneNumber,
-      name: result?.displayName,
-    );
+    if (result == null) return null;
+    final user = await _employeeService.getEmployeeDetail(result.uid);
     return user;
   }
 

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:workspace/core/service/location_service.dart';
 import 'package:workspace/core/service/permission_service.dart';
 
 class DashboardMapWidget extends StatefulWidget {
@@ -26,7 +25,6 @@ class DashboardMapWidgetState extends State<DashboardMapWidget> {
 
   Future<void> _determinePosition() async {
     await PermissionService().locationPermission(context);
-    await LocationService().requestLocationService();
     Position position = await Geolocator.getCurrentPosition();
     _currentPosition = LatLng(position.latitude, position.longitude);
     _moveCameraToPosition(_currentPosition);
