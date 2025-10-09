@@ -92,6 +92,7 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
   }
 
   void _createEmployee() async {
+    FocusManager.instance.primaryFocus?.unfocus();
     if (!_formKey.currentState!.validate()) return;
     setState(() => isLoading = true);
     final result = await _employeeService.createEmployee(

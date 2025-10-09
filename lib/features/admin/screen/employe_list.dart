@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:workspace/core/components/app_bar.dart';
 import 'package:workspace/core/helper/extention.dart';
+import 'package:workspace/core/helper/navigation.dart';
+import 'package:workspace/core/components/app_bar.dart';
+import 'package:workspace/features/admin/screen/employee_detail.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
 import 'package:workspace/features/admin/service/employee_service.dart';
 
@@ -41,19 +43,29 @@ class _EmployeeListState extends State<EmployeeList> {
               Center(child: Text('No employees found.'))
             else
               ...employees.map((employee) {
-                return Card(
-                  margin: EdgeInsets.only(bottom: 15),
-                  child: ListTile(
-                    title: Text(employee.name ?? ''),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Email: ${employee.email}'),
-                        Text('Phone: ${employee.phone}'),
-                        Text('Position: ${employee.position}'),
-                        Text('Department: ${employee.department}'),
-                        Text('Joined: ${employee.createdAt?.showDate() ?? ''}'),
-                      ],
+                return InkWell(
+                  onTap: () {
+                    AppNavigator.push(
+                      context,
+                      EmployeeDetailPage(userModel: employee),
+                    );
+                  },
+                  child: Card(
+                    margin: EdgeInsets.only(bottom: 15),
+                    child: ListTile(
+                      title: Text(employee.name ?? ''),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Email: ${employee.email}'),
+                          Text('Phone: ${employee.phone}'),
+                          Text('Position: ${employee.position}'),
+                          Text('Department: ${employee.department}'),
+                          Text(
+                            'Joined: ${employee.createdAt?.showDate() ?? ''}',
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );

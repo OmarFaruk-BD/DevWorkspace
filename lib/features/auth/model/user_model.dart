@@ -4,6 +4,7 @@ class UserModel {
   final String? id;
   final String? name;
   final String? email;
+  final String? password;
   final String? phone;
   final String? position;
   final String? department;
@@ -16,6 +17,7 @@ class UserModel {
     this.name,
     this.email,
     this.phone,
+    this.password,
     this.position,
     this.department,
     this.birthDate,
@@ -29,6 +31,7 @@ class UserModel {
     String? name,
     String? email,
     String? phone,
+    String? password,
     String? position,
     String? department,
     String? birthDate,
@@ -41,6 +44,7 @@ class UserModel {
       name: name ?? this.name,
       email: email ?? this.email,
       phone: phone ?? this.phone,
+      password: password ?? this.password,
       position: position ?? this.position,
       department: department ?? this.department,
       birthDate: birthDate ?? this.birthDate,
@@ -56,6 +60,7 @@ class UserModel {
       'name': name,
       'email': email,
       'phone': phone,
+      'password': password,
       'position': position,
       'department': department,
       'birthDate': birthDate,
@@ -71,6 +76,7 @@ class UserModel {
       name: map['name'] != null ? map['name'] as String : null,
       email: map['email'] != null ? map['email'] as String : null,
       phone: map['phone'] != null ? map['phone'] as String : null,
+      password: map['password'] != null ? map['password'] as String : null,
       position: map['position'] != null ? map['position'] as String : null,
       department: map['department'] != null
           ? map['department'] as String
