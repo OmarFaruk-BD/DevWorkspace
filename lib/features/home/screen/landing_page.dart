@@ -35,7 +35,7 @@ class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(child: IndexedStack(index: _index, children: _screens)),
+      body: IndexedStack(index: _index, children: _screens),
       bottomNavigationBar: Theme(
         data: ThemeData(
           splashColor: Colors.transparent,
@@ -45,7 +45,7 @@ class _LandingPageState extends State<LandingPage> {
           padding: const EdgeInsets.all(10),
           margin: const EdgeInsets.only(left: 18, right: 18, bottom: 24),
           decoration: BoxDecoration(
-            color: AppColors.red,
+            color: AppColors.primary,
             borderRadius: BorderRadius.circular(50),
           ),
           child: Row(
@@ -94,7 +94,7 @@ class _LandingPageState extends State<LandingPage> {
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: isSelected ? AppColors.red : Colors.transparent,
+          color: isSelected ? AppColors.secondary : Colors.transparent,
         ),
         child: Row(
           children: [
@@ -103,7 +103,7 @@ class _LandingPageState extends State<LandingPage> {
               width: isSelected ? 15 : 18,
               height: isSelected ? 15 : 18,
               colorFilter: ColorFilter.mode(
-                isSelected ? AppColors.yellow : AppColors.white,
+                isSelected ? AppColors.white : AppColors.white,
                 BlendMode.srcIn,
               ),
             ),

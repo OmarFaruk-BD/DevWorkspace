@@ -28,7 +28,7 @@ class BottomSheetWidget extends StatelessWidget {
             child: ActionSlider.standard(
               width: MediaQuery.of(context).size.width,
               sliderBehavior: SliderBehavior.move,
-              backgroundColor: AppColors.red,
+              backgroundColor: AppColors.primary,
               toggleColor: Colors.white,
               boxShadow: const [],
               icon: SvgPicture.asset(AppImages.arrow),

@@ -40,7 +40,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: CustomAppBarV2(
         title: 'Profile',
         onBackTap: () => Navigator.pop(context),
       ),
@@ -51,7 +51,7 @@ class _ProfilePageState extends State<ProfilePage> {
               Container(
                 margin: EdgeInsets.only(bottom: 50),
                 height: MediaQuery.of(context).size.height * 0.18,
-                color: AppColors.red,
+                color: AppColors.primary,
               ),
               Positioned(
                 left: 0,

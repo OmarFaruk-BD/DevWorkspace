@@ -29,7 +29,7 @@ class HeaderWidget extends StatelessWidget {
               right: 20,
               left: 20,
             ),
-            color: AppColors.red,
+            color: AppColors.primary,
             child: Row(
               children: [
                 Container(

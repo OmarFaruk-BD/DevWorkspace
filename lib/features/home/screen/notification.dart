@@ -23,9 +23,7 @@ class _NotificationPageState extends State<NotificationPage> {
   @override
   void initState() {
     super.initState();
-    _pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
-    });
+    _pagingController.addPageRequestListener(_fetchPage);
   }
 
   @override
@@ -55,7 +53,7 @@ class _NotificationPageState extends State<NotificationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: CustomAppBarV2(
         title: 'Notifications',
         onBackTap: () => Navigator.pop(context),
       ),
@@ -79,8 +77,8 @@ class NotificationItem extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(bottom: 20),
       child: InkWell(
-        onTap:
-            () => AppNavigator.push(context, NotificationDetail(model: data)),
+        onTap: () =>
+            AppNavigator.push(context, NotificationDetail(model: data)),
         child: Container(
           padding: EdgeInsets.all(16),
           decoration: BoxDecoration(
