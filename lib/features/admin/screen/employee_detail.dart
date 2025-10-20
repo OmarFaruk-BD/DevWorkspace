@@ -40,7 +40,7 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
               Container(
                 margin: EdgeInsets.only(bottom: 50),
                 height: MediaQuery.of(context).size.height * 0.18,
-                color: AppColors.blue,
+                color: AppColors.secondary,
               ),
               Positioned(
                 left: 0,

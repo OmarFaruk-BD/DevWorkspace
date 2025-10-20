@@ -9,9 +9,9 @@ import 'package:workspace/core/components/app_button.dart';
 import 'package:workspace/core/components/app_snack_bar.dart';
 import 'package:workspace/core/components/app_text_field.dart';
 import 'package:workspace/features/auth/cubit/auth_cubit.dart';
-import 'package:workspace/features/admin/screen/admin_dashboard.dart';
-import 'package:workspace/features/admin/service/admin_auth_service.dart';
 import 'package:workspace/features/home/screen/landing_page.dart';
+import 'package:workspace/features/admin/landing/admin_landing.dart';
+import 'package:workspace/features/admin/service/admin_auth_service.dart';
 
 class AdminLoginPage extends StatefulWidget {
   const AdminLoginPage({super.key});
@@ -50,7 +50,10 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                 ),
               ),
               const SizedBox(height: 15),
-              const Text('Manager Login', textAlign: TextAlign.center),
+              const Text(
+                'Please login to continue',
+                textAlign: TextAlign.center,
+              ),
               const SizedBox(height: 50),
               Text(context.tr('email_phone'), style: AppStyles.mediumGrey),
               const SizedBox(height: 12),
@@ -99,7 +102,9 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
     result.fold((f) => AppSnackBar.error(context, f), (user) {
       context.read<AuthCubit>().updateUser(user);
       AppSnackBar.show(context, 'Login successfully.');
-      final child = user.isAdmin ? const AdminDashboard() : const LandingPage();
+      final child = user.isAdmin
+          ? const AdminLandingPage()
+          : const LandingPage();
       AppNavigator.pushAndRemoveUntil(context, child);
     });
   }

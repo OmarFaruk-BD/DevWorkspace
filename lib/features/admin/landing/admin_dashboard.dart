@@ -9,14 +9,14 @@ import 'package:workspace/features/admin/screen/employe_list.dart';
 import 'package:workspace/features/admin/screen/admin_login_page.dart';
 import 'package:workspace/features/admin/service/admin_auth_service.dart';
 
-class AdminDashboard extends StatefulWidget {
-  const AdminDashboard({super.key});
+class AdminDashboardPage extends StatefulWidget {
+  const AdminDashboardPage({super.key});
 
   @override
-  State<AdminDashboard> createState() => _AdminDashboardState();
+  State<AdminDashboardPage> createState() => _AdminDashboardPageState();
 }
 
-class _AdminDashboardState extends State<AdminDashboard> {
+class _AdminDashboardPageState extends State<AdminDashboardPage> {
   final AdminAuthService _service = AdminAuthService();
   @override
   Widget build(BuildContext context) {

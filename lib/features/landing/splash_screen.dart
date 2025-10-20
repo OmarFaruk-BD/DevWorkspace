@@ -1,11 +1,11 @@
+import 'package:logger/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:logger/logger.dart';
 import 'package:workspace/core/utils/app_images.dart';
 import 'package:workspace/core/helper/navigation.dart';
 import 'package:workspace/features/auth/cubit/auth_cubit.dart';
 import 'package:workspace/features/home/screen/landing_page.dart';
-import 'package:workspace/features/admin/screen/admin_dashboard.dart';
+import 'package:workspace/features/admin/landing/admin_landing.dart';
 import 'package:workspace/features/admin/screen/admin_login_page.dart';
 import 'package:workspace/features/admin/service/admin_auth_service.dart';
 
@@ -31,7 +31,9 @@ class _SplashScreenState extends State<SplashScreen> {
     if (user != null) {
       Logger().d(user.toMap());
       context.read<AuthCubit>().updateUser(user);
-      final child = user.isAdmin ? const AdminDashboard() : const LandingPage();
+      final child = user.isAdmin
+          ? const AdminLandingPage()
+          : const LandingPage();
       AppNavigator.pushAndRemoveUntil(context, child);
     } else {
       AppNavigator.pushAndRemoveUntil(context, const AdminLoginPage());
