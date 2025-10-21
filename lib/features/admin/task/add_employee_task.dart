@@ -13,6 +13,16 @@ class AddEmployeeTaskPage extends StatefulWidget {
 class _AddEmployeeTaskPageState extends State<AddEmployeeTaskPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AdminAppBar(title: 'Employee List'));
+    return Scaffold(
+      appBar: AdminAppBar(title: 'Add Employee Task'),
+      body: ListView(
+        children: [
+          Center(child: Text('Under Development')),
+          Center(child: Text('Under Development')),
+          Center(child: Text('Under Development')),
+          Center(child: Text('Under Development')),
+        ],
+      ),
+    );
   }
 }

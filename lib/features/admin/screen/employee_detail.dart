@@ -6,7 +6,7 @@ import 'package:workspace/core/components/app_bar.dart';
 import 'package:workspace/core/components/app_button.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
 import 'package:workspace/core/components/app_network_image.dart';
-import 'package:workspace/features/admin/screen/add_employee_task.dart';
+import 'package:workspace/features/admin/task/add_employee_task.dart';
 
 class EmployeeDetailPage extends StatefulWidget {
   const EmployeeDetailPage({super.key, required this.userModel});
@@ -18,12 +18,12 @@ class EmployeeDetailPage extends StatefulWidget {
 
 class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
   bool showPassword = false;
-  UserModel? userModel;
+  UserModel? user;
 
   @override
   void initState() {
     super.initState();
-    userModel = widget.userModel;
+    user = widget.userModel;
   }
 
   @override
@@ -64,15 +64,15 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
           SizedBox(height: 20),
           Center(
             child: Text(
-              userModel?.name ?? '',
+              user?.name ?? '',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
             ),
           ),
-          Center(child: Text(userModel?.position ?? 'N/A')),
+          Center(child: Text(user?.position ?? 'N/A')),
           SizedBox(height: 20),
-          _buildItem('First Name', userModel?.name ?? 'N/A'),
+          _buildItem('First Name', user?.name ?? 'N/A'),
           _buildDivider(),
-          _buildItem('Last Name', userModel?.name ?? 'N/A'),
+          _buildItem('Last Name', user?.name ?? 'N/A'),
           _buildDivider(),
           InkWell(
             onTap: () async {
@@ -82,19 +82,19 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
             },
             child: _buildItem(
               'Password',
-              showPassword ? userModel?.password ?? '' : '*********',
+              showPassword ? user?.password ?? '' : '*********',
             ),
           ),
           _buildDivider(),
-          _buildItem('Position', userModel?.position ?? 'N/A'),
+          _buildItem('Position', user?.position ?? 'N/A'),
           _buildDivider(),
-          _buildItem('Department', userModel?.department ?? 'N/A'),
+          _buildItem('Department', user?.department ?? 'N/A'),
           _buildDivider(),
           _buildItem('Birthday', 'N/A'),
           _buildDivider(),
-          _buildItem('Personal E-mail', userModel?.email ?? 'N/A'),
+          _buildItem('Personal E-mail', user?.email ?? 'N/A'),
           _buildDivider(),
-          _buildItem('Company E-mail', userModel?.email ?? 'N/A'),
+          _buildItem('Company E-mail', user?.email ?? 'N/A'),
           SizedBox(height: 40),
           Row(
             children: [
@@ -103,7 +103,7 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
                 child: AdminButton(
                   text: 'Add Task',
                   onTap: () {
-                    AppNavigator.push(context, const AddEmployeeTask());
+                    AppNavigator.push(context, AddEmployeeTaskPage(user: user));
                   },
                 ),
               ),
@@ -112,7 +112,7 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
                 child: AdminButton(
                   text: 'See Tasks',
                   onTap: () {
-                    AppNavigator.push(context, const AddEmployeeTask());
+                    AppNavigator.push(context, AddEmployeeTaskPage(user: user));
                   },
                 ),
               ),
@@ -127,7 +127,7 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
                 child: AdminButton(
                   text: 'Send Message',
                   onTap: () {
-                    AppNavigator.push(context, const AddEmployeeTask());
+                    AppNavigator.push(context, AddEmployeeTaskPage(user: user));
                   },
                 ),
               ),
@@ -136,7 +136,7 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
                 child: AdminButton(
                   text: 'See Messages',
                   onTap: () {
-                    AppNavigator.push(context, const AddEmployeeTask());
+                    AppNavigator.push(context, AddEmployeeTaskPage(user: user));
                   },
                 ),
               ),
