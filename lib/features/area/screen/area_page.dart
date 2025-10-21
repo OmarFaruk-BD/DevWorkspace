@@ -27,7 +27,7 @@ class _AreaPageState extends State<AreaPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBarV2(
+      appBar: CustomAppBar(
         title: 'Area',
         onBackTap: () {
           AppNavigator.push(context, LandingPage(index: 0));

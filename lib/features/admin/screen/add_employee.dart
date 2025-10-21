@@ -33,7 +33,7 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        appBar: CustomAppBar(title: 'Add Employee', hasBackButton: false),
+        appBar: AdminAppBar(title: 'Add Employee', hasBackButton: false),
         body: SafeArea(
           child: Form(
             key: _formKey,

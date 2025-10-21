@@ -38,7 +38,7 @@ class _LeaveDetailState extends State<LeaveDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: AdminAppBar(
         title: 'Leave Approval',
         onBackTap: () => Navigator.pop(context),
       ),

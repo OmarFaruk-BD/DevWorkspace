@@ -12,7 +12,7 @@ class _AdminMessagePageState extends State<AdminMessagePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'Report Page', hasBackButton: false),
+      appBar: AdminAppBar(title: 'Report Page', hasBackButton: false),
       body: Center(child: Text('Admin Report Page')),
     );
   }

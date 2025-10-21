@@ -29,7 +29,7 @@ class _AttendanceDetailPageState extends State<AttendanceDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBarV2(
+      appBar: CustomAppBar(
         title: 'Attendance Details',
         onBackTap: () {
           if (widget.isLanding) {

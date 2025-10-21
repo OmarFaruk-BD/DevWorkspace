@@ -32,7 +32,7 @@ class _NotificationDetailState extends State<NotificationDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: AdminAppBar(
         title: 'Notifications',
         onBackTap: () => Navigator.pop(context),
       ),

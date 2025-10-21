@@ -62,3 +62,19 @@ class AppButton extends StatelessWidget {
     );
   }
 }
+
+class AdminButton extends AppButton {
+  const AdminButton({
+    super.key,
+    super.onTap,
+    super.width,
+    super.textColor,
+    super.radius = 16,
+    required super.text,
+    super.hPadding = 15,
+    super.vPadding = 15,
+    super.textSize = 16,
+    super.isLoading = false,
+    super.btnColor = AppColors.admin,
+  });
+}

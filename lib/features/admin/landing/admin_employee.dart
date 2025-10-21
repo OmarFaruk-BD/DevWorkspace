@@ -12,7 +12,7 @@ class _AdminEmployeePageState extends State<AdminEmployeePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'Employee Page', hasBackButton: false),
+      appBar: AdminAppBar(title: 'Employee Page', hasBackButton: false),
       body: Center(child: Text('Admin Employee Page')),
     );
   }

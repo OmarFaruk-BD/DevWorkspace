@@ -36,7 +36,7 @@ class _AttendanceHistoryPageState extends State<AttendanceHistoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: AdminAppBar(
         title: 'Attendance History',
         onBackTap: () => Navigator.pop(context),
       ),

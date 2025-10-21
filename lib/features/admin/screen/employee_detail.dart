@@ -29,7 +29,7 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: AdminAppBar(
         title: 'Profile',
         onBackTap: () => Navigator.pop(context),
       ),
@@ -100,7 +100,7 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
             children: [
               SizedBox(width: 20),
               Expanded(
-                child: AppButton(
+                child: AdminButton(
                   text: 'Add Task',
                   onTap: () {
                     AppNavigator.push(context, const AddEmployeeTask());
@@ -109,7 +109,7 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
               ),
               SizedBox(width: 20),
               Expanded(
-                child: AppButton(
+                child: AdminButton(
                   text: 'See Tasks',
                   onTap: () {
                     AppNavigator.push(context, const AddEmployeeTask());
@@ -124,7 +124,7 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
             children: [
               SizedBox(width: 20),
               Expanded(
-                child: AppButton(
+                child: AdminButton(
                   text: 'Send Message',
                   onTap: () {
                     AppNavigator.push(context, const AddEmployeeTask());
@@ -133,7 +133,7 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
               ),
               SizedBox(width: 20),
               Expanded(
-                child: AppButton(
+                child: AdminButton(
                   text: 'See Messages',
                   onTap: () {
                     AppNavigator.push(context, const AddEmployeeTask());

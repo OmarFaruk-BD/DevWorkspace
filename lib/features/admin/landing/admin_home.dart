@@ -12,7 +12,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'Admin Home Page', hasBackButton: false),
+      appBar: AdminAppBar(title: 'Admin Home Page', hasBackButton: false),
       body: Center(child: Text('Admin Home Page')),
     );
   }

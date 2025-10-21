@@ -32,7 +32,7 @@ class _LeaveRequestPageState extends State<LeaveRequestPage> {
     return BlocBuilder<LeaveCubit, LeaveState>(
       builder: (context, state) {
         return Scaffold(
-          appBar: CustomAppBar(
+          appBar: AdminAppBar(
             title: 'Leave Request',
             onBackTap: () => Navigator.pop(context),
           ),

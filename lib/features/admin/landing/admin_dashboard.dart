@@ -21,7 +21,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'Admin Dashboard', hasBackButton: false),
+      appBar: AdminAppBar(title: 'Admin Dashboard', hasBackButton: false),
       body: ListView(
         padding: EdgeInsets.all(25),
         children: [

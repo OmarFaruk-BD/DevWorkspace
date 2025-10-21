@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:workspace/core/utils/app_colors.dart';
 
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomAppBar({
+class AdminAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const AdminAppBar({
     super.key,
     this.onBackTap,
     required this.title,
@@ -42,8 +42,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 }
 
-class CustomAppBarV2 extends StatelessWidget implements PreferredSizeWidget {
-  const CustomAppBarV2({
+class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const CustomAppBar({
     super.key,
     this.onBackTap,
     required this.title,

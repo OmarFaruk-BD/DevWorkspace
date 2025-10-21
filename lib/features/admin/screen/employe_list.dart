@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:workspace/core/helper/navigation.dart';
 import 'package:workspace/core/components/app_bar.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
+import 'package:workspace/features/admin/task/add_employee_task.dart';
 import 'package:workspace/features/admin/screen/employee_detail.dart';
 import 'package:workspace/features/admin/service/employee_service.dart';
 
@@ -32,7 +33,7 @@ class _EmployeeListState extends State<EmployeeList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'Employee List'),
+      appBar: AdminAppBar(title: 'Employee List'),
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: fetchEmployees,
@@ -97,6 +98,24 @@ class EmployeItem extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 4),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      AppNavigator.push(
+                        context,
+                        AddEmployeeTaskPage(user: employee),
+                      );
+                    },
+                    child: Text('Add Task'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {},
+                    child: Text('Live Location'),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
@@ -113,7 +132,7 @@ class EmployeItem extends StatelessWidget {
           SizedBox(width: 6),
           Text(
             value,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
           ),
         ],
       ),

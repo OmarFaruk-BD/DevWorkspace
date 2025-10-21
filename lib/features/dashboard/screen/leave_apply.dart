@@ -32,7 +32,7 @@ class _LeaveApplyPageState extends State<LeaveApplyPage> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        appBar: CustomAppBar(
+        appBar: AdminAppBar(
           title: 'Leave Request',
           onBackTap: () => Navigator.pop(context),
         ),

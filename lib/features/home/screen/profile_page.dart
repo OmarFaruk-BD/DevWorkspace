@@ -40,7 +40,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBarV2(
+      appBar: CustomAppBar(
         title: 'Profile',
         onBackTap: () => Navigator.pop(context),
       ),
