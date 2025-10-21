@@ -41,41 +41,43 @@ class _LandingPageState extends State<LandingPage> {
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
         ),
-        child: Container(
-          padding: const EdgeInsets.all(10),
-          margin: const EdgeInsets.only(left: 18, right: 18, bottom: 24),
-          decoration: BoxDecoration(
-            color: AppColors.primary,
-            borderRadius: BorderRadius.circular(50),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildBottomNavBar2(
-                icon: AppImages.home,
-                label: context.tr('home'),
-                isSelected: _index == 0,
-                onTap: () => setState(() => _index = 0),
-              ),
-              _buildBottomNavBar2(
-                icon: AppImages.location,
-                label: context.tr('area'),
-                isSelected: _index == 1,
-                onTap: () => setState(() => _index = 1),
-              ),
-              _buildBottomNavBar2(
-                icon: AppImages.calander,
-                label: context.tr('history'),
-                isSelected: _index == 2,
-                onTap: () => setState(() => _index = 2),
-              ),
-              _buildBottomNavBar2(
-                icon: AppImages.dashboard,
-                label: context.tr('dashboard'),
-                isSelected: _index == 3,
-                onTap: () => setState(() => _index = 3),
-              ),
-            ],
+        child: SafeArea(
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            margin: const EdgeInsets.all(15).copyWith(top: 0),
+            decoration: BoxDecoration(
+              color: AppColors.primary,
+              borderRadius: BorderRadius.circular(50),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _buildBottomNavBar2(
+                  icon: AppImages.home,
+                  label: context.tr('home'),
+                  isSelected: _index == 0,
+                  onTap: () => setState(() => _index = 0),
+                ),
+                _buildBottomNavBar2(
+                  icon: AppImages.location,
+                  label: context.tr('area'),
+                  isSelected: _index == 1,
+                  onTap: () => setState(() => _index = 1),
+                ),
+                _buildBottomNavBar2(
+                  icon: AppImages.calander,
+                  label: context.tr('history'),
+                  isSelected: _index == 2,
+                  onTap: () => setState(() => _index = 2),
+                ),
+                _buildBottomNavBar2(
+                  icon: AppImages.dashboard,
+                  label: context.tr('dashboard'),
+                  isSelected: _index == 3,
+                  onTap: () => setState(() => _index = 3),
+                ),
+              ],
+            ),
           ),
         ),
       ),

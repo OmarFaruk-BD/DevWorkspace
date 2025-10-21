@@ -38,41 +38,43 @@ class _AdminLandingPageState extends State<AdminLandingPage> {
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
         ),
-        child: Container(
-          padding: const EdgeInsets.all(10),
-          margin: const EdgeInsets.only(left: 18, right: 18, bottom: 24),
-          decoration: BoxDecoration(
-            color: AppColors.secondary,
-            borderRadius: BorderRadius.circular(50),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildBottomNavBar2(
-                label: 'Home',
-                icon: Icons.analytics,
-                isSelected: _index == 0,
-                onTap: () => setState(() => _index = 0),
-              ),
-              _buildBottomNavBar2(
-                label: 'Employee',
-                icon: Icons.group,
-                isSelected: _index == 1,
-                onTap: () => setState(() => _index = 1),
-              ),
-              _buildBottomNavBar2(
-                label: 'Message',
-                icon: Icons.message,
-                isSelected: _index == 2,
-                onTap: () => setState(() => _index = 2),
-              ),
-              _buildBottomNavBar2(
-                label: 'Dashboard',
-                icon: Icons.dashboard,
-                isSelected: _index == 3,
-                onTap: () => setState(() => _index = 3),
-              ),
-            ],
+        child: SafeArea(
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            margin: const EdgeInsets.all(15).copyWith(top: 0),
+            decoration: BoxDecoration(
+              color: AppColors.secondary,
+              borderRadius: BorderRadius.circular(50),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _buildBottomNavBar2(
+                  label: 'Home',
+                  icon: Icons.analytics,
+                  isSelected: _index == 0,
+                  onTap: () => setState(() => _index = 0),
+                ),
+                _buildBottomNavBar2(
+                  label: 'Employee',
+                  icon: Icons.group,
+                  isSelected: _index == 1,
+                  onTap: () => setState(() => _index = 1),
+                ),
+                _buildBottomNavBar2(
+                  label: 'Message',
+                  icon: Icons.message,
+                  isSelected: _index == 2,
+                  onTap: () => setState(() => _index = 2),
+                ),
+                _buildBottomNavBar2(
+                  label: 'Dashboard',
+                  icon: Icons.dashboard,
+                  isSelected: _index == 3,
+                  onTap: () => setState(() => _index = 3),
+                ),
+              ],
+            ),
           ),
         ),
       ),
