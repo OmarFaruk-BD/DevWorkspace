@@ -83,14 +83,14 @@ class EmployeeTaskService {
   }
 
   /// 📋 Get all tasks assigned to a specific employee
-  Future<Either<String, List<Map<String, dynamic>>>> getTasksByEmployee({
-    required String assignedTo,
-  }) async {
+  Future<List<Map<String, dynamic>>> getTasksByEmployee(
+    String assignedTo,
+  ) async {
     try {
       final querySnapshot = await _firestore
           .collection('tasks')
           .where('assignedTo', isEqualTo: assignedTo)
-          .orderBy('createdAt', descending: true)
+          // .orderBy('createdAt', descending: true)
           .get();
 
       final tasks = querySnapshot.docs.map((doc) {
@@ -98,13 +98,13 @@ class EmployeeTaskService {
         return {'taskId': doc.id, ...data};
       }).toList();
 
-      return Right(tasks);
+      return tasks;
     } on FirebaseException catch (e) {
       _logger.e('Firebase error fetching tasks: ${e.message}');
-      return Left('Failed to fetch tasks: ${e.message}');
+      return [];
     } catch (e) {
       _logger.e('Error fetching tasks: $e');
-      return Left('Failed to fetch tasks: $e');
+      return [];
     }
   }
 }

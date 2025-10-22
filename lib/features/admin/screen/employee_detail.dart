@@ -7,6 +7,7 @@ import 'package:workspace/core/components/app_button.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
 import 'package:workspace/core/components/app_network_image.dart';
 import 'package:workspace/features/admin/task/add_employee_task.dart';
+import 'package:workspace/features/admin/task/employee_task_list.dart';
 
 class EmployeeDetailPage extends StatefulWidget {
   const EmployeeDetailPage({super.key, required this.userModel});
@@ -112,7 +113,7 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
                 child: AdminButton(
                   text: 'See Tasks',
                   onTap: () {
-                    AppNavigator.push(context, AddEmployeeTaskPage(user: user));
+                    AppNavigator.push(context, EmployeeTaskList(user: user));
                   },
                 ),
               ),

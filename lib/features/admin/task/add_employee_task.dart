@@ -3,9 +3,9 @@ import 'package:workspace/core/helper/extention.dart';
 import 'package:workspace/core/components/app_bar.dart';
 import 'package:workspace/core/components/app_popup.dart';
 import 'package:workspace/core/components/app_button.dart';
+import 'package:workspace/core/service/app_validator.dart';
 import 'package:workspace/core/components/app_snack_bar.dart';
 import 'package:workspace/core/components/app_text_field.dart';
-import 'package:workspace/core/service/app_validator.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
 import 'package:workspace/core/components/item_selection_popup.dart';
 import 'package:workspace/features/admin/service/employee_task_service.dart';
@@ -87,10 +87,7 @@ class _AddEmployeeTaskPageState extends State<AddEmployeeTaskPage> {
                 SizedBox(height: 20),
                 Text('Comments (Optional)'),
                 SizedBox(height: 8),
-                AppTextField(
-                  controller: _comments,
-                  hintText: 'Enter comments',
-                ),
+                AppTextField(controller: _comments, hintText: 'Enter comments'),
                 SizedBox(height: 20),
                 Text('Due Date'),
                 SizedBox(height: 8),
