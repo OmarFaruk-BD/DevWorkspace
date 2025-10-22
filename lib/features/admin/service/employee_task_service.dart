@@ -6,45 +6,37 @@ class EmployeeTaskService {
   final Logger _logger = Logger();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  /// ✅ Create a new task document
   Future<Either<String, String>> createTask({
     required String assignedTo,
     required String title,
+    required String status,
     required String description,
     required String priority,
     required String taskType,
-    required String createdBy,
     required String client,
-    required String contract,
-    required String department,
     required String amount,
     required String dueDate,
-    String comments = '',
-    String attachments = '',
+    required String comments,
+    required String attachments,
   }) async {
     try {
       final Map<String, dynamic> taskData = {
-        'tasks': [
-          {
-            'title': title,
-            'description': description,
-            'priority': priority,
-            'taskType': taskType,
-            'comments': comments,
-            'attachments': attachments,
-            'createdAt': FieldValue.serverTimestamp(),
-            'updatedAt': FieldValue.serverTimestamp(),
-            'createdBy': createdBy,
-            'client': client,
-            'contract': contract,
-            'department': department,
-            'amount': amount,
-          },
-        ],
-        'assignedTo': assignedTo,
+        'status': status,
         'dueDate': dueDate,
-        'status': 'pending',
+        'assignedTo': assignedTo,
         'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+        'title': title,
+        'description': description,
+        'priority': priority,
+        'taskType': taskType,
+        'comments': comments,
+        'attachments': attachments,
+        'client': client,
+        'amount': amount,
       };
+      _logger.e(taskData);
 
       await _firestore.collection('tasks').add(taskData);
 
@@ -55,23 +47,64 @@ class EmployeeTaskService {
     }
   }
 
-  Future<Either<String, String>> addTaskToEmployee({
-    required String taskDocId,
-    required Map<String, dynamic> newTask,
+  /// ✏️ Edit (update) an existing task by its document ID
+  Future<Either<String, String>> editTask({
+    required String taskId,
+    required Map<String, dynamic> updatedFields,
   }) async {
     try {
-      newTask['createdAt'] = FieldValue.serverTimestamp();
-      newTask['updatedAt'] = FieldValue.serverTimestamp();
+      updatedFields['updatedAt'] = FieldValue.serverTimestamp();
+      _logger.e(updatedFields);
 
-      await _firestore.collection('tasks').doc(taskDocId).update({
-        'tasks': FieldValue.arrayUnion([newTask]),
-        'updatedAt': FieldValue.serverTimestamp(),
-      });
+      await _firestore.collection('tasks').doc(taskId).update(updatedFields);
 
-      return const Right('Task list updated successfully.');
+      return const Right('Task updated successfully.');
+    } on FirebaseException catch (e) {
+      _logger.e('Firebase error editing task: ${e.message}');
+      return Left('Failed to update task: ${e.message}');
     } catch (e) {
-      _logger.e('Error updating task list: $e');
-      return Left('Failed to update task list: $e');
+      _logger.e('Error editing task: $e');
+      return Left('Failed to edit task: $e');
+    }
+  }
+
+  /// 🗑️ Delete a task by its document ID
+  Future<Either<String, String>> deleteTask(String taskId) async {
+    try {
+      await _firestore.collection('tasks').doc(taskId).delete();
+      return const Right('Task deleted successfully.');
+    } on FirebaseException catch (e) {
+      _logger.e('Firebase error deleting task: ${e.message}');
+      return Left('Failed to delete task: ${e.message}');
+    } catch (e) {
+      _logger.e('Error deleting task: $e');
+      return Left('Failed to delete task: $e');
+    }
+  }
+
+  /// 📋 Get all tasks assigned to a specific employee
+  Future<Either<String, List<Map<String, dynamic>>>> getTasksByEmployee({
+    required String assignedTo,
+  }) async {
+    try {
+      final querySnapshot = await _firestore
+          .collection('tasks')
+          .where('assignedTo', isEqualTo: assignedTo)
+          .orderBy('createdAt', descending: true)
+          .get();
+
+      final tasks = querySnapshot.docs.map((doc) {
+        final data = doc.data();
+        return {'taskId': doc.id, ...data};
+      }).toList();
+
+      return Right(tasks);
+    } on FirebaseException catch (e) {
+      _logger.e('Firebase error fetching tasks: ${e.message}');
+      return Left('Failed to fetch tasks: ${e.message}');
+    } catch (e) {
+      _logger.e('Error fetching tasks: $e');
+      return Left('Failed to fetch tasks: $e');
     }
   }
 }
