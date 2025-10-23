@@ -32,41 +32,41 @@ class HomeService {
         'isPunchIn': isPunchIn,
         'createdAt': FieldValue.serverTimestamp(),
       };
-      _logger.e(payload);
+      // _logger.e(payload);
 
       await _firestore.collection('eAttendance').add(payload);
 
-      return const Right('Location created successfully.');
+      return const Right('Attendance created successfully.');
     } catch (e) {
       _logger.e('Error creating task: $e');
-      return Left('Failed to create location: $e');
+      return Left('Failed to create attendance: $e');
     }
   }
 
-  /// 📋 Get all assignLocation assigned to a specific employee
-  Future<List<Map<String, dynamic>>> getAssignLocationListByEmployee(
-    String assignedTo,
-  ) async {
-    try {
-      final querySnapshot = await _firestore
-          .collection('assignLocation')
-          .where('assignedTo', isEqualTo: assignedTo)
-          .get();
+  // /// 📋 Get all assignLocation assigned to a specific employee
+  // Future<List<Map<String, dynamic>>> getAssignLocationListByEmployee(
+  //   String assignedTo,
+  // ) async {
+  //   try {
+  //     final querySnapshot = await _firestore
+  //         .collection('assignLocation')
+  //         .where('assignedTo', isEqualTo: assignedTo)
+  //         .get();
 
-      final assignLocation = querySnapshot.docs.map((doc) {
-        final data = doc.data();
-        return {'taskId': doc.id, ...data};
-      }).toList();
+  //     final assignLocation = querySnapshot.docs.map((doc) {
+  //       final data = doc.data();
+  //       return {'taskId': doc.id, ...data};
+  //     }).toList();
 
-      return assignLocation;
-    } on FirebaseException catch (e) {
-      _logger.e('Firebase error fetching assignLocation: ${e.message}');
-      return [];
-    } catch (e) {
-      _logger.e('Error fetching assignLocation: $e');
-      return [];
-    }
-  }
+  //     return assignLocation;
+  //   } on FirebaseException catch (e) {
+  //     _logger.e('Firebase error fetching assignLocation: ${e.message}');
+  //     return [];
+  //   } catch (e) {
+  //     _logger.e('Error fetching assignLocation: $e');
+  //     return [];
+  //   }
+  // }
 
   Future<MyAreaModel?> getAssignLocationByEmployee(BuildContext context) async {
     try {
@@ -86,7 +86,7 @@ class HomeService {
         return null;
       } else {
         final data = assignLocation.last;
-        _logger.e(data);
+        // _logger.e(data);
 
         final myArea = MyAreaModel(
           longitude: data['long'],
@@ -95,7 +95,7 @@ class HomeService {
           start: data['start'],
           end: data['end'],
         );
-        _logger.e(myArea.toString());
+        // _logger.e(myArea.toString());
         return myArea;
       }
     } on FirebaseException catch (e) {

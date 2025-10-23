@@ -16,7 +16,9 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    context.read<HomeCubit>().updateMyArea(context);
+    context.read<HomeCubit>()
+      ..updateMyArea(context)
+      ..checkPunchIn(context);
   }
 
   @override

@@ -13,7 +13,6 @@ part 'home_state.dart';
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(HomeInitial()) {
     updateTime();
-    checkPunchIn();
   }
 
   final AttendanceService _attendanceService = AttendanceService();
@@ -42,8 +41,9 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
-  void checkPunchIn() async {
-    final attendanceDetail = await _attendanceService.getAttendanceDetails();
+  void checkPunchIn(BuildContext context) async {
+    final attendanceDetail = await _attendanceService
+        .getTodayAttendanceEmployee(context);
     if (attendanceDetail?.punchIn != null &&
         attendanceDetail?.punchOut == null) {
       punch(true);
