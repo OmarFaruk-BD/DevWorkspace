@@ -21,7 +21,7 @@ class _AttendanceDetailPageState extends State<AttendanceDetailPage> {
   @override
   void initState() {
     super.initState();
-    context.read<AttendanceCubit>().updateAttendanceDetails();
+    context.read<AttendanceCubit>().updateAttendanceDetails(context);
   }
 
   @override
@@ -36,24 +36,19 @@ class _AttendanceDetailPageState extends State<AttendanceDetailPage> {
           return ListView(
             padding: EdgeInsets.all(24),
             children: [
-              InkWell(
-                onTap: () {
-                  context.read<AttendanceCubit>().updateAttendanceOverview();
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 27),
-                  decoration: BoxDecoration(
-                    color: AppColors.green,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    '${DateTime.now().toDateString('dd MMMM yyyy')}\n${DateTime.now().toDateString('EEEE')}',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 24,
-                      color: AppColors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 27),
+                decoration: BoxDecoration(
+                  color: AppColors.green,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  '${DateTime.now().toDateString('dd MMMM yyyy')}\n${DateTime.now().toDateString('EEEE')}',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: AppColors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),

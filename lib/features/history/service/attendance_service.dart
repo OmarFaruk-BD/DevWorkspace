@@ -30,29 +30,27 @@ class AttendanceService {
       } else {
         final lastAttendance = attendanceList.last;
         final date = DateTime.tryParse(lastAttendance['date']);
-        if (date?.day == DateTime.now().day) {
-          if (lastAttendance['assignTo'] == assignedTo) {
-            final punchedIn = attendanceList.length.isEven;
-
-            final getLast = AttendanceDetailModel(
-              date: lastAttendance['date'],
-              day: lastAttendance['time'],
-              punchIn: lastAttendance['time'],
-              punchOut: punchedIn ? lastAttendance['time'] : null,
-              punchInLocation: lastAttendance['latitude'],
-              punchOutLocation: punchedIn ? lastAttendance['longitude'] : null,
-              dutyLocation: [
-                DutyLocation(
-                  latitude: lastAttendance['latitude'],
-                  longitude: lastAttendance['longitude'],
-                  address: lastAttendance['longitude'],
-                  time: lastAttendance['time'],
-                ),
-              ],
-            );
-            _logger.e('Last: ${getLast.toMap()}');
-            return getLast;
-          }
+        if (date?.day == DateTime.now().day &&
+            lastAttendance['assignTo'] == assignedTo) {
+          final punchedIn = attendanceList.length.isOdd;
+          final getLast = AttendanceDetailModel(
+            date: lastAttendance['date'],
+            day: lastAttendance['time'],
+            punchIn: lastAttendance['time'],
+            punchOut: punchedIn ? lastAttendance['time'] : null,
+            punchInLocation: lastAttendance['latitude'],
+            punchOutLocation: punchedIn ? lastAttendance['longitude'] : null,
+            dutyLocation: [
+              DutyLocation(
+                latitude: lastAttendance['latitude'],
+                longitude: lastAttendance['longitude'],
+                address: lastAttendance['longitude'],
+                time: lastAttendance['time'],
+              ),
+            ],
+          );
+          _logger.e('Last: ${getLast.toMap()}');
+          return getLast;
         }
         return null;
       }
@@ -62,21 +60,6 @@ class AttendanceService {
     } catch (e) {
       _logger.e('TodayAttendanceEmployee: $e');
       return null;
-    }
-  }
-
-  Future<void> getAttendanceOverview() async {
-    try {
-      final date = DateTime.now().toDateString('yyyy-MM-dd');
-      Map<String, dynamic> params = {'date': date};
-      final response = await ApiClient().get(
-        path: 'Endpoints.overview',
-        params: params,
-      );
-      Logger().e(params);
-      response.print();
-    } catch (e) {
-      Logger().e(e);
     }
   }
 

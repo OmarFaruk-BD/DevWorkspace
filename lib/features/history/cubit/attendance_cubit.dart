@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:workspace/features/history/service/attendance_service.dart';
 import 'package:workspace/features/history/model/attendance_detail_model.dart';
 import 'package:workspace/features/history/model/attendance_history_model.dart';
@@ -7,13 +8,11 @@ part 'attendance_state.dart';
 
 class AttendanceCubit extends Cubit<AttendanceState> {
   AttendanceCubit() : super(AttendanceInitial());
+  final AttendanceService _attendanceService = AttendanceService();
 
-  void updateAttendanceOverview() async {
-    await AttendanceService().getAttendanceOverview();
-  }
-
-  void updateAttendanceDetails() async {
-    final attendanceDetail = await AttendanceService().getAttendanceDetails();
+  void updateAttendanceDetails(BuildContext context) async {
+    final attendanceDetail = await _attendanceService
+        .getTodayAttendanceEmployee(context);
     emit(state.copyWith(attendanceDetail: attendanceDetail));
   }
 
