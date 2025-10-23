@@ -34,8 +34,12 @@ class HomeCubit extends Cubit<HomeState> {
   void updateMyArea(BuildContext context) async {
     final myAreaModel = await _homeService.getAssignLocationByEmployee(context);
     emit(state.copyWith(myArea: myAreaModel));
-    final address = await _locationService.getMyLocation();
-    emit(state.copyWith(address: address?.fullAddress));
+    final lat = double.tryParse(myAreaModel?.latitude ?? '');
+    final long = double.tryParse(myAreaModel?.longitude ?? '');
+    if (lat != null && long != null) {
+      final location = await _locationService.getLocationDetail(lat, long);
+      emit(state.copyWith(address: location?.fullAddress));
+    }
   }
 
   void checkPunchIn() async {

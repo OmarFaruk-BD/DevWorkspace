@@ -86,6 +86,7 @@ class HomeService {
         return null;
       } else {
         final data = assignLocation.last;
+        _logger.e(data);
 
         final myArea = MyAreaModel(
           longitude: data['long'],
@@ -94,6 +95,7 @@ class HomeService {
           start: data['start'],
           end: data['end'],
         );
+        _logger.e(myArea.toString());
         return myArea;
       }
     } on FirebaseException catch (e) {

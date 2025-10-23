@@ -7,7 +7,6 @@ import 'package:workspace/core/utils/app_styles.dart';
 import 'package:workspace/core/helper/navigation.dart';
 import 'package:workspace/core/components/app_text.dart';
 import 'package:workspace/features/auth/cubit/auth_cubit.dart';
-import 'package:workspace/core/components/app_network_image.dart';
 import 'package:workspace/features/home/screen/notification.dart';
 import 'package:workspace/features/home/screen/profile_page.dart';
 
@@ -33,14 +32,14 @@ class HeaderWidget extends StatelessWidget {
             child: Row(
               children: [
                 Container(
-                  width: 70,
-                  height: 70,
+                  width: 62,
+                  height: 62,
                   padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                     color: AppColors.white,
                     borderRadius: BorderRadius.circular(70),
                   ),
-                  child: AppCachedImage(state.user?.avatar, radius: 65),
+                  child: Icon(Icons.person, size: 40, color: AppColors.primary),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
