@@ -8,6 +8,8 @@ import 'package:workspace/features/auth/model/user_model.dart';
 import 'package:workspace/core/components/app_network_image.dart';
 import 'package:workspace/features/admin/task/add_employee_task.dart';
 import 'package:workspace/features/admin/task/employee_task_list.dart';
+import 'package:workspace/features/admin/attendance/employee_attendance.dart';
+import 'package:workspace/features/admin/attendance/employee_attendace_list.dart';
 
 class EmployeeDetailPage extends StatefulWidget {
   const EmployeeDetailPage({super.key, required this.userModel});
@@ -114,6 +116,36 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
                   text: 'See Tasks',
                   onTap: () {
                     AppNavigator.push(context, EmployeeTaskList(user: user));
+                  },
+                ),
+              ),
+              SizedBox(width: 20),
+            ],
+          ),
+          SizedBox(height: 20),
+          Row(
+            children: [
+              SizedBox(width: 20),
+              Expanded(
+                child: AdminButton(
+                  text: 'Assign Attendance',
+                  onTap: () {
+                    AppNavigator.push(
+                      context,
+                      AddEmployeeAttendancePage(user: user),
+                    );
+                  },
+                ),
+              ),
+              SizedBox(width: 20),
+              Expanded(
+                child: AdminButton(
+                  text: 'See Attendance',
+                  onTap: () {
+                    AppNavigator.push(
+                      context,
+                      EmployeeAttendaceList(user: user),
+                    );
                   },
                 ),
               ),
