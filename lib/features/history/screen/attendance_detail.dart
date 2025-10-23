@@ -5,10 +5,8 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:workspace/core/helper/extention.dart';
 import 'package:workspace/core/utils/app_colors.dart';
 import 'package:workspace/core/utils/app_images.dart';
-import 'package:workspace/core/helper/navigation.dart';
 import 'package:workspace/core/components/app_bar.dart';
 import 'package:workspace/features/home/cubit/home_cubit.dart';
-import 'package:workspace/features/home/screen/landing_page.dart';
 import 'package:workspace/features/history/cubit/attendance_cubit.dart';
 
 class AttendanceDetailPage extends StatefulWidget {
@@ -31,13 +29,7 @@ class _AttendanceDetailPageState extends State<AttendanceDetailPage> {
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Attendance Details',
-        onBackTap: () {
-          if (widget.isLanding) {
-            AppNavigator.push(context, LandingPage(index: 0));
-          } else {
-            Navigator.pop(context);
-          }
-        },
+        hasBackButton: !widget.isLanding,
       ),
       body: BlocBuilder<AttendanceCubit, AttendanceState>(
         builder: (context, state) {

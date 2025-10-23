@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:workspace/core/utils/app_colors.dart';
 import 'package:workspace/core/utils/app_images.dart';
-import 'package:workspace/core/helper/navigation.dart';
 import 'package:workspace/core/components/app_bar.dart';
 import 'package:workspace/core/components/app_text.dart';
 import 'package:workspace/core/components/app_button.dart';
@@ -12,7 +11,6 @@ import 'package:workspace/features/area/widget/info_row.dart';
 import 'package:workspace/features/home/cubit/home_cubit.dart';
 import 'package:workspace/core/service/permission_service.dart';
 import 'package:workspace/features/area/screen/map_widget.dart';
-import 'package:workspace/features/home/screen/landing_page.dart';
 import 'package:workspace/features/home/widget/duty_location.dart';
 import 'package:workspace/features/home/widget/punch_bottom_sheet.dart';
 
@@ -27,12 +25,7 @@ class _AreaPageState extends State<AreaPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        title: 'Area',
-        onBackTap: () {
-          AppNavigator.push(context, LandingPage(index: 0));
-        },
-      ),
+      appBar: CustomAppBar(title: 'Area', hasBackButton: false),
       body: BlocBuilder<HomeCubit, HomeState>(
         builder: (context, state) {
           return Column(
