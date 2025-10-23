@@ -1,13 +1,21 @@
-import 'dart:convert';
-
 class MyAreaModel {
   final int? id;
   final DateTime? date;
   final String? latitude;
   final String? longitude;
   final String? radius;
+  final String? start;
+  final String? end;
 
-  MyAreaModel({this.id, this.date, this.latitude, this.longitude, this.radius});
+  MyAreaModel({
+    this.id,
+    this.date,
+    this.latitude,
+    this.longitude,
+    this.radius,
+    this.start,
+    this.end,
+  });
 
   MyAreaModel copyWith({
     int? id,
@@ -23,25 +31,8 @@ class MyAreaModel {
     radius: radius ?? this.radius,
   );
 
-  factory MyAreaModel.fromJson(String str) =>
-      MyAreaModel.fromMap(json.decode(str));
-
-  String toJson() => json.encode(toMap());
-
-  factory MyAreaModel.fromMap(Map<String, dynamic> json) => MyAreaModel(
-    id: json["id"],
-    date: json["date"] == null ? null : DateTime.parse(json["date"]),
-    latitude: json["latitude"],
-    longitude: json["longitude"],
-    radius: json["radius"],
-  );
-
-  Map<String, dynamic> toMap() => {
-    "id": id,
-    "date":
-        "${date!.year.toString().padLeft(4, '0')}-${date!.month.toString().padLeft(2, '0')}-${date!.day.toString().padLeft(2, '0')}",
-    "latitude": latitude,
-    "longitude": longitude,
-    "radius": radius,
-  };
+  @override
+  String toString() {
+    return 'MyAreaModel(id: $id, date: $date, latitude: $latitude, longitude: $longitude, radius: $radius, start: $start, end: $end)';
+  }
 }

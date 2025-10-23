@@ -43,18 +43,6 @@ class HomeService {
     }
   }
 
-  Future<MyAreaModel?> getMyArea(BuildContext context) async {
-    final user = context.read<AuthCubit>().state.user;
-    final data = await getAssignLocationByEmployee(user?.id ?? '');
-    final myArea = MyAreaModel(
-      date: DateTime.now(),
-      latitude: data['latitude'],
-      longitude: data['latitude'],
-      radius: data['latitude'],
-    );
-    return myArea;
-  }
-
   /// 📋 Get all assignLocation assigned to a specific employee
   Future<List<Map<String, dynamic>>> getAssignLocationListByEmployee(
     String assignedTo,
@@ -80,10 +68,11 @@ class HomeService {
     }
   }
 
-  Future<Map<String, dynamic>> getAssignLocationByEmployee(
-    String assignedTo,
-  ) async {
+  Future<MyAreaModel?> getAssignLocationByEmployee(BuildContext context) async {
     try {
+      final user = context.read<AuthCubit>().state.user;
+      final assignedTo = user?.id ?? '';
+
       final querySnapshot = await _firestore
           .collection('assignLocation')
           .where('assignedTo', isEqualTo: assignedTo)
@@ -94,16 +83,25 @@ class HomeService {
         return {'taskId': doc.id, ...data};
       }).toList();
       if (assignLocation.isEmpty) {
-        return {};
+        return null;
       } else {
-        return assignLocation.last;
+        final data = assignLocation.last;
+
+        final myArea = MyAreaModel(
+          longitude: data['long'],
+          radius: data['radius'],
+          latitude: data['lat'],
+          start: data['start'],
+          end: data['end'],
+        );
+        return myArea;
       }
     } on FirebaseException catch (e) {
       _logger.e('Firebase error fetching assignLocation: ${e.message}');
-      return {};
+      return null;
     } catch (e) {
       _logger.e('Error fetching assignLocation: $e');
-      return {};
+      return null;
     }
   }
 }

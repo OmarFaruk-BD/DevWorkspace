@@ -124,7 +124,7 @@ class _AddEmployeeAttendancePageState extends State<AddEmployeeAttendancePage> {
               ),
               SizedBox(height: 30),
               AppButton(
-                text: 'Assign Task',
+                text: 'Assign Location',
                 isLoading: _isLoading,
                 width: double.maxFinite,
                 onTap: _createTask,
