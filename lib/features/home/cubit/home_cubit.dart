@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:workspace/core/helper/extention.dart';
 import 'package:workspace/features/area/model/my_area_model.dart';
 import 'package:workspace/features/home/service/home_service.dart';
@@ -12,7 +13,6 @@ class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(HomeInitial()) {
     updateTime();
     _checkPunchIn();
-    updateMyArea();
   }
 
   void updateTime() {
@@ -26,8 +26,8 @@ class HomeCubit extends Cubit<HomeState> {
     });
   }
 
-  void updateMyArea() async {
-    final myAreaModel = await HomeService().getMyArea();
+  void updateMyArea(BuildContext context) async {
+    final myAreaModel = await HomeService().getMyArea(context);
     emit(state.copyWith(myArea: myAreaModel));
     // final address = await LocationService().getMyLocation();
     // emit(state.copyWith(address: address?.fullAddress));
@@ -43,6 +43,5 @@ class HomeCubit extends Cubit<HomeState> {
 
   void punch(bool isPunchIn) {
     emit(state.copyWith(punchedIn: isPunchIn));
-    updateMyArea();
   }
 }

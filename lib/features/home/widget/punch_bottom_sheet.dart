@@ -7,6 +7,7 @@ import 'package:workspace/core/utils/app_images.dart';
 import 'package:workspace/core/components/app_text.dart';
 import 'package:workspace/core/components/app_snack_bar.dart';
 import 'package:workspace/core/service/location_service.dart';
+import 'package:workspace/features/auth/cubit/auth_cubit.dart';
 import 'package:workspace/features/home/cubit/home_cubit.dart';
 import 'package:workspace/features/home/service/home_service.dart';
 
@@ -33,7 +34,11 @@ class BottomSheetWidget extends StatelessWidget {
               boxShadow: const [],
               icon: SvgPicture.asset(AppImages.arrow),
               action: (controller) {
-                _punch(state: state, context: context, controller: controller);
+                _createAttendance(
+                  state: state,
+                  context: context,
+                  controller: controller,
+                );
               },
               child: Center(
                 child: CommonText(
@@ -51,19 +56,26 @@ class BottomSheetWidget extends StatelessWidget {
     );
   }
 
-  void _punch({
+  void _createAttendance({
     required HomeState state,
     required BuildContext context,
     required ActionSliderController controller,
   }) async {
+    final location = await LocationService().getMyLocation();
+    if (!context.mounted) return;
+    final user = context.read<AuthCubit>().state.user;
+    if (location?.latitude == null || location?.longitude == null) {
+      AppSnackBar.show(context, 'Please enable location service');
+      return;
+    }
     controller.loading();
     final isPunchIn = state.punchedIn ?? false;
-    final location = await LocationService().getMyLocation();
-    final result = await HomeService().punchIn(
+    final result = await HomeService().createAttendance(
       isPunchIn: isPunchIn,
-      address: location?.fullAddress,
-      latitude: location?.latitude?.toString(),
-      longitude: location?.longitude?.toString(),
+      assignTo: user?.id ?? '',
+      address: location?.fullAddress ?? '',
+      latitude: location?.latitude?.toString() ?? '',
+      longitude: location?.longitude?.toString() ?? '',
     );
     result.fold(
       (l) {
