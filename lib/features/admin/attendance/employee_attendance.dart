@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:workspace/core/components/app_bar.dart';
 import 'package:workspace/core/components/app_button.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:workspace/core/components/app_snack_bar.dart';
+import 'package:workspace/core/service/location_service.dart';
 import 'package:workspace/core/components/app_text_field.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
+import 'package:workspace/features/admin/widget/pick_location.dart';
 import 'package:workspace/features/admin/service/e_attendance_service.dart';
 
 class AddEmployeeAttendancePage extends StatefulWidget {
@@ -18,11 +21,13 @@ class AddEmployeeAttendancePage extends StatefulWidget {
 class _AddEmployeeAttendancePageState extends State<AddEmployeeAttendancePage> {
   final EAssignLocationService _eAssignLocation = EAssignLocationService();
   final TextEditingController _radius = TextEditingController();
+  final LocationService _locationService = LocationService();
   TimeOfDay _startTime = TimeOfDay(hour: 09, minute: 00);
   TimeOfDay _endTime = TimeOfDay(hour: 16, minute: 00);
   bool _isLoading = false;
-  String? _lat;
+  String? _address;
   String? _long;
+  String? _lat;
 
   @override
   void initState() {
@@ -85,9 +90,30 @@ class _AddEmployeeAttendancePageState extends State<AddEmployeeAttendancePage> {
                 readOnly: true,
                 hintText: 'Assign Location',
                 controller: TextEditingController(
-                  text: _lat == null ? null : '${_lat ?? ''}, ${_long ?? ''}',
+                  text: _lat == null
+                      ? null
+                      : 'Lat: ${_lat ?? ''}, Lng: ${_long ?? ''}',
                 ),
+                onTap: () async {
+                  final LatLng? picked = await showDialog<LatLng>(
+                    context: context,
+                    builder: (context) => const PickLocationDialog(),
+                  );
+                  if (picked != null) {
+                    _lat = picked.latitude.toStringAsFixed(4);
+                    _long = picked.longitude.toStringAsFixed(4);
+                    setState(() {});
+                    final data = await _locationService.getLocationDetail(
+                      picked.latitude,
+                      picked.longitude,
+                    );
+                    _address = data?.fullAddress;
+                    setState(() {});
+                  }
+                },
               ),
+              if (_address != null) SizedBox(height: 8),
+              if (_address != null) Text(_address ?? ''),
               SizedBox(height: 20),
               Text('Assign Radius (in KM)'),
               SizedBox(height: 8),

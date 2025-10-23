@@ -51,6 +51,43 @@ class LocationService {
       return null;
     }
   }
+
+  Future<MyLocationModel?> getLocationDetail(
+    double latitude,
+    double longitude,
+  ) async {
+    try {
+      List<Placemark> newPlace = await placemarkFromCoordinates(
+        latitude,
+        longitude,
+      );
+      if (newPlace.isNotEmpty) {
+        Placemark placeMark = newPlace.first;
+        final myLocationModel = MyLocationModel(
+          latitude: latitude,
+          longitude: longitude,
+          name: placeMark.name,
+          street: placeMark.street,
+          isoCountryCode: placeMark.isoCountryCode,
+          country: placeMark.country,
+          postalCode: placeMark.postalCode,
+          administrativeArea: placeMark.administrativeArea,
+          subAdministrativeArea: placeMark.subAdministrativeArea,
+          locality: placeMark.locality,
+          subLocality: placeMark.subLocality,
+          thoroughfare: placeMark.thoroughfare,
+          subThoroughfare: placeMark.subThoroughfare,
+        );
+        return myLocationModel;
+      } else {
+        _logger.e('Failed to get location');
+        return null;
+      }
+    } catch (e) {
+      _logger.e('Error occurred while getting location: $e');
+      return null;
+    }
+  }
 }
 
 class MyLocationModel {
