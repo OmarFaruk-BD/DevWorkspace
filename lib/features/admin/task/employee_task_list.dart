@@ -30,7 +30,7 @@ class _EmployeeTaskListState extends State<EmployeeTaskList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AdminAppBar(title: 'Employee List'),
+      appBar: AdminAppBar(title: 'Task List'),
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: fetchEmployeeTask,
@@ -70,45 +70,20 @@ class TaskItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 4),
-            Row(
-              children: [
-                _buildItem(Icons.business_center, '${task['title']}'),
-                _buildItem(Icons.public_outlined, '${task['title']}'),
-              ],
-            ),
+            if (task['description'] != null) Text(task['description'] ?? ''),
             SizedBox(height: 4),
-            Row(
-              children: [
-                _buildItem(Icons.email_outlined, '${task['title']}'),
-                _buildItem(Icons.phone_android_outlined, '${task['title']}'),
-              ],
-            ),
+            if (task['priority'] != null)
+              Text('Priority: ${task['priority'] ?? ''}'),
             SizedBox(height: 4),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(onPressed: () {}, child: Text('Add Task')),
-                ElevatedButton(onPressed: () {}, child: Text('Live Location')),
-              ],
-            ),
+            Text('Task Type: ${task['taskType'] ?? ''}'),
+            SizedBox(height: 4),
+            if (task['client'] != null) Text('Client: ${task['client'] ?? ''}'),
+            if (task['client'] != null) SizedBox(height: 4),
+            if (task['amount'] != null)
+              Text('Amount: ${task['amount'] ?? ''} BDT'),
+            if (task['amount'] != null) SizedBox(height: 4),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildItem(IconData key, String value) {
-    return Expanded(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Icon(key, size: 18),
-          SizedBox(width: 6),
-          Text(
-            value,
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
-          ),
-        ],
       ),
     );
   }

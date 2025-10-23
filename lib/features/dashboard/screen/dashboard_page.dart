@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:workspace/core/utils/app_colors.dart';
-import 'package:workspace/core/helper/navigation.dart';
 import 'package:workspace/core/utils/app_images.dart';
-import 'package:workspace/features/dashboard/screen/leave_approval.dart';
-import 'package:workspace/features/dashboard/screen/leave_request.dart';
-import 'package:workspace/features/dashboard/widget/time_widget.dart';
-import 'package:workspace/features/history/screen/attendance_detail.dart';
-import 'package:workspace/features/history/screen/attendance_history.dart';
+import 'package:workspace/core/helper/navigation.dart';
 import 'package:workspace/features/home/widget/header.dart';
+import 'package:workspace/features/auth/cubit/auth_cubit.dart';
+import 'package:workspace/features/dashboard/widget/time_widget.dart';
+import 'package:workspace/features/admin/task/employee_task_list.dart';
+import 'package:workspace/features/dashboard/screen/leave_request.dart';
+import 'package:workspace/features/dashboard/screen/leave_approval.dart';
+import 'package:workspace/features/history/screen/attendance_history.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -20,61 +22,68 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            padding: EdgeInsets.all(20),
-            child: Column(
-              children: [
-                SizedBox(height: MediaQuery.of(context).size.height * 0.55),
-                Row(
+    return BlocBuilder<AuthCubit, AuthState>(
+      builder: (context, state) {
+        return Scaffold(
+          body: Stack(
+            children: [
+              SingleChildScrollView(
+                padding: EdgeInsets.all(20),
+                child: Column(
                   children: [
-                    DashboardItem(
-                      text: 'Today\'s\nOverview',
-                      icon: AppImages.overview,
-                      onTap:
-                          () => AppNavigator.push(
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.55),
+                    Row(
+                      children: [
+                        DashboardItem(
+                          text: 'Tasks\nOverview',
+                          icon: AppImages.overview,
+                          onTap: () => AppNavigator.push(
                             context,
-                            AttendanceDetailPage(isLanding: false),
+                            EmployeeTaskList(user: state.user),
                           ),
-                    ),
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.1),
-                    DashboardItem(
-                      text: 'Attendance\nHistory',
-                      icon: AppImages.overview_2,
-                      onTap:
-                          () => AppNavigator.push(
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.1,
+                        ),
+                        DashboardItem(
+                          text: 'Attendance\nHistory',
+                          icon: AppImages.overview_2,
+                          onTap: () => AppNavigator.push(
                             context,
                             AttendanceHistoryPage(),
                           ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 25),
+                    Row(
+                      children: [
+                        DashboardItem(
+                          text: 'Leave\nRequest',
+                          icon: AppImages.overview_2,
+                          onTap: () =>
+                              AppNavigator.push(context, LeaveRequestPage()),
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.1,
+                        ),
+                        DashboardItem(
+                          text: 'Leave\nApproval',
+                          icon: AppImages.overview_2,
+                          onTap: () =>
+                              AppNavigator.push(context, LeaveApproval()),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-                SizedBox(height: 25),
-                Row(
-                  children: [
-                    DashboardItem(
-                      text: 'Leave\nRequest',
-                      icon: AppImages.overview_2,
-                      onTap:
-                          () => AppNavigator.push(context, LeaveRequestPage()),
-                    ),
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.1),
-                    DashboardItem(
-                      text: 'Leave\nApproval',
-                      icon: AppImages.overview_2,
-                      onTap: () => AppNavigator.push(context, LeaveApproval()),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+              ),
+              HeaderWidget(),
+              TimeWidget(),
+            ],
           ),
-          HeaderWidget(),
-          TimeWidget(),
-        ],
-      ),
+        );
+      },
     );
   }
 }
