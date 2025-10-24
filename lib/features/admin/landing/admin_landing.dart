@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:workspace/core/utils/app_colors.dart';
 import 'package:workspace/features/admin/landing/admin_home.dart';
+import 'package:workspace/features/admin/screen/employe_list.dart';
 import 'package:workspace/features/admin/landing/admin_message.dart';
-import 'package:workspace/features/admin/landing/admin_employee.dart';
 import 'package:workspace/features/admin/landing/admin_dashboard.dart';
 
 class AdminLandingPage extends StatefulWidget {
@@ -18,7 +18,7 @@ class _AdminLandingPageState extends State<AdminLandingPage> {
 
   static const List<Widget> _screens = <Widget>[
     AdminHomePage(),
-    AdminEmployeePage(),
+    EmployeeListPage(),
     AdminMessagePage(),
     AdminDashboardPage(),
   ];

@@ -32,13 +32,16 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
           SizedBox(height: 20),
           AppButton(
             text: 'Employee List',
-            onTap: () => AppNavigator.push(context, EmployeeList()),
+            onTap: () =>
+                AppNavigator.push(context, EmployeeListPage()),
           ),
           SizedBox(height: 20),
           AppButton(
             text: 'Manager List',
-            onTap: () =>
-                AppNavigator.push(context, EmployeeList(role: 'admin')),
+            onTap: () => AppNavigator.push(
+              context,
+              EmployeeListPage(role: 'admin'),
+            ),
           ),
           SizedBox(height: 20),
           AppButton(text: 'Area Management', onTap: () {}),

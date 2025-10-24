@@ -6,15 +6,15 @@ import 'package:workspace/features/admin/task/add_employee_task.dart';
 import 'package:workspace/features/admin/screen/employee_detail.dart';
 import 'package:workspace/features/admin/service/employee_service.dart';
 
-class EmployeeList extends StatefulWidget {
-  const EmployeeList({super.key, this.role = 'employee'});
+class EmployeeListPage extends StatefulWidget {
+  const EmployeeListPage({super.key, this.role = 'employee'});
   final String role;
 
   @override
-  State<EmployeeList> createState() => _EmployeeListState();
+  State<EmployeeListPage> createState() => _EmployeeListPageState();
 }
 
-class _EmployeeListState extends State<EmployeeList> {
+class _EmployeeListPageState extends State<EmployeeListPage> {
   final EmployeeService _employeeService = EmployeeService();
   List<UserModel> employees = [];
   bool isLoading = true;
