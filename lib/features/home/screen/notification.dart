@@ -18,6 +18,7 @@ class NotificationPage extends StatefulWidget {
 class _NotificationPageState extends State<NotificationPage> {
   final EmployeeNotificationService _service = EmployeeNotificationService();
   List<NotificationModel> notifications = [];
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -26,9 +27,10 @@ class _NotificationPageState extends State<NotificationPage> {
   }
 
   void getNtifications() async {
+    setState(() => isLoading = true);
     final user = context.read<AuthCubit>().state.user;
     notifications = await _service.getnotificationByEmployee(user?.id ?? '');
-    setState(() {});
+    setState(() => isLoading = false);
   }
 
   @override
@@ -41,6 +43,7 @@ class _NotificationPageState extends State<NotificationPage> {
       body: ListView(
         padding: EdgeInsets.all(24),
         children: [
+          if (isLoading) const Center(child: CircularProgressIndicator()),
           ...List.generate(notifications.length, (index) {
             return NotificationItem(data: notifications[index]);
           }),
