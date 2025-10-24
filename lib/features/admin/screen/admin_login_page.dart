@@ -34,59 +34,61 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        body: Form(
-          key: _formKey,
-          child: ListView(
-            padding: const EdgeInsets.all(24),
-            children: [
-              SizedBox(height: MediaQuery.of(context).padding.top + 40),
-              const Text(
-                'Work Sync',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 50,
-                  color: AppColors.primary,
-                  fontWeight: FontWeight.bold,
+        body: SafeArea(
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              padding: const EdgeInsets.all(24),
+              children: [
+                SizedBox(height: MediaQuery.of(context).padding.top + 40),
+                const Text(
+                  'Work Sync',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 50,
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 15),
-              const Text(
-                'Please login to continue',
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 50),
-              Text(context.tr('email_phone'), style: AppStyles.mediumGrey),
-              const SizedBox(height: 12),
-              AppTextField(
-                controller: _emailTEC,
-                hintText: context.tr('email_phone'),
-                validator: _validator.validateEmail,
-              ),
-              const SizedBox(height: 24),
-              Text(context.tr('password'), style: AppStyles.mediumGrey),
-              const SizedBox(height: 12),
-              AppTextField(
-                maxLine: 1,
-                controller: _passwordTEC,
-                obscureText: obscureText,
-                hintText: context.tr('password'),
-                validator: _validator.validatePassword,
-                suffixIcon: TextFieldIcon(
-                  icon: obscureText
-                      ? Icons.visibility_outlined
-                      : Icons.visibility_off_outlined,
-                  onTap: () => setState(() => obscureText = !obscureText),
+                const SizedBox(height: 15),
+                const Text(
+                  'Please login to continue',
+                  textAlign: TextAlign.center,
                 ),
-              ),
+                const SizedBox(height: 50),
+                Text(context.tr('email_phone'), style: AppStyles.mediumGrey),
+                const SizedBox(height: 12),
+                AppTextField(
+                  controller: _emailTEC,
+                  hintText: context.tr('email_phone'),
+                  validator: _validator.validateEmail,
+                ),
+                const SizedBox(height: 24),
+                Text(context.tr('password'), style: AppStyles.mediumGrey),
+                const SizedBox(height: 12),
+                AppTextField(
+                  maxLine: 1,
+                  controller: _passwordTEC,
+                  obscureText: obscureText,
+                  hintText: context.tr('password'),
+                  validator: _validator.validatePassword,
+                  suffixIcon: TextFieldIcon(
+                    icon: obscureText
+                        ? Icons.visibility_outlined
+                        : Icons.visibility_off_outlined,
+                    onTap: () => setState(() => obscureText = !obscureText),
+                  ),
+                ),
 
-              const SizedBox(height: 30),
-              AppButton(
-                isLoading: isLoading,
-                text: context.tr('sign_in'),
-                onTap: _userLogin,
-              ),
-              const SizedBox(height: 40),
-            ],
+                const SizedBox(height: 30),
+                AppButton(
+                  isLoading: isLoading,
+                  text: context.tr('sign_in'),
+                  onTap: _userLogin,
+                ),
+                const SizedBox(height: 40),
+              ],
+            ),
           ),
         ),
       ),

@@ -32,9 +32,6 @@ class _ProfilePageState extends State<ProfilePage> {
   void _getProfile() async {
     userModel = context.read<AuthCubit>().state.user;
     setState(() {});
-    final user2 = await AuthService().getUserProfile();
-    userModel = user2;
-    setState(() {});
   }
 
   @override
