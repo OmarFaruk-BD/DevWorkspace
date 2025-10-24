@@ -30,12 +30,11 @@ class Data {
   String toJson() => json.encode(toMap());
 
   factory Data.fromMap(Map<String, dynamic> json) => Data(
-    data:
-        json["data"] == null
-            ? []
-            : List<NotificationModel>.from(
-              json["data"]!.map((x) => NotificationModel.fromMap(x)),
-            ),
+    data: json["data"] == null
+        ? []
+        : List<NotificationModel>.from(
+            json["data"]!.map((x) => NotificationModel.fromMap(x)),
+          ),
   );
 
   Map<String, dynamic> toMap() => {
@@ -44,31 +43,31 @@ class Data {
 }
 
 class NotificationModel {
-  final String? id;
+  final String? comments;
   final String? title;
   final String? content;
-  final String? image;
+  final String? priority;
   final String? createdAt;
 
   NotificationModel({
-    this.id,
+    this.comments,
     this.title,
     this.content,
-    this.image,
+    this.priority,
     this.createdAt,
   });
 
   NotificationModel copyWith({
-    String? id,
+    String? comments,
     String? title,
     String? content,
-    String? image,
+    String? priority,
     String? createdAt,
   }) => NotificationModel(
-    id: id ?? this.id,
+    comments: comments ?? this.comments,
     title: title ?? this.title,
     content: content ?? this.content,
-    image: image ?? this.image,
+    priority: priority ?? this.priority,
     createdAt: createdAt ?? this.createdAt,
   );
 
@@ -79,18 +78,18 @@ class NotificationModel {
 
   factory NotificationModel.fromMap(Map<String, dynamic> json) =>
       NotificationModel(
-        id: json["id"],
+        comments: json["id"],
         title: json["title"],
         content: json["content"],
-        image: json["image"],
+        priority: json["image"],
         createdAt: json["created_at"],
       );
 
   Map<String, dynamic> toMap() => {
-    "id": id,
+    "id": comments,
     "title": title,
     "content": content,
-    "image": image,
+    "image": priority,
     "created_at": createdAt,
   };
 }

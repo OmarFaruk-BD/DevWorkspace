@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:workspace/core/helper/navigation.dart';
 import 'package:workspace/core/components/app_bar.dart';
-import 'package:workspace/core/components/app_network_image.dart';
+import 'package:workspace/core/components/app_button.dart';
+import 'package:workspace/features/auth/cubit/auth_cubit.dart';
 import 'package:workspace/features/home/model/notification_model.dart';
 import 'package:workspace/features/home/screen/notification_detail.dart';
-import 'package:workspace/features/home/service/notification_service.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:workspace/features/admin/service/notification_service.dart';
 
 class NotificationPage extends StatefulWidget {
   const NotificationPage({super.key});
@@ -16,38 +16,19 @@ class NotificationPage extends StatefulWidget {
 }
 
 class _NotificationPageState extends State<NotificationPage> {
-  final PagingController<int, NotificationModel> _pagingController =
-      PagingController(firstPageKey: 0);
-  final int perPage = 10;
+  final EmployeeNotificationService _service = EmployeeNotificationService();
+  List<NotificationModel> notifications = [];
 
   @override
   void initState() {
     super.initState();
-    _pagingController.addPageRequestListener(_fetchPage);
+    getNtifications();
   }
 
-  @override
-  void dispose() {
-    _pagingController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _fetchPage(int pageKey) async {
-    try {
-      final newItems = await NotificationService().getNotificationList(
-        page: pageKey,
-        perPage: perPage,
-      );
-      final isLastPage = newItems.length < perPage;
-      if (isLastPage) {
-        _pagingController.appendLastPage(newItems);
-      } else {
-        final nextPageKey = pageKey + newItems.length;
-        _pagingController.appendPage(newItems, nextPageKey);
-      }
-    } catch (error) {
-      _pagingController.error = error;
-    }
+  void getNtifications() async {
+    final user = context.read<AuthCubit>().state.user;
+    notifications = await _service.getnotificationByEmployee(user?.id ?? '');
+    setState(() {});
   }
 
   @override
@@ -57,12 +38,13 @@ class _NotificationPageState extends State<NotificationPage> {
         title: 'Notifications',
         onBackTap: () => Navigator.pop(context),
       ),
-      body: PagedListView(
-        padding: EdgeInsets.all(20),
-        pagingController: _pagingController,
-        builderDelegate: PagedChildBuilderDelegate<NotificationModel>(
-          itemBuilder: (context, item, index) => NotificationItem(data: item),
-        ),
+      body: ListView(
+        padding: EdgeInsets.all(24),
+        children: [
+          ...List.generate(notifications.length, (index) {
+            return NotificationItem(data: notifications[index]);
+          }),
+        ],
       ),
     );
   }
@@ -95,16 +77,7 @@ class NotificationItem extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: AppCachedImage(data.image),
-              ),
-              const SizedBox(width: 20),
+              const SizedBox(width: 5),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,6 +99,13 @@ class NotificationItem extends StatelessWidget {
                     ),
                   ],
                 ),
+              ),
+              AppButton(
+                text: data.priority ?? '',
+                radius: 20,
+                vPadding: 6,
+                textSize: 12,
+                hPadding: 10,
               ),
             ],
           ),

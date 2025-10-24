@@ -24,7 +24,7 @@ class _NotificationDetailState extends State<NotificationDetail> {
 
   void _getDeatails() async {
     final getData = await NotificationService().getNotificationDetail(
-      widget.model.id,
+      widget.model.comments,
     );
     if (getData != null) setState(() => model = getData);
   }
@@ -45,7 +45,7 @@ class _NotificationDetailState extends State<NotificationDetail> {
           ),
           SizedBox(height: 20),
           AppCachedImage(
-            model.image ?? '',
+            model.priority ?? '',
             radius: 8,
             fit: BoxFit.fitWidth,
             width: MediaQuery.of(context).size.width,

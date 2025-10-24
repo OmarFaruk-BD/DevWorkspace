@@ -1,6 +1,7 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:logger/logger.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:workspace/features/home/model/notification_model.dart';
 
 class EmployeeNotificationService {
   final Logger _logger = Logger();
@@ -76,7 +77,7 @@ class EmployeeNotificationService {
   }
 
   /// 📋 Get all notification assigned to a specific employee
-  Future<List<Map<String, dynamic>>> getnotificationByEmployee(
+  Future<List<NotificationModel>> getnotificationByEmployee(
     String assignedTo,
   ) async {
     try {
@@ -87,7 +88,14 @@ class EmployeeNotificationService {
           .get();
 
       final notification = querySnapshot.docs.map((doc) {
-        return doc.data();
+        final data = doc.data();
+        return NotificationModel(
+          title: data['title'],
+          createdAt: data['date'],
+          comments: data['comments'],
+          priority: data['priority'],
+          content: data['description'],
+        );
       }).toList();
 
       return notification;
