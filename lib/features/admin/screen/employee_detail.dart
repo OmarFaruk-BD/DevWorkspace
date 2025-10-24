@@ -4,12 +4,13 @@ import 'package:workspace/core/utils/app_images.dart';
 import 'package:workspace/core/helper/navigation.dart';
 import 'package:workspace/core/components/app_bar.dart';
 import 'package:workspace/core/components/app_button.dart';
+import 'package:workspace/core/components/app_snack_bar.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
 import 'package:workspace/core/components/app_network_image.dart';
 import 'package:workspace/features/admin/task/add_employee_task.dart';
 import 'package:workspace/features/admin/task/employee_task_list.dart';
+import 'package:workspace/features/admin/task/add_employee_notification.dart';
 import 'package:workspace/features/admin/attendance/employee_attendance.dart';
-import 'package:workspace/features/admin/attendance/employee_attendace_list.dart';
 
 class EmployeeDetailPage extends StatefulWidget {
   const EmployeeDetailPage({super.key, required this.userModel});
@@ -142,10 +143,11 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
                 child: AdminButton(
                   text: 'See Attendance',
                   onTap: () {
-                    AppNavigator.push(
-                      context,
-                      EmployeeAttendaceList(user: user),
-                    );
+                    AppSnackBar.show(context, 'Coming soon');
+                    // AppNavigator.push(
+                    //   context,
+                    //   EmployeeAttendaceList(user: user),
+                    // );
                   },
                 ),
               ),
@@ -160,7 +162,10 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
                 child: AdminButton(
                   text: 'Send Message',
                   onTap: () {
-                    AppNavigator.push(context, AddEmployeeTaskPage(user: user));
+                    AppNavigator.push(
+                      context,
+                      EmployeeAddNotificationPage(user: user),
+                    );
                   },
                 ),
               ),
@@ -169,7 +174,7 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
                 child: AdminButton(
                   text: 'See Messages',
                   onTap: () {
-                    AppNavigator.push(context, AddEmployeeTaskPage(user: user));
+                    AppSnackBar.show(context, 'Coming soon');
                   },
                 ),
               ),
