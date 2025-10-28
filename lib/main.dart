@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:workspace/map/map_page.dart';
+import 'package:workspace/map/init_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:workspace/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
         locale: context.locale,
         debugShowCheckedModeBanner: false,
         theme: AppTheme.themeDataLight,
-        home: MapInitPage(),
+        home: InitPage(),
       ),
     );
   }

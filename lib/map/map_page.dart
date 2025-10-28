@@ -1,48 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:workspace/core/helper/navigation.dart';
-import 'package:workspace/core/components/app_button.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 
-class MapInitPage extends StatefulWidget {
-  const MapInitPage({super.key});
+class MapPage extends StatefulWidget {
+  const MapPage({super.key});
 
   @override
-  State<MapInitPage> createState() => _MapInitPageState();
+  State<MapPage> createState() => _MapPageState();
 }
 
-class _MapInitPageState extends State<MapInitPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("OSM Flutter")),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
-        children: [
-          AppButton(
-            radius: 50,
-            text: 'Go To Map Page',
-            onTap: () => AppNavigator.push(context, const RouteMapPage()),
-          ),
-          const SizedBox(height: 20),
-          AppButton(
-            radius: 50,
-            text: 'Go To Route Map Page',
-            onTap: () => AppNavigator.push(context, const RouteMapPage()),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class RouteMapPage extends StatefulWidget {
-  const RouteMapPage({super.key});
-
-  @override
-  State<RouteMapPage> createState() => _RouteMapPageState();
-}
-
-class _RouteMapPageState extends State<RouteMapPage> {
+class _MapPageState extends State<MapPage> {
   late MapController controller;
 
   final GeoPoint dhaka = GeoPoint(latitude: 23.8041, longitude: 90.4152);
