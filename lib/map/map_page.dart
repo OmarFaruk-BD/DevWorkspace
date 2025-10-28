@@ -2,52 +2,50 @@ import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 
 class MapPage extends StatefulWidget {
-  const MapPage({super.key});
+  const MapPage({super.key, required this.startPoint, required this.endPoint});
+  final GeoPoint startPoint;
+  final GeoPoint endPoint;
 
   @override
   State<MapPage> createState() => _MapPageState();
 }
 
 class _MapPageState extends State<MapPage> {
-  late MapController controller;
-
-  final GeoPoint dhaka = GeoPoint(latitude: 23.8041, longitude: 90.4152);
-  final GeoPoint chittagong = GeoPoint(latitude: 22.3752, longitude: 91.8349);
+  late final MapController controller;
+  bool isFocusToCar = false;
+  late final GeoPoint start;
+  late final GeoPoint end;
 
   @override
   void initState() {
     super.initState();
-    controller = MapController(initPosition: dhaka);
+    end = widget.endPoint;
+    start = widget.startPoint;
+    controller = MapController(initPosition: start);
   }
 
   Future<void> _drawRoute() async {
+    await Future.delayed(const Duration(milliseconds: 500));
     await controller.addMarker(
-      dhaka,
+      start,
       markerIcon: MarkerIcon(
         icon: Icon(Icons.location_pin, color: Colors.green, size: 48),
       ),
     );
 
     await controller.addMarker(
-      chittagong,
+      end,
       markerIcon: MarkerIcon(
         icon: Icon(Icons.location_pin, color: Colors.blue, size: 48),
       ),
     );
 
-    await controller.drawRoad(
-      dhaka,
-      chittagong,
-      roadType: RoadType.car,
-      roadOption: RoadOption(roadColor: Colors.red, roadWidth: 6),
-    );
-
     await controller.zoomToBoundingBox(
       BoundingBox(
-        north: dhaka.latitude,
-        east: dhaka.longitude,
-        south: chittagong.latitude,
-        west: chittagong.longitude,
+        north: start.latitude,
+        east: start.longitude,
+        south: end.latitude,
+        west: end.longitude,
       ),
       paddinInPixel: 80,
     );
@@ -57,8 +55,8 @@ class _MapPageState extends State<MapPage> {
 
   Future<void> _moveCarAlongRoad() async {
     RoadInfo roadInfo = await controller.drawRoad(
-      dhaka,
-      chittagong,
+      start,
+      end,
       roadType: RoadType.car,
       roadOption: RoadOption(roadColor: Colors.red, roadWidth: 6),
     );
@@ -68,41 +66,50 @@ class _MapPageState extends State<MapPage> {
     await controller.addMarker(
       points.first,
       markerIcon: MarkerIcon(
-        icon: Icon(Icons.directions_car, color: Colors.black, size: 45),
+        icon: Icon(Icons.directions_car, color: Colors.black, size: 50),
       ),
     );
+
     GeoPoint oldPoint = points.first;
 
     for (int i = 1; i < points.length; i++) {
-      await Future.delayed(const Duration(milliseconds: 100));
+      await Future.delayed(const Duration(milliseconds: 20));
       GeoPoint newPoint = points[i];
       await controller.changeLocationMarker(
         oldLocation: oldPoint,
         newLocation: newPoint,
       );
-      // await controller.moveTo(newPoint);
       oldPoint = newPoint;
+      if (isFocusToCar) {
+        await controller.moveTo(newPoint);
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Dhaka → Chittagong Route")),
-      body: OSMFlutter(
-        controller: controller,
-        onMapIsReady: (value) async {
-          await Future.delayed(const Duration(seconds: 1));
-          await _drawRoute();
-        },
-        osmOption: OSMOption(
-          isPicker: false,
-          zoomOption: ZoomOption(
-            initZoom: 7,
-            maxZoomLevel: 18,
-            minZoomLevel: 3,
+      appBar: AppBar(title: const Text('Dhaka → Chittagong Route')),
+      body: SafeArea(
+        child: OSMFlutter(
+          controller: controller,
+          onMapIsReady: (value) async {
+            await Future.delayed(const Duration(seconds: 1));
+            await _drawRoute();
+          },
+          osmOption: OSMOption(
+            isPicker: false,
+            zoomOption: ZoomOption(
+              initZoom: 7,
+              minZoomLevel: 3,
+              maxZoomLevel: 18,
+            ),
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.directions),
+        onPressed: () => setState(() => isFocusToCar = true),
       ),
     );
   }
