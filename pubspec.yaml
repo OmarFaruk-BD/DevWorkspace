@@ -51,8 +51,6 @@ dependencies:
   firebase_storage: ^13.0.2
   firebase_messaging: ^16.0.2
   
-  #OpenStreetMap
-  flutter_osm_plugin: ^1.4.3
 
 dev_dependencies:
   flutter_test:
