@@ -13,6 +13,7 @@ class InitPage extends StatefulWidget {
 }
 
 class _InitPageState extends State<InitPage> {
+  final GeoPoint initPosition = GeoPoint(latitude: 23.8041, longitude: 90.4152);
   GeoPoint? startPoint;
   GeoPoint? endPoint;
 
@@ -24,21 +25,25 @@ class _InitPageState extends State<InitPage> {
 
   Future<void> handleTap() async {
     if (startPoint == null) {
-      /// Pick Start
-      final result = await showDialog(
+      final result = await showSimplePickerLocation(
+        radius: 12,
         context: context,
-        builder: (context) {
-          return const PickLocationPage();
-        },
+        isDismissible: true,
+        title: 'Pick Start Point',
+        textConfirmPicker: 'Pick',
+        initPosition: initPosition,
+        zoomOption: const ZoomOption(initZoom: 12),
       );
       if (result != null) setState(() => startPoint = result);
     } else if (endPoint == null) {
-      /// Pick End
-      final result = await showDialog(
+      final result = await showSimplePickerLocation(
+        radius: 12,
         context: context,
-        builder: (context) {
-          return const PickLocationPage();
-        },
+        isDismissible: true,
+        title: 'Pick End Point',
+        textConfirmPicker: 'Pick',
+        initPosition: initPosition,
+        zoomOption: const ZoomOption(initZoom: 12),
       );
       if (result != null) setState(() => endPoint = result);
     } else {

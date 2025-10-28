@@ -89,7 +89,7 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Dhaka → Chittagong Route')),
+      appBar: AppBar(title: const Text('Open Street Map'), centerTitle: true),
       body: SafeArea(
         child: OSMFlutter(
           controller: controller,
