@@ -6,9 +6,10 @@ import 'package:workspace/core/utils/app_theme.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:workspace/features/auth/cubit/auth_cubit.dart';
 import 'package:workspace/features/home/cubit/home_cubit.dart';
-import 'package:workspace/features/landing/splash_screen.dart';
+// import 'package:workspace/features/landing/splash_screen.dart';
 import 'package:workspace/features/dashboard/cubit/leave_cubit.dart';
 import 'package:workspace/features/history/cubit/attendance_cubit.dart';
+import 'package:workspace/temp_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,7 +45,7 @@ class MyApp extends StatelessWidget {
         locale: context.locale,
         debugShowCheckedModeBanner: false,
         theme: AppTheme.themeDataLight,
-        home: const SplashScreen(),
+        home:  RouteMapPage(),
       ),
     );
   }
