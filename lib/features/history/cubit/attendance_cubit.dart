@@ -16,12 +16,17 @@ class AttendanceCubit extends Cubit<AttendanceState> {
     emit(state.copyWith(attendanceDetail: attendanceDetail));
   }
 
-  void updateAttendanceHistory({DateTime? startDate, DateTime? endDate}) async {
+  void updateAttendanceHistory({
+    required BuildContext context,
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
     if (startDate == null || endDate == null) {
       return;
     }
     emit(state.copyWith(isLoading: true));
     final dataList = await AttendanceService().getAttendanceHistory(
+      context: context,
       startDate: startDate,
       endDate: endDate,
     );

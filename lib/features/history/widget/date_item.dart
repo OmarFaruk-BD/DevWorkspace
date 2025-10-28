@@ -24,7 +24,7 @@ class DateItem extends StatelessWidget {
       padding: EdgeInsets.all(10),
       margin: EdgeInsets.only(bottom: 15),
       decoration: BoxDecoration(
-        color: AppColors.grey,
+        color: AppColors.grey.withAlpha(30),
         borderRadius: BorderRadius.circular(8),
         border: Border(bottom: BorderSide(color: AppColors.grey, width: 3)),
       ),
@@ -66,7 +66,7 @@ class DateItem extends StatelessWidget {
               ),
               Text(
                 'Punch In',
-                style: TextStyle(fontSize: 11, color: AppColors.grey),
+                style: TextStyle(fontSize: 11, color: AppColors.black),
               ),
             ],
           ),
@@ -82,7 +82,7 @@ class DateItem extends StatelessWidget {
               ),
               Text(
                 'Punch Out',
-                style: TextStyle(fontSize: 11, color: AppColors.grey),
+                style: TextStyle(fontSize: 11, color: AppColors.black),
               ),
             ],
           ),
@@ -99,7 +99,7 @@ class DateItem extends StatelessWidget {
               ),
               Text(
                 'Total Hours',
-                style: TextStyle(fontSize: 11, color: AppColors.grey),
+                style: TextStyle(fontSize: 11, color: AppColors.black),
               ),
             ],
           ),

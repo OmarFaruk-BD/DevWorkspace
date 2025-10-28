@@ -1,7 +1,6 @@
 import 'package:logger/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:workspace/core/api/api_client.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:workspace/core/helper/extention.dart';
 import 'package:workspace/features/auth/cubit/auth_cubit.dart';
@@ -63,46 +62,47 @@ class AttendanceService {
     }
   }
 
-  Future<AttendanceDetailModel?> getAttendanceDetails() async {
-    try {
-      final date = DateTime.now().toDateString('yyyy-MM-dd');
-      Map<String, dynamic> params = {'date': date};
-      final response = await ApiClient().get(
-        path: 'Endpoints.attendanceDetails',
-        params: params,
-      );
-      // Logger().e(params);
-      // response.print();
-      AttendanceDetailModel attendanceModel = AttendanceDetailModel.fromMap(
-        response.response?.data,
-      );
-      return attendanceModel;
-    } catch (e) {
-      // Logger().e(e);
-      return null;
-    }
-  }
-
   Future<List<AttendanceHistoryModel>> getAttendanceHistory({
+    required BuildContext context,
     DateTime? startDate,
     DateTime? endDate,
   }) async {
     try {
-      Map<String, dynamic> params = {
-        'start_date': startDate.toDateString('yyyy-MM-dd'),
-        'end_date': endDate.toDateString('yyyy-MM-dd'),
-      };
-      final response = await ApiClient().get(
-        path: 'Endpoints.attendanceHistory',
-        params: params,
-      );
-      Logger().e(params);
-      response.print();
-      List<AttendanceHistoryModel> attendanceModel =
-          AttendanceHistoryResModel.fromMap(response.response?.data).data ?? [];
-      return attendanceModel;
+      final user = context.read<AuthCubit>().state.user;
+      final assignedTo = user?.id ?? '';
+
+      final querySnapshot = await _firestore.collection('eAttendance').get();
+
+      final attendanceList = querySnapshot.docs.map((doc) {
+        return doc.data();
+      }).toList();
+
+      if (attendanceList.isNotEmpty) {
+        List<AttendanceHistoryModel> dataList = [];
+        for (final item in attendanceList) {
+          final punchDate = DateTime.tryParse(item['date']);
+          final day = punchDate?.day.toString() ?? '';
+          final dayName = punchDate?.toDateString('EE');
+          if (item['assignTo'] != assignedTo) continue;
+          final getData = AttendanceHistoryModel(
+            punchDate: punchDate,
+            punchIn: item['time'],
+            punchOut: item['time'],
+            totalHours: '????',
+            day: day,
+            dayName: dayName,
+            monthYear: '',
+          );
+          dataList.add(getData);
+        }
+        return dataList;
+      }
+      return [];
+    } on FirebaseException catch (e) {
+      _logger.e('TodayAttendanceEmployee: ${e.message}');
+      return [];
     } catch (e) {
-      Logger().e(e);
+      _logger.e('TodayAttendanceEmployee: $e');
       return [];
     }
   }
