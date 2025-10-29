@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:workspace/core/components/app_button.dart';
 import 'package:workspace/core/helper/navigation.dart';
 import 'package:workspace/core/components/app_bar.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
@@ -79,46 +80,42 @@ class EmployeItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Card(
-        margin: EdgeInsets.only(bottom: 15),
-        child: ListTile(
-          title: Text(
-            employee.name ?? '',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-          ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 4),
-              Row(
-                children: [
-                  _buildItem(Icons.business_center, '${employee.position}'),
-                  _buildItem(Icons.public_outlined, '${employee.department}'),
-                ],
-              ),
-              SizedBox(height: 4),
-              Row(
-                children: [
-                  _buildItem(Icons.email_outlined, '${employee.email}'),
-                  _buildItem(Icons.phone_android_outlined, '${employee.phone}'),
-                ],
-              ),
-              SizedBox(height: 4),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    AppNavigator.pushTo(
-                      context,
-                      EmployeeDetailPage(userModel: employee),
-                      onBack: () => onTap?.call(),
-                    );
-                  },
-                  child: Text('Details'),
+    return Padding(
+      padding: EdgeInsets.only(bottom: 15),
+      child: InkWell(
+        onTap: onTap,
+        child: Card(
+          child: ListTile(
+            title: Text(
+              employee.name ?? '',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 4),
+                Row(
+                  children: [
+                    _buildItem(Icons.business_center, '${employee.position}'),
+                    _buildItem(Icons.public_outlined, '${employee.department}'),
+                  ],
                 ),
-              ),
-            ],
+                SizedBox(height: 4),
+                Row(
+                  children: [
+                    _buildItem(Icons.email_outlined, '${employee.email}'),
+                    _buildItem(
+                      Icons.phone_android_outlined,
+                      '${employee.phone}',
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10),
+                Center(
+                  child: AdminButton(radius: 30, vPadding: 6, text: 'Details'),
+                ),
+              ],
+            ),
           ),
         ),
       ),

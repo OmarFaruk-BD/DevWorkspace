@@ -30,7 +30,6 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
   final EmployeeService _employeeService = EmployeeService();
   bool showPassword = false;
   bool isDeleting = false;
-  UserModel? employee;
   UserModel? user;
 
   @override
@@ -41,7 +40,7 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
   }
 
   Future<void> fetchEmployees() async {
-    employee = await _employeeService.getEmployeeWithImage(user?.id);
+    user = await _employeeService.getEmployeeWithImage(user?.id);
     setState(() {});
   }
 
@@ -74,11 +73,11 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(150),
                     ),
-                    child: employee?.imageUrl != null
+                    child: user?.imageUrl != null
                         ? CircleAvatar(
                             radius: 40,
                             backgroundImage: MemoryImage(
-                              base64Decode(employee?.imageUrl ?? ''),
+                              base64Decode(user?.imageUrl ?? ''),
                             ),
                           )
                         : AppCachedImage(AppImages.demoAvaterURL, radius: 100),
