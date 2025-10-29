@@ -6,8 +6,13 @@ import 'package:workspace/features/admin/screen/employee_detail.dart';
 import 'package:workspace/features/admin/service/employee_service.dart';
 
 class EmployeeListPage extends StatefulWidget {
-  const EmployeeListPage({super.key, this.role = 'employee'});
+  const EmployeeListPage({
+    super.key,
+    this.role = 'employee',
+    this.hasBackButton = true,
+  });
   final String role;
+  final bool hasBackButton;
 
   @override
   State<EmployeeListPage> createState() => _EmployeeListPageState();
@@ -32,7 +37,10 @@ class _EmployeeListPageState extends State<EmployeeListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AdminAppBar(title: 'Employee List'),
+      appBar: AdminAppBar(
+        title: 'Employee List',
+        hasBackButton: widget.hasBackButton,
+      ),
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: fetchEmployees,
@@ -48,9 +56,10 @@ class _EmployeeListPageState extends State<EmployeeListPage> {
                   return EmployeItem(
                     employee: employee,
                     onTap: () {
-                      AppNavigator.push(
+                      AppNavigator.pushTo(
                         context,
                         EmployeeDetailPage(userModel: employee),
+                        onBack: fetchEmployees,
                       );
                     },
                   );
@@ -100,9 +109,10 @@ class EmployeItem extends StatelessWidget {
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    AppNavigator.push(
+                    AppNavigator.pushTo(
                       context,
                       EmployeeDetailPage(userModel: employee),
+                      onBack: () => onTap?.call(),
                     );
                   },
                   child: Text('Details'),

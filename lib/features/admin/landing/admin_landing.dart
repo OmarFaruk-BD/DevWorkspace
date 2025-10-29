@@ -18,7 +18,7 @@ class _AdminLandingPageState extends State<AdminLandingPage> {
 
   static const List<Widget> _screens = <Widget>[
     AdminHomePage(),
-    EmployeeListPage(),
+    EmployeeListPage(hasBackButton: false),
     AdminMessagePage(),
     AdminDashboardPage(),
   ];

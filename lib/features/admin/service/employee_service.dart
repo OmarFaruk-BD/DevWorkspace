@@ -124,6 +124,37 @@ class EmployeeService {
     }
   }
 
+  Future<Either<String, String>> deleteEmployee(UserModel? user) async {
+    try {
+      // ✅ Step 2: Temporarily sign in as the employee using email & password
+      final employeeCredential = await _auth.signInWithEmailAndPassword(
+        email: user?.email ?? '',
+        password: user?.password ?? '',
+      );
+
+      final employee = employeeCredential.user;
+      if (employee == null) {
+        return const Left('Employee not found.');
+      }
+
+      // ✅ Step 3: Delete employee document from Firestore using UID
+      await _firestore.collection('users').doc(user?.id).delete();
+
+      // ✅ Step 4: Delete employee authentication record
+      await employee.delete();
+
+      _logger.i('Employee deleted successfully: ${user?.email}');
+
+      return const Right('Employee deleted successfully.');
+    } on FirebaseAuthException catch (e) {
+      _logger.e('Firebase Auth Error: ${e.message}');
+      return Left('Auth error: ${e.message}');
+    } catch (e) {
+      _logger.e('Delete employee failed: $e');
+      return Left('Failed to delete employee: $e');
+    }
+  }
+
   Future<List<UserModel>> getAllEmployees([String role = 'employee']) async {
     try {
       final querySnapshot = await _firestore

@@ -8,6 +8,7 @@ import 'package:workspace/core/helper/navigation.dart';
 import 'package:workspace/core/components/app_bar.dart';
 import 'package:workspace/core/components/app_button.dart';
 import 'package:workspace/core/components/app_snack_bar.dart';
+import 'package:workspace/core/components/approval_popup.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
 import 'package:workspace/core/components/app_network_image.dart';
 import 'package:workspace/features/admin/screen/edit_employe.dart';
@@ -28,6 +29,7 @@ class EmployeeDetailPage extends StatefulWidget {
 class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
   final EmployeeService _employeeService = EmployeeService();
   bool showPassword = false;
+  bool isDeleting = false;
   UserModel? employee;
   UserModel? user;
 
@@ -136,7 +138,24 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
               ),
               SizedBox(width: 20),
               Expanded(
-                child: AdminButton(text: 'Delete Profile', onTap: () {}),
+                child: AdminButton(
+                  text: 'Delete Profile',
+                  isLoading: isDeleting,
+                  onTap: () async {
+                    final text =
+                        'Are you sure you want to delete this profile?';
+                    await showDialog(
+                      context: context,
+                      builder: (context) {
+                        return ApprovalWidget(
+                          title: 'Delete Profile!',
+                          description: text,
+                          onApprove: _deleteEmployee,
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
               SizedBox(width: 20),
             ],
@@ -227,6 +246,17 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
         ],
       ),
     );
+  }
+
+  void _deleteEmployee() async {
+    Navigator.pop(context);
+    setState(() => isDeleting = true);
+    final result = await _employeeService.deleteEmployee(user);
+    setState(() => isDeleting = false);
+    result.fold((error) => AppSnackBar.show(context, error), (success) {
+      AppSnackBar.show(context, success);
+      Navigator.pop(context, true);
+    });
   }
 
   Container _buildDivider() {
