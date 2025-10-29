@@ -69,7 +69,8 @@ class HeaderWidget extends StatelessWidget {
                   icon: SvgPicture.asset(AppImages.notification),
                 ),
                 IconButton(
-                  onPressed: () => AppNavigator.push(context, ProfilePage()),
+                  onPressed: () =>
+                      AppNavigator.push(context, ProfilePage(user: state.user)),
                   icon: SvgPicture.asset(AppImages.menu),
                 ),
               ],

@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:workspace/core/utils/app_colors.dart';
 import 'package:workspace/core/utils/app_images.dart';
+import 'package:workspace/core/helper/extention.dart';
 import 'package:workspace/core/helper/navigation.dart';
 import 'package:workspace/core/components/app_bar.dart';
 import 'package:workspace/core/components/app_popup.dart';
@@ -10,27 +13,34 @@ import 'package:workspace/features/auth/cubit/auth_cubit.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
 import 'package:workspace/core/components/approval_popup.dart';
 import 'package:workspace/core/components/app_network_image.dart';
+import 'package:workspace/features/admin/screen/edit_employe.dart';
 import 'package:workspace/features/auth/service/auth_service.dart';
 import 'package:workspace/features/admin/screen/admin_login_page.dart';
+import 'package:workspace/features/admin/service/employee_service.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  const ProfilePage({super.key, required this.user});
+  final UserModel? user;
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  UserModel? userModel;
+  final EmployeeService _employeeService = EmployeeService();
+  bool showPassword = false;
+  bool isDeleting = false;
+  UserModel? user;
 
   @override
   void initState() {
     super.initState();
-    _getProfile();
+    user = widget.user;
+    fetchEmployees();
   }
 
-  void _getProfile() async {
-    userModel = context.read<AuthCubit>().state.user;
+  Future<void> fetchEmployees() async {
+    user = await _employeeService.getEmployeeWithImage(user?.id);
     setState(() {});
   }
 
@@ -47,7 +57,7 @@ class _ProfilePageState extends State<ProfilePage> {
             children: [
               Container(
                 margin: EdgeInsets.only(bottom: 50),
-                height: MediaQuery.of(context).size.height * 0.15,
+                height: MediaQuery.of(context).size.height * 0.18,
                 color: AppColors.primary,
               ),
               Positioned(
@@ -63,7 +73,14 @@ class _ProfilePageState extends State<ProfilePage> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(150),
                     ),
-                    child: AppCachedImage(AppImages.demoAvaterURL, radius: 100),
+                    child: user?.imageUrl != null
+                        ? CircleAvatar(
+                            radius: 40,
+                            backgroundImage: MemoryImage(
+                              base64Decode(user?.imageUrl ?? ''),
+                            ),
+                          )
+                        : AppCachedImage(AppImages.demoAvaterURL, radius: 100),
                   ),
                 ),
               ),
@@ -72,27 +89,49 @@ class _ProfilePageState extends State<ProfilePage> {
           SizedBox(height: 20),
           Center(
             child: Text(
-              userModel?.name ?? '',
+              user?.name ?? '',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
             ),
           ),
-          Center(child: Text(userModel?.position ?? 'N/A')),
+          Center(child: Text(user?.position ?? 'N/A')),
           SizedBox(height: 20),
-          _buildItem('First Name', userModel?.name ?? 'N/A'),
+          _buildItem('Name', user?.name ?? 'N/A'),
           _buildDivider(),
-          _buildItem('Last Name', userModel?.name ?? 'N/A'),
+          _buildItem('Email', user?.email ?? 'N/A'),
           _buildDivider(),
-          _buildItem('Password', '*********'),
+          _buildItem('Phone', user?.phone ?? 'N/A'),
           _buildDivider(),
-          _buildItem('Position', userModel?.position ?? 'N/A'),
+          InkWell(
+            onTap: () async {
+              setState(() => showPassword = !showPassword);
+              await Future.delayed(const Duration(seconds: 3));
+              setState(() => showPassword = false);
+            },
+            child: _buildItem(
+              'Password',
+              showPassword ? user?.password ?? '' : '*********',
+            ),
+          ),
           _buildDivider(),
-          _buildItem('Department', userModel?.department ?? 'N/A'),
+          _buildItem('Role', user?.role.capitalize() ?? 'N/A'),
           _buildDivider(),
-          _buildItem('Birthday', 'N/A'),
+          _buildItem('Position', user?.position ?? 'N/A'),
           _buildDivider(),
-          _buildItem('Personal E-mail', userModel?.email ?? 'N/A'),
+          _buildItem('Department', user?.department ?? 'N/A'),
           _buildDivider(),
-          _buildItem('Company E-mail', userModel?.email ?? 'N/A'),
+          Padding(
+            padding: const EdgeInsets.all(35).copyWith(bottom: 0),
+            child: AppButton(
+              text: 'Edit Profile',
+              onTap: () {
+                AppNavigator.pushTo(
+                  context,
+                  EditEmployeePage(user: user),
+                  onBack: fetchEmployees,
+                );
+              },
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.all(35),
             child: AppButton(

@@ -47,10 +47,10 @@ class _EditEmployeePageState extends State<EditEmployeePage> {
     _departmentTEC.text = widget.user?.department ?? '';
     _positionTEC.text = widget.user?.position ?? '';
     _passwordTEC.text = widget.user?.password ?? '';
+    role = widget.user?.role.capitalize() ?? '';
     _phoneTEC.text = widget.user?.phone ?? '';
     _emailTEC.text = widget.user?.email ?? '';
     _nameTEC.text = widget.user?.name ?? '';
-    role = widget.user?.role.capitalize() ?? '';
     setState(() {});
     getImage();
   }
@@ -85,6 +85,7 @@ class _EditEmployeePageState extends State<EditEmployeePage> {
                 Text('Email'),
                 const SizedBox(height: 8),
                 AppTextField(
+                  readOnly: true,
                   controller: _emailTEC,
                   hintText: 'Enter Employee Email',
                   validator: _validator.validateEmail,
@@ -93,6 +94,7 @@ class _EditEmployeePageState extends State<EditEmployeePage> {
                 Text('Password'),
                 const SizedBox(height: 8),
                 AppTextField(
+                  readOnly: true,
                   controller: _passwordTEC,
                   hintText: 'Enter Employee Password',
                   validator: _validator.validatePassword,

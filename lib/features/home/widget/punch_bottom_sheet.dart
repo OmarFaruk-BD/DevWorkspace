@@ -72,7 +72,7 @@ class BottomSheetWidget extends StatelessWidget {
       AppSnackBar.show(context, 'Please enable location service');
       return;
     }
-    final isPunchIn = state.punchedIn ?? true;
+    final isPunchIn = state.punchedIn ?? false;
     final result = await HomeService().createAttendance(
       isPunchIn: isPunchIn,
       assignTo: user?.id ?? '',
