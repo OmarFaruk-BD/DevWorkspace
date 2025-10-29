@@ -32,7 +32,7 @@ class HomeService {
         'isPunchIn': isPunchIn,
         'createdAt': FieldValue.serverTimestamp(),
       };
-      // _logger.e(payload);
+      _logger.e(payload);
 
       await _firestore.collection('eAttendance').add(payload);
 

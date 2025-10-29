@@ -61,15 +61,18 @@ class BottomSheetWidget extends StatelessWidget {
     required BuildContext context,
     required ActionSliderController controller,
   }) async {
+    controller.loading();
     final location = await LocationService().getMyLocation();
     if (!context.mounted) return;
     final user = context.read<AuthCubit>().state.user;
     if (location?.latitude == null || location?.longitude == null) {
+      controller.failure();
+      controller.reset();
+      Navigator.pop(context);
       AppSnackBar.show(context, 'Please enable location service');
       return;
     }
-    controller.loading();
-    final isPunchIn = state.punchedIn ?? false;
+    final isPunchIn = state.punchedIn ?? true;
     final result = await HomeService().createAttendance(
       isPunchIn: isPunchIn,
       assignTo: user?.id ?? '',

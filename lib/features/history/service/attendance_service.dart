@@ -20,45 +20,81 @@ class AttendanceService {
       final assignedTo = user?.id ?? '';
 
       final querySnapshot = await _firestore.collection('eAttendance').get();
+      final attendanceList = querySnapshot.docs
+          .map((doc) => doc.data())
+          .toList();
 
-      final attendanceList = querySnapshot.docs.map((doc) {
-        return doc.data();
+      if (attendanceList.isEmpty) return null;
+
+      final today = DateTime.now();
+
+      // ✅ Filter today's attendance for this user
+      final todayList = attendanceList.where((item) {
+        final date = DateTime.tryParse(item['date'] ?? '');
+        return date != null &&
+            date.year == today.year &&
+            date.month == today.month &&
+            date.day == today.day &&
+            item['assignTo'] == assignedTo;
       }).toList();
 
-      if (attendanceList.isEmpty) {
-        return null;
-      } else {
-        final lastAttendance = attendanceList.last;
-        final date = DateTime.tryParse(lastAttendance['date']);
-        if (date?.day == DateTime.now().day &&
-            lastAttendance['assignTo'] == assignedTo) {
-          final punchedIn = attendanceList.length.isOdd;
-          final getLast = AttendanceDetailModel(
-            date: lastAttendance['date'],
-            day: lastAttendance['time'],
-            punchIn: lastAttendance['time'],
-            punchOut: punchedIn ? lastAttendance['time'] : null,
-            punchInLocation: lastAttendance['latitude'],
-            punchOutLocation: punchedIn ? lastAttendance['longitude'] : null,
-            dutyLocation: [
-              DutyLocation(
-                latitude: lastAttendance['latitude'],
-                longitude: lastAttendance['longitude'],
-                address: lastAttendance['longitude'],
-                time: lastAttendance['time'],
-              ),
-            ],
-          );
-          _logger.e('Last: ${getLast.toMap()}');
-          return getLast;
-        }
-        return null;
-      }
+      if (todayList.isEmpty) return null;
+
+      // ✅ Sort by time (earliest → latest)
+      todayList.sort(
+        (a, b) => (a['time'] as String).compareTo(b['time'] as String),
+      );
+
+      // ✅ Find earliest punchIn
+      final firstPunchIn = todayList.firstWhere(
+        (item) => item['isPunchIn'] == true,
+        orElse: () => todayList.first,
+      );
+
+      // ✅ Check last record to decide if user punched out or not
+      final lastRecord = todayList.last;
+      final hasPunchedOut = lastRecord['isPunchIn'] == false;
+
+      final punchInTime = firstPunchIn['time'];
+      final punchOutTime = hasPunchedOut ? lastRecord['time'] : null;
+
+      final punchInLat = firstPunchIn['latitude'];
+      // final punchInLng = firstPunchIn['longitude'];
+
+      // final punchOutLat = hasPunchedOut ? lastRecord['latitude'] : null;
+      final punchOutLng = hasPunchedOut ? lastRecord['longitude'] : null;
+
+      // ✅ Build duty location list (all today’s points)
+      final dutyLocations = todayList.map((entry) {
+        return DutyLocation(
+          latitude: entry['latitude'],
+          longitude: entry['longitude'],
+          address: entry['address'] ?? '',
+          time: entry['time'],
+        );
+      }).toList();
+
+      final date = firstPunchIn['date'];
+      final dayName = DateFormat('EEEE').format(today);
+
+      // ✅ Build model
+      final attendanceDetail = AttendanceDetailModel(
+        date: date,
+        day: dayName,
+        punchIn: punchInTime,
+        punchOut: punchOutTime,
+        punchInLocation: punchInLat,
+        punchOutLocation: punchOutLng,
+        dutyLocation: dutyLocations,
+      );
+
+      _logger.i('TodayAttendance: ${attendanceDetail.toMap()}');
+      return attendanceDetail;
     } on FirebaseException catch (e) {
-      _logger.e('TodayAttendanceEmployee: ${e.message}');
+      _logger.e('TodayAttendanceEmployee Firebase: ${e.message}');
       return null;
     } catch (e) {
-      _logger.e('TodayAttendanceEmployee: $e');
+      _logger.e('TodayAttendanceEmployee Error: $e');
       return null;
     }
   }
