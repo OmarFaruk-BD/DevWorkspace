@@ -4,13 +4,13 @@ import 'package:fpdart/fpdart.dart';
 import 'package:logger/logger.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:workspace/core/components/app_compressor.dart';
+import 'package:workspace/core/components/app_image_helper.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
 
 class EmployeeService {
   final Logger _logger = Logger();
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final AppImageCompressor _compressor = AppImageCompressor();
+  final AppImageHelper _compressor = AppImageHelper();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<Either<String, String>> createEmployee({

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:workspace/core/utils/app_colors.dart';
 import 'package:workspace/core/utils/app_images.dart';
@@ -24,6 +26,7 @@ class EmployeeDetailPage extends StatefulWidget {
 class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
   final EmployeeService _employeeService = EmployeeService();
   bool showPassword = false;
+  UserModel? employee;
   UserModel? user;
 
   @override
@@ -34,8 +37,8 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
   }
 
   Future<void> fetchEmployees() async {
-    final employee = await _employeeService.getEmployeeWithImage(user?.id);
-    print(employee?.imageUrl);
+    employee = await _employeeService.getEmployeeWithImage(user?.id);
+    setState(() {});
   }
 
   @override
@@ -67,7 +70,14 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(150),
                     ),
-                    child: AppCachedImage(AppImages.demoAvaterURL, radius: 100),
+                    child: employee?.imageUrl != null
+                        ? CircleAvatar(
+                            radius: 40,
+                            backgroundImage: MemoryImage(
+                              base64Decode(employee?.imageUrl ?? ''),
+                            ),
+                          )
+                        : AppCachedImage(AppImages.demoAvaterURL, radius: 100),
                   ),
                 ),
               ),
