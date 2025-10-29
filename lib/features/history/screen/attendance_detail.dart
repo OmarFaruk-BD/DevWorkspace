@@ -63,12 +63,16 @@ class _AttendanceDetailPageState extends State<AttendanceDetailPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _buildItem(
-                      title: state.attendanceDetail?.punchIn ?? '--:--',
+                      title:
+                          state.attendanceDetail?.punchIn.toDateString() ??
+                          '--:--',
                       subtitle: 'Punch In',
                       image: AppImages.map,
                     ),
                     _buildItem(
-                      title: state.attendanceDetail?.punchOut ?? '--:--',
+                      title:
+                          state.attendanceDetail?.punchOut.toDateString() ??
+                          '--:--',
                       subtitle: 'Punch Out',
                       image: AppImages.map,
                     ),
