@@ -10,7 +10,7 @@ class UserModel {
   final String? position;
   final String? department;
   final String? birthDate;
-  final String? avatar;
+  final String? imageUrl;
   final String? approved;
   final DateTime? createdAt;
   UserModel({
@@ -23,7 +23,7 @@ class UserModel {
     this.role,
     this.department,
     this.birthDate,
-    this.avatar,
+    this.imageUrl,
     this.approved,
     this.createdAt,
   });
@@ -41,7 +41,7 @@ class UserModel {
     String? role,
     String? department,
     String? birthDate,
-    String? avatar,
+    String? imageUrl,
     String? approved,
     DateTime? createdAt,
   }) {
@@ -55,7 +55,7 @@ class UserModel {
       role: role ?? this.role,
       department: department ?? this.department,
       birthDate: birthDate ?? this.birthDate,
-      avatar: avatar ?? this.avatar,
+      imageUrl: imageUrl ?? this.imageUrl,
       approved: approved ?? this.approved,
       createdAt: createdAt ?? this.createdAt,
     );
@@ -72,7 +72,7 @@ class UserModel {
       'role': role,
       'department': department,
       'birthDate': birthDate,
-      'avatar': avatar,
+      'imageUrl': imageUrl,
       'approved': approved,
       'createdAt': createdAt,
     };
@@ -91,7 +91,7 @@ class UserModel {
           ? map['department'] as String
           : null,
       birthDate: map['birthDate'] != null ? map['birthDate'] as String : null,
-      avatar: map['avatar'] != null ? map['avatar'] as String : null,
+      imageUrl: map['avatar'] != null ? map['avatar'] as String : null,
       approved: map['approved'] != null ? map['approved'] as String : null,
       createdAt: map['createdAt'] != null
           ? DateTime.parse(map['createdAt'] as String)
@@ -106,6 +106,6 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(id: $id, name: $name, email: $email, phone: $phone, position: $position, department: $department, birthDate: $birthDate, avatar: $avatar, approved: $approved createdAt: $createdAt role: $role)';
+    return 'UserModel(id: $id, name: $name, email: $email, phone: $phone, position: $position, department: $department, birthDate: $birthDate, avatar: $imageUrl, approved: $approved createdAt: $createdAt role: $role)';
   }
 }

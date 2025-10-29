@@ -122,4 +122,31 @@ class EmployeeService {
       return null;
     }
   }
+
+  Future<UserModel?> getEmployeeWithImage(String? uid) async {
+    try {
+      final docSnapshot = await _firestore.collection('users').doc(uid).get();
+      if (!docSnapshot.exists) {
+        _logger.w("No employee found with UID: $uid");
+        return null;
+      }
+
+      final data = docSnapshot.data()!;
+      return UserModel(
+        id: data['uid'],
+        name: data['name'],
+        role: data['role'],
+        email: data['email'],
+        phone: data['phone'],
+        imageUrl: data['imageUrl'],
+        password: data['password'],
+        position: data['position'],
+        department: data['department'],
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+      );
+    } catch (e) {
+      _logger.e("Error fetching employee detail: $e");
+      return null;
+    }
+  }
 }

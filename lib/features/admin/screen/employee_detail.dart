@@ -9,6 +9,7 @@ import 'package:workspace/features/auth/model/user_model.dart';
 import 'package:workspace/core/components/app_network_image.dart';
 import 'package:workspace/features/admin/task/add_employee_task.dart';
 import 'package:workspace/features/admin/task/employee_task_list.dart';
+import 'package:workspace/features/admin/service/employee_service.dart';
 import 'package:workspace/features/admin/task/add_employee_notification.dart';
 import 'package:workspace/features/admin/attendance/employee_attendance.dart';
 
@@ -21,6 +22,7 @@ class EmployeeDetailPage extends StatefulWidget {
 }
 
 class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
+  final EmployeeService _employeeService = EmployeeService();
   bool showPassword = false;
   UserModel? user;
 
@@ -28,6 +30,12 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
   void initState() {
     super.initState();
     user = widget.userModel;
+    fetchEmployees();
+  }
+
+  Future<void> fetchEmployees() async {
+    final employee = await _employeeService.getEmployeeWithImage(user?.id);
+    print(employee?.imageUrl);
   }
 
   @override
