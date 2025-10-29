@@ -68,6 +68,62 @@ class EmployeeService {
     }
   }
 
+  Future<Either<String, String>> editEmployee({
+    required String uid,
+    required String name,
+    required String email,
+    required String phone,
+    required String password,
+    required String position,
+    required String department,
+    required String role,
+    File? imageFile,
+  }) async {
+    try {
+      // 🔹 Step 1: Check if user exists
+      final docRef = _firestore.collection('users').doc(uid);
+      final doc = await docRef.get();
+
+      if (!doc.exists) {
+        return const Left("Employee not found.");
+      }
+
+      // 🔹 Step 2: Prepare update data
+      Map<String, dynamic> updateData = {
+        'name': name,
+        'email': email,
+        'phone': phone,
+        'password': password,
+        'position': position,
+        'department': department,
+        'role': role.toLowerCase(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      };
+
+      if (imageFile != null) {
+        final compressedBytes = await _compressor.compressImageToBase64(
+          imageFile,
+        );
+        updateData['imageUrl'] = compressedBytes;
+      }
+
+      // 🔹 Step 4: Update Firestore document
+      await docRef.update(updateData);
+
+      _logger.i('✅ Employee $uid updated successfully.');
+      return const Right("Employee updated successfully.");
+    } on FirebaseAuthException catch (e) {
+      _logger.e("FirebaseAuthException: ${e.message}");
+      return Left("Firebase Auth error: ${e.message}");
+    } on FirebaseException catch (e) {
+      _logger.e("FirebaseException: ${e.message}");
+      return Left("Database error: ${e.message}");
+    } catch (e) {
+      _logger.e("editEmployee Error: $e");
+      return Left("Failed to update employee: $e");
+    }
+  }
+
   Future<List<UserModel>> getAllEmployees([String role = 'employee']) async {
     try {
       final querySnapshot = await _firestore

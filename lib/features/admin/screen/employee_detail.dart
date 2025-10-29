@@ -9,6 +9,7 @@ import 'package:workspace/core/components/app_button.dart';
 import 'package:workspace/core/components/app_snack_bar.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
 import 'package:workspace/core/components/app_network_image.dart';
+import 'package:workspace/features/admin/screen/edit_employe.dart';
 import 'package:workspace/features/admin/task/add_employee_task.dart';
 import 'package:workspace/features/admin/task/employee_task_list.dart';
 import 'package:workspace/features/admin/service/employee_service.dart';
@@ -118,6 +119,25 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
           _buildDivider(),
           _buildItem('Company E-mail', user?.email ?? 'N/A'),
           SizedBox(height: 40),
+          Row(
+            children: [
+              SizedBox(width: 20),
+              Expanded(
+                child: AdminButton(
+                  text: 'Edit Profile',
+                  onTap: () {
+                    AppNavigator.push(context, EditEmployeePage(user: user));
+                  },
+                ),
+              ),
+              SizedBox(width: 20),
+              Expanded(
+                child: AdminButton(text: 'Delete Profile', onTap: () {}),
+              ),
+              SizedBox(width: 20),
+            ],
+          ),
+          SizedBox(height: 20),
           Row(
             children: [
               SizedBox(width: 20),

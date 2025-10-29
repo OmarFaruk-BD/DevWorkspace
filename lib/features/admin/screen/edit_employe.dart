@@ -1,24 +1,28 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:workspace/core/helper/extention.dart';
 import 'package:workspace/core/components/app_bar.dart';
 import 'package:workspace/core/components/app_popup.dart';
 import 'package:workspace/core/components/app_button.dart';
 import 'package:workspace/core/service/app_validator.dart';
 import 'package:workspace/core/components/app_snack_bar.dart';
 import 'package:workspace/core/components/app_text_field.dart';
+import 'package:workspace/features/auth/model/user_model.dart';
+import 'package:workspace/core/components/app_image_helper.dart';
 import 'package:workspace/core/components/app_image_picker.dart';
 import 'package:workspace/core/components/item_selection_popup.dart';
 import 'package:workspace/features/admin/service/employee_service.dart';
 
-class AddEmployeePage extends StatefulWidget {
-  const AddEmployeePage({super.key});
+class EditEmployeePage extends StatefulWidget {
+  const EditEmployeePage({super.key, this.user});
+  final UserModel? user;
 
   @override
-  State<AddEmployeePage> createState() => _AddEmployeePageState();
+  State<EditEmployeePage> createState() => _EditEmployeePageState();
 }
 
-class _AddEmployeePageState extends State<AddEmployeePage> {
+class _EditEmployeePageState extends State<EditEmployeePage> {
   final TextEditingController _departmentTEC = TextEditingController();
   final TextEditingController _positionTEC = TextEditingController();
   final TextEditingController _passwordTEC = TextEditingController();
@@ -30,14 +34,40 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
   final AppValidator _validator = AppValidator();
   String role = 'Employee';
   bool _isLoading = false;
+  String? _uploadedImage;
   File? _imageFile;
+
+  @override
+  void initState() {
+    super.initState();
+    initLoadData();
+  }
+
+  void initLoadData() {
+    _departmentTEC.text = widget.user?.department ?? '';
+    _positionTEC.text = widget.user?.position ?? '';
+    _passwordTEC.text = widget.user?.password ?? '';
+    _phoneTEC.text = widget.user?.phone ?? '';
+    _emailTEC.text = widget.user?.email ?? '';
+    _nameTEC.text = widget.user?.name ?? '';
+    role = widget.user?.role.capitalize() ?? '';
+    setState(() {});
+    getImage();
+  }
+
+  void getImage() async {
+    final getUser = await _employeeService.getEmployeeWithImage(
+      widget.user?.id,
+    );
+    setState(() => _uploadedImage = getUser?.imageUrl);
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        appBar: AdminAppBar(title: 'Add Employee'),
+        appBar: AdminAppBar(title: 'Edit Employee'),
         body: SafeArea(
           child: Form(
             key: _formKey,
@@ -160,6 +190,21 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
                       ),
                     ],
                   ),
+                if (_uploadedImage != null && _imageFile == null)
+                  const SizedBox(height: 20),
+                if (_uploadedImage != null && _imageFile == null)
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.grey),
+                    ),
+                    child: AppImageHelper.base64ToImage(
+                      _uploadedImage!,
+                      fit: BoxFit.contain,
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.width * 0.5,
+                    ),
+                  ),
                 const SizedBox(height: 30),
                 AppButton(
                   isLoading: _isLoading,
@@ -179,19 +224,23 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
     FocusManager.instance.primaryFocus?.unfocus();
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
-    final result = await _employeeService.createEmployee(
+
+    final result = await _employeeService.editEmployee(
+      uid: widget.user?.id ?? '',
+      name: _nameTEC.text.trim(),
+      email: _emailTEC.text.trim(),
+      phone: _phoneTEC.text.trim(),
+      password: _passwordTEC.text.trim(),
+      position: _positionTEC.text.trim(),
+      department: _departmentTEC.text.trim(),
       role: role,
-      name: _nameTEC.text,
-      email: _emailTEC.text,
-      phone: _phoneTEC.text,
       imageFile: _imageFile,
-      password: _passwordTEC.text,
-      position: _positionTEC.text,
-      department: _departmentTEC.text,
     );
+
     setState(() => _isLoading = false);
-    result.fold((error) => AppSnackBar.show(context, error), (data) {
-      AppSnackBar.show(context, data);
+
+    result.fold((error) => AppSnackBar.show(context, error), (success) {
+      AppSnackBar.show(context, success);
       Navigator.pop(context);
     });
   }
