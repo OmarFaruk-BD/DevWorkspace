@@ -6,7 +6,6 @@ import 'package:workspace/core/utils/app_images.dart';
 import 'package:workspace/core/helper/navigation.dart';
 import 'package:workspace/features/home/widget/header.dart';
 import 'package:workspace/features/auth/cubit/auth_cubit.dart';
-import 'package:workspace/features/dashboard/widget/time_widget.dart';
 import 'package:workspace/features/admin/task/employee_task_list.dart';
 import 'package:workspace/features/dashboard/screen/leave_request.dart';
 import 'package:workspace/features/dashboard/screen/leave_approval.dart';
@@ -25,61 +24,51 @@ class _DashboardPageState extends State<DashboardPage> {
     return BlocBuilder<AuthCubit, AuthState>(
       builder: (context, state) {
         return Scaffold(
-          body: Stack(
+          body: ListView(
+            padding: const EdgeInsets.all(0),
             children: [
-              SingleChildScrollView(
-                padding: EdgeInsets.all(20),
-                child: Column(
+              HeaderWidgetV2(),
+              Padding(
+                padding: const EdgeInsets.all(25).copyWith(bottom: 0),
+                child: Row(
                   children: [
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.55),
-                    Row(
-                      children: [
-                        DashboardItem(
-                          text: 'Tasks\nOverview',
-                          icon: AppImages.overview,
-                          onTap: () => AppNavigator.push(
-                            context,
-                            EmployeeTaskList(user: state.user),
-                          ),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.1,
-                        ),
-                        DashboardItem(
-                          text: 'Attendance\nHistory',
-                          icon: AppImages.overview_2,
-                          onTap: () => AppNavigator.push(
-                            context,
-                            AttendanceHistoryPage(),
-                          ),
-                        ),
-                      ],
+                    DashboardItem(
+                      text: 'Tasks\nOverview',
+                      icon: AppImages.overview,
+                      onTap: () => AppNavigator.push(
+                        context,
+                        EmployeeTaskList(user: state.user),
+                      ),
                     ),
-                    SizedBox(height: 25),
-                    Row(
-                      children: [
-                        DashboardItem(
-                          text: 'Leave\nRequest',
-                          icon: AppImages.overview_2,
-                          onTap: () =>
-                              AppNavigator.push(context, LeaveRequestPage()),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.1,
-                        ),
-                        DashboardItem(
-                          text: 'Leave\nApproval',
-                          icon: AppImages.overview_2,
-                          onTap: () =>
-                              AppNavigator.push(context, LeaveApproval()),
-                        ),
-                      ],
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.1),
+                    DashboardItem(
+                      text: 'Attendance\nHistory',
+                      icon: AppImages.overview_2,
+                      onTap: () =>
+                          AppNavigator.push(context, AttendanceHistoryPage()),
                     ),
                   ],
                 ),
               ),
-              HeaderWidget(),
-              TimeWidget(),
+              Padding(
+                padding: const EdgeInsets.all(25).copyWith(bottom: 0),
+                child: Row(
+                  children: [
+                    DashboardItem(
+                      text: 'Leave\nRequest',
+                      icon: AppImages.overview_2,
+                      onTap: () =>
+                          AppNavigator.push(context, LeaveRequestPage()),
+                    ),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.1),
+                    DashboardItem(
+                      text: 'Leave\nApproval',
+                      icon: AppImages.overview_2,
+                      onTap: () => AppNavigator.push(context, LeaveApproval()),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         );

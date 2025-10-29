@@ -81,3 +81,69 @@ class HeaderWidget extends StatelessWidget {
     );
   }
 }
+
+class HeaderWidgetV2 extends StatelessWidget {
+  const HeaderWidgetV2({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<AuthCubit, AuthState>(
+      builder: (context, state) {
+        return Container(
+          padding: EdgeInsets.only(
+            top: MediaQuery.of(context).padding.top + 15,
+            bottom: 20,
+            right: 20,
+            left: 20,
+          ),
+          color: AppColors.primary,
+          child: Row(
+            children: [
+              Container(
+                width: 62,
+                height: 62,
+                padding: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.circular(70),
+                ),
+                child: Icon(Icons.person, size: 40, color: AppColors.primary),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CommonText(
+                      state.user?.name ?? '',
+                      maxLines: 2,
+                      fontSize: 18,
+                      color: AppColors.white,
+                      fontWeight: FontWeight.w600,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      state.user?.phone ?? '',
+                      style: AppStyles.mediumGrey12.copyWith(
+                        color: AppColors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              IconButton(
+                onPressed: () => AppNavigator.push(context, NotificationPage()),
+                icon: SvgPicture.asset(AppImages.notification),
+              ),
+              IconButton(
+                onPressed: () =>
+                    AppNavigator.push(context, ProfilePage(user: state.user)),
+                icon: SvgPicture.asset(AppImages.menu),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
