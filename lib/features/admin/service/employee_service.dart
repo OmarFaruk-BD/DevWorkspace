@@ -1,12 +1,16 @@
+import 'dart:io';
+
 import 'package:fpdart/fpdart.dart';
 import 'package:logger/logger.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:workspace/core/components/app_compressor.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
 
 class EmployeeService {
   final Logger _logger = Logger();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final AppImageCompressor _compressor = AppImageCompressor();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<Either<String, String>> createEmployee({
@@ -17,13 +21,24 @@ class EmployeeService {
     required String position,
     required String department,
     required String role,
+    File? imageFile,
   }) async {
     try {
+      // Step 1: Create user in Firebase Auth
       UserCredential userCredential = await _auth
           .createUserWithEmailAndPassword(email: email, password: password);
 
       String uid = userCredential.user!.uid;
 
+      String? imageBase64;
+      if (imageFile != null) {
+        final compressedBytes = await _compressor.compressImageToBase64(
+          imageFile,
+        );
+        imageBase64 = compressedBytes;
+      }
+
+      // Step 3: Save user data in Firestore
       await _firestore.collection('users').doc(uid).set({
         'uid': uid,
         'name': name,
@@ -33,9 +48,11 @@ class EmployeeService {
         'position': position,
         'department': department,
         'role': role.toLowerCase(),
+        'imageUrl': imageBase64 ?? '',
         'createdAt': FieldValue.serverTimestamp(),
       });
-      return Right('Employee created successfully.');
+
+      return const Right('Employee created successfully.');
     } on FirebaseAuthException catch (e) {
       _logger.e("FirebaseAuthException: ${e.message}");
       if (e.code == 'email-already-in-use') {
@@ -46,6 +63,7 @@ class EmployeeService {
         return Left("Authentication error: ${e.message}");
       }
     } catch (e) {
+      _logger.e("createEmployee Error: $e");
       return Left("Failed to create employee: $e");
     }
   }

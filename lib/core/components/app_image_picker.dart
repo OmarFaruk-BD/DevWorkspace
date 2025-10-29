@@ -1,14 +1,13 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:image_cropper/image_cropper.dart';
 
 class AppImagePicker {
-  void pickImage({
+  Future<void> pickImage({
     Function(File?)? onImagePick,
     required BuildContext context,
-  }) {
-    showModalBottomSheet(
+  }) async {
+    await showModalBottomSheet(
       context: context,
       builder: (context) {
         return SafeArea(
@@ -73,26 +72,26 @@ class AppImagePicker {
 
     final pickedFile = await ImagePicker().pickImage(source: source);
     if (pickedFile == null) return;
+    onImagePick?.call(File(pickedFile.path));
 
-    final croppedFile = await ImageCropper().cropImage(
-      sourcePath: pickedFile.path,
-      uiSettings: [
-        AndroidUiSettings(
-          toolbarTitle: 'Crop Image',
-          toolbarColor: Colors.greenAccent,
-          toolbarWidgetColor: Colors.white,
-          initAspectRatio: CropAspectRatioPreset.original,
-          lockAspectRatio: false,
-        ),
-        IOSUiSettings(title: 'Crop Image'),
-      ],
-    );
-
-    if (croppedFile != null) {
-      onImagePick?.call(File(croppedFile.path));
-    } else {
-      onImagePick?.call(null);
-    }
+    // final croppedFile = await ImageCropper().cropImage(
+    //   sourcePath: pickedFile.path,
+    //   uiSettings: [
+    //     AndroidUiSettings(
+    //       toolbarTitle: 'Crop Image',
+    //       toolbarColor: Colors.greenAccent,
+    //       toolbarWidgetColor: Colors.white,
+    //       initAspectRatio: CropAspectRatioPreset.original,
+    //       lockAspectRatio: false,
+    //     ),
+    //     IOSUiSettings(title: 'Crop Image'),
+    //   ],
+    // );
+    // if (croppedFile != null) {
+    //   onImagePick?.call(File(croppedFile.path));
+    // } else {
+    //   onImagePick?.call(null);
+    // }
   }
 
   Widget _buildButton({

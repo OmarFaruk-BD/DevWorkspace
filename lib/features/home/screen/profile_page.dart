@@ -47,7 +47,7 @@ class _ProfilePageState extends State<ProfilePage> {
             children: [
               Container(
                 margin: EdgeInsets.only(bottom: 50),
-                height: MediaQuery.of(context).size.height * 0.18,
+                height: MediaQuery.of(context).size.height * 0.15,
                 color: AppColors.primary,
               ),
               Positioned(
