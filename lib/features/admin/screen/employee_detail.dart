@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:workspace/core/helper/extention.dart';
 import 'package:workspace/core/utils/app_colors.dart';
 import 'package:workspace/core/utils/app_images.dart';
 import 'package:workspace/core/helper/navigation.dart';
@@ -93,9 +94,11 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
           ),
           Center(child: Text(user?.position ?? 'N/A')),
           SizedBox(height: 20),
-          _buildItem('First Name', user?.name ?? 'N/A'),
+          _buildItem('Name', user?.name ?? 'N/A'),
           _buildDivider(),
-          _buildItem('Last Name', user?.name ?? 'N/A'),
+          _buildItem('Email', user?.email ?? 'N/A'),
+          _buildDivider(),
+          _buildItem('Phone', user?.phone ?? 'N/A'),
           _buildDivider(),
           InkWell(
             onTap: () async {
@@ -109,15 +112,12 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
             ),
           ),
           _buildDivider(),
+          _buildItem('Role', user?.role.capitalize() ?? 'N/A'),
+          _buildDivider(),
           _buildItem('Position', user?.position ?? 'N/A'),
           _buildDivider(),
           _buildItem('Department', user?.department ?? 'N/A'),
           _buildDivider(),
-          _buildItem('Birthday', 'N/A'),
-          _buildDivider(),
-          _buildItem('Personal E-mail', user?.email ?? 'N/A'),
-          _buildDivider(),
-          _buildItem('Company E-mail', user?.email ?? 'N/A'),
           SizedBox(height: 40),
           Row(
             children: [
@@ -126,7 +126,11 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
                 child: AdminButton(
                   text: 'Edit Profile',
                   onTap: () {
-                    AppNavigator.push(context, EditEmployeePage(user: user));
+                    AppNavigator.pushTo(
+                      context,
+                      EditEmployeePage(user: user),
+                      onBack: fetchEmployees,
+                    );
                   },
                 ),
               ),

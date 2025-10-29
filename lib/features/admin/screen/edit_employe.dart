@@ -208,8 +208,8 @@ class _EditEmployeePageState extends State<EditEmployeePage> {
                 const SizedBox(height: 30),
                 AppButton(
                   isLoading: _isLoading,
-                  onTap: _createEmployee,
-                  text: 'Create Employee',
+                  onTap: _editEmployee,
+                  text: 'Update Employee',
                 ),
                 const SizedBox(height: 40),
               ],
@@ -220,7 +220,7 @@ class _EditEmployeePageState extends State<EditEmployeePage> {
     );
   }
 
-  void _createEmployee() async {
+  void _editEmployee() async {
     FocusManager.instance.primaryFocus?.unfocus();
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
