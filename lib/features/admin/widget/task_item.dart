@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:workspace/core/helper/navigation.dart';
 import 'package:workspace/core/components/app_button.dart';
-import 'package:workspace/features/admin/task/task_detail.dart';
+import 'package:workspace/features/admin/task/employee_task_detail.dart';
 
 class TaskItem extends StatelessWidget {
   const TaskItem({super.key, required this.task, this.onBack});
@@ -51,7 +51,7 @@ class TaskItem extends StatelessWidget {
                 onTap: () {
                   AppNavigator.pushTo(
                     context,
-                    TaskDetailPage(task: task),
+                    EmployeeTaskDetailPage(task: task),
                     onBack: () => onBack?.call(),
                   );
                 },

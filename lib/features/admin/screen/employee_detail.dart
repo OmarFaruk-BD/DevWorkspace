@@ -15,8 +15,9 @@ import 'package:workspace/features/admin/screen/edit_employe.dart';
 import 'package:workspace/features/admin/task/add_employee_task.dart';
 import 'package:workspace/features/admin/task/employee_task_list.dart';
 import 'package:workspace/features/admin/service/employee_service.dart';
-import 'package:workspace/features/admin/task/add_employee_notification.dart';
 import 'package:workspace/features/admin/attendance/employee_attendance.dart';
+import 'package:workspace/features/admin/notification/add_employee_notification.dart';
+import 'package:workspace/features/admin/notification/employee_notification_list.dart';
 
 class EmployeeDetailPage extends StatefulWidget {
   const EmployeeDetailPage({super.key, required this.userModel});
@@ -234,7 +235,10 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
                 child: AdminButton(
                   text: 'Notification List',
                   onTap: () {
-                    AppSnackBar.show(context, 'Coming soon');
+                    AppNavigator.push(
+                      context,
+                      EmployeeNotificationList(user: user),
+                    );
                   },
                 ),
               ),

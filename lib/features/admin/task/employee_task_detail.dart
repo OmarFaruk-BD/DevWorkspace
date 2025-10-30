@@ -1,26 +1,26 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:workspace/core/components/app_popup.dart';
-import 'package:workspace/core/components/approval_popup.dart';
 import 'package:workspace/core/helper/extention.dart';
 import 'package:workspace/core/helper/navigation.dart';
 import 'package:workspace/core/components/app_bar.dart';
+import 'package:workspace/core/components/app_popup.dart';
 import 'package:workspace/core/components/app_button.dart';
 import 'package:workspace/core/components/app_snack_bar.dart';
+import 'package:workspace/core/components/approval_popup.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
 import 'package:workspace/features/admin/task/edit_employee_task.dart';
 import 'package:workspace/features/admin/service/employee_service.dart';
 import 'package:workspace/features/admin/service/employee_task_service.dart';
+import 'package:flutter/material.dart';
 
-class TaskDetailPage extends StatefulWidget {
-  const TaskDetailPage({super.key, required this.task});
+class EmployeeTaskDetailPage extends StatefulWidget {
+  const EmployeeTaskDetailPage({super.key, required this.task});
   final Map<String, dynamic> task;
 
   @override
-  State<TaskDetailPage> createState() => _TaskDetailPageState();
+  State<EmployeeTaskDetailPage> createState() => _EmployeeTaskDetailPageState();
 }
 
-class _TaskDetailPageState extends State<TaskDetailPage> {
+class _EmployeeTaskDetailPageState extends State<EmployeeTaskDetailPage> {
   final EmployeeTaskService _taskService = EmployeeTaskService();
   final EmployeeService _employeeService = EmployeeService();
   late Map<String, dynamic> task;
