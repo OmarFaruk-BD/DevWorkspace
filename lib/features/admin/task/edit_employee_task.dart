@@ -6,13 +6,11 @@ import 'package:workspace/core/components/app_button.dart';
 import 'package:workspace/core/service/app_validator.dart';
 import 'package:workspace/core/components/app_snack_bar.dart';
 import 'package:workspace/core/components/app_text_field.dart';
-import 'package:workspace/features/auth/model/user_model.dart';
 import 'package:workspace/core/components/item_selection_popup.dart';
 import 'package:workspace/features/admin/service/employee_task_service.dart';
 
 class EditEmployeeTask extends StatefulWidget {
-  const EditEmployeeTask({super.key, this.user, required this.task});
-  final UserModel? user;
+  const EditEmployeeTask({super.key, required this.task});
   final Map<String, dynamic> task;
 
   @override
@@ -43,11 +41,11 @@ class _EditEmployeeTaskState extends State<EditEmployeeTask> {
   @override
   void initState() {
     super.initState();
-    _assignedTo = widget.user?.id ?? '';
     initDataLoad();
   }
 
   void initDataLoad() async {
+    _assignedTo = widget.task['assignedTo'];
     _status = widget.task['status'];
     _title.text = widget.task['title'];
     _description.text = widget.task['description'];
@@ -56,7 +54,7 @@ class _EditEmployeeTaskState extends State<EditEmployeeTask> {
     _taskType = widget.task['taskType'];
     _dayType = widget.task['comments'];
     _priority = widget.task['priority'];
-    _dueDate = DateTime.parse(widget.task['dueDate']);
+    _dueDate = DateTime.tryParse(widget.task['dueDate']) ?? DateTime.now();
     setState(() {});
   }
 
@@ -183,7 +181,7 @@ class _EditEmployeeTaskState extends State<EditEmployeeTask> {
                 ),
                 SizedBox(height: 30),
                 AppButton(
-                  text: 'Assign Task',
+                  text: 'Update Task',
                   isLoading: _isLoading,
                   width: double.maxFinite,
                   onTap: _editTask,
@@ -198,10 +196,10 @@ class _EditEmployeeTaskState extends State<EditEmployeeTask> {
   }
 
   void _editTask() async {
-    if (!_formKey.currentState!.validate()) return;
+    if (_formKey.currentState?.validate() != true) return;
     setState(() => _isLoading = true);
     final result = await _taskService.editTask(
-      taskId: widget.task['id'],
+      taskId: widget.task['taskId'],
       updatedFields: {
         'status': _status,
         'title': _title.text,
@@ -218,6 +216,7 @@ class _EditEmployeeTaskState extends State<EditEmployeeTask> {
     );
     setState(() => _isLoading = false);
     result.fold((error) => AppSnackBar.show(context, error), (data) {
+      Navigator.pop(context);
       AppSnackBar.show(context, data);
     });
   }

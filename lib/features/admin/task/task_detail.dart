@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:workspace/core/helper/extention.dart';
+import 'package:workspace/core/helper/navigation.dart';
 import 'package:workspace/core/components/app_bar.dart';
+import 'package:workspace/core/components/app_button.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
+import 'package:workspace/features/admin/task/edit_employee_task.dart';
 import 'package:workspace/features/admin/service/employee_service.dart';
+import 'package:workspace/features/admin/service/employee_task_service.dart';
 
 class TaskDetailPage extends StatefulWidget {
   const TaskDetailPage({super.key, required this.task});
@@ -12,7 +18,8 @@ class TaskDetailPage extends StatefulWidget {
 }
 
 class _TaskDetailPageState extends State<TaskDetailPage> {
-  final _employeeService = EmployeeService();
+  final EmployeeTaskService _taskService = EmployeeTaskService();
+  final EmployeeService _employeeService = EmployeeService();
   late Map<String, dynamic> task;
   UserModel? user;
 
@@ -28,6 +35,17 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
     setState(() {});
   }
 
+  void geTaskDetail() async {
+    final getTask = await _taskService.getTaskByEmployeeAndId(
+      assignedTo: task['assignedTo'],
+      taskId: task['taskId'],
+    );
+    if (getTask != null && getTask.isNotEmpty) {
+      task = getTask;
+    }
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,8 +54,20 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
         padding: EdgeInsets.all(20),
         children: [
           if (user != null) _EmployeItem(user!),
-          if (user != null) SizedBox(height: 15),
           TaskDetailItem(task: task),
+          SizedBox(height: 15),
+          AppButton(
+            text: 'Edit Task',
+            onTap: () {
+              AppNavigator.pushTo(
+                context,
+                EditEmployeeTask(task: task),
+                onBack: geTaskDetail,
+              );
+            },
+          ),
+          SizedBox(height: 15),
+          AppButton(text: 'Delete Task', onTap: () {}),
         ],
       ),
     );
@@ -47,6 +77,16 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
 class TaskDetailItem extends StatelessWidget {
   const TaskDetailItem({super.key, required this.task});
   final Map<String, dynamic> task;
+
+  DateTime? get createdAt {
+    if (task['createdAt'] == null || task['createdAt'] == '') return null;
+    return (task['createdAt'] as Timestamp).toDate();
+  }
+
+  DateTime? get updatedAt {
+    if (task['updatedAt'] == null || task['updatedAt'] == '') return null;
+    return (task['updatedAt'] as Timestamp).toDate();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,9 +119,9 @@ class TaskDetailItem extends StatelessWidget {
               SizedBox(height: 4),
               Text('Amount: ${task['amount'] ?? ''}'),
               SizedBox(height: 4),
-              Text('Created At: ${task['createdAt'] ?? ''}'),
+              Text('Created At: ${createdAt.toDateString()}'),
               SizedBox(height: 4),
-              Text('Updated At: ${task['updatedAt'] ?? ''}'),
+              Text('Updated At: ${updatedAt.toDateString()}'),
             ],
           ),
         ),

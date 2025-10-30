@@ -106,4 +106,35 @@ class EmployeeTaskService {
       return [];
     }
   }
+
+  Future<Map<String, dynamic>?> getTaskByEmployeeAndId({
+    String? assignedTo,
+    String? taskId,
+  }) async {
+    try {
+      final querySnapshot = await _firestore
+          .collection('tasks')
+          .where('assignedTo', isEqualTo: assignedTo)
+          .get();
+
+      final tasks = querySnapshot.docs.map((doc) {
+        final data = doc.data();
+        return {'taskId': doc.id, ...data};
+      }).toList();
+
+      if (tasks.isEmpty) return null;
+
+      Map<String, dynamic>? getTask = tasks.firstWhere(
+        (element) => element['taskId'] == taskId,
+      );
+
+      return getTask;
+    } on FirebaseException catch (e) {
+      _logger.e('Firebase error fetching tasks: ${e.message}');
+      return null;
+    } catch (e) {
+      _logger.e('Error fetching tasks: $e');
+      return null;
+    }
+  }
 }
