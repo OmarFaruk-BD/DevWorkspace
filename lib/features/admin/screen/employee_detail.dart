@@ -9,7 +9,6 @@ import 'package:workspace/core/components/app_bar.dart';
 import 'package:workspace/core/components/app_button.dart';
 import 'package:workspace/core/components/app_snack_bar.dart';
 import 'package:workspace/core/components/approval_popup.dart';
-import 'package:workspace/features/admin/attendance/e_attendance_history.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
 import 'package:workspace/core/components/app_network_image.dart';
 import 'package:workspace/features/admin/screen/edit_employe.dart';
@@ -17,6 +16,8 @@ import 'package:workspace/features/admin/task/add_employee_task.dart';
 import 'package:workspace/features/admin/task/employee_task_list.dart';
 import 'package:workspace/features/admin/service/employee_service.dart';
 import 'package:workspace/features/admin/attendance/employee_attendance.dart';
+import 'package:workspace/features/admin/attendance/e_attendance_history.dart';
+import 'package:workspace/features/admin/notification/e_emergency_request.dart';
 import 'package:workspace/features/admin/attendance/employee_location_list.dart';
 import 'package:workspace/features/admin/notification/add_employee_notification.dart';
 import 'package:workspace/features/admin/notification/employee_notification_list.dart';
@@ -233,12 +234,9 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
               SizedBox(width: 20),
               Expanded(
                 child: AdminButton(
-                  text: 'Notification List',
+                  text: 'Emergency Request List',
                   onTap: () {
-                    AppNavigator.push(
-                      context,
-                      EmployeeNotificationList(user: user),
-                    );
+                    AppNavigator.push(context, EEmergencyRequest(user: user));
                   },
                 ),
               ),
@@ -263,7 +261,7 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
               SizedBox(width: 20),
               Expanded(
                 child: AdminButton(
-                  text: 'Notification List',
+                  text: 'See Notifications',
                   onTap: () {
                     AppNavigator.push(
                       context,

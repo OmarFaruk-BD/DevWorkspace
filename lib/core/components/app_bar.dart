@@ -34,6 +34,7 @@ class AdminAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Text(
         title,
         style: const TextStyle(
+          fontSize: 18,
           color: Colors.white,
           fontWeight: FontWeight.w600,
         ),
@@ -75,6 +76,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Text(
         title,
         style: const TextStyle(
+          fontSize: 18,
           color: Colors.white,
           fontWeight: FontWeight.w600,
         ),
