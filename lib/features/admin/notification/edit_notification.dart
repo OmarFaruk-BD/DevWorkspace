@@ -46,6 +46,15 @@ class _EditEmployeeNotificationPageState
     _assignedTo = widget.assignedTo ?? '';
     notification = widget.notification;
     initDataLoad();
+    getDetails();
+  }
+
+  void getDetails() async {
+    final result = await _notificationService.getNotificationDetails(
+      assignedTo: widget.assignedTo ?? '',
+      notificationId: widget.notification?.id ?? '',
+    );
+    setState(() => notification = result);
   }
 
   void initDataLoad() {
@@ -166,8 +175,8 @@ class _EditEmployeeNotificationPageState
     );
     setState(() => _isLoading = false);
     result.fold((error) => AppSnackBar.show(context, error), (data) {
-      Navigator.pop(context);
       AppSnackBar.show(context, data);
+      getDetails();
     });
   }
 }

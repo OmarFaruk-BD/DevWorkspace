@@ -107,4 +107,42 @@ class EmployeeNotificationService {
       return [];
     }
   }
+
+  Future<NotificationModel?> getNotificationDetails({
+    required String assignedTo,
+    required String notificationId,
+  }) async {
+    try {
+      final querySnapshot = await _firestore
+          .collection('notification')
+          .where('assignedTo', isEqualTo: assignedTo)
+          .get();
+
+      final notifications = querySnapshot.docs.map((doc) {
+        final data = doc.data();
+        return {'id': doc.id, ...data};
+      }).toList();
+
+      final notification = notifications.firstWhere((element) {
+        return element['id'] == notificationId;
+      });
+
+      final getData = NotificationModel(
+        id: notification['id'],
+        title: notification['title'],
+        createdAt: notification['date'],
+        comments: notification['comments'],
+        priority: notification['priority'],
+        content: notification['description'],
+      );
+
+      return getData;
+    } on FirebaseException catch (e) {
+      _logger.e('Firebase error fetching notification: ${e.message}');
+      return null;
+    } catch (e) {
+      _logger.e('Error fetching notification: $e');
+      return null;
+    }
+  }
 }
