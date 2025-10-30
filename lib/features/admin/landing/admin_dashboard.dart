@@ -7,6 +7,7 @@ import 'package:workspace/core/components/approval_popup.dart';
 import 'package:workspace/features/admin/screen/add_employee.dart';
 import 'package:workspace/features/admin/screen/employe_list.dart';
 import 'package:workspace/features/admin/screen/admin_login_page.dart';
+import 'package:workspace/features/admin/screen/manager_list_page.dart';
 import 'package:workspace/features/admin/service/admin_auth_service.dart';
 
 class AdminDashboardPage extends StatefulWidget {
@@ -25,34 +26,30 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
       body: ListView(
         padding: EdgeInsets.all(25),
         children: [
-          AppButton(
+          AdminButton(
             text: 'Add Employee',
             onTap: () => AppNavigator.push(context, AddEmployeePage()),
           ),
           SizedBox(height: 20),
-          AppButton(
+          AdminButton(
             text: 'Employee List',
-            onTap: () =>
-                AppNavigator.push(context, EmployeeListPage()),
+            onTap: () => AppNavigator.push(context, EmployeeListPage()),
           ),
           SizedBox(height: 20),
-          AppButton(
+          AdminButton(
             text: 'Manager List',
-            onTap: () => AppNavigator.push(
-              context,
-              EmployeeListPage(role: 'admin'),
-            ),
+            onTap: () => AppNavigator.push(context, ManagerListPage()),
           ),
           SizedBox(height: 20),
-          AppButton(text: 'Area Management', onTap: () {}),
+          AdminButton(text: 'Area Management', onTap: () {}),
           SizedBox(height: 20),
-          AppButton(text: 'Assign Task', onTap: () {}),
+          AdminButton(text: 'Assign Task', onTap: () {}),
           SizedBox(height: 20),
-          AppButton(text: 'Notification', onTap: () {}),
+          AdminButton(text: 'Notification', onTap: () {}),
           SizedBox(height: 20),
-          AppButton(text: 'Report', onTap: () {}),
+          AdminButton(text: 'Report', onTap: () {}),
           SizedBox(height: 20),
-          AppButton(text: 'Sign Out', onTap: _signOut),
+          AdminButton(text: 'Sign Out', onTap: _signOut),
         ],
       ),
     );

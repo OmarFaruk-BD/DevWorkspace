@@ -15,8 +15,9 @@ import 'package:workspace/core/components/item_selection_popup.dart';
 import 'package:workspace/features/admin/service/employee_service.dart';
 
 class EditEmployeePage extends StatefulWidget {
-  const EditEmployeePage({super.key, this.user});
+  const EditEmployeePage({super.key, this.user, this.title = 'Employee'});
   final UserModel? user;
+  final String title;
 
   @override
   State<EditEmployeePage> createState() => _EditEmployeePageState();
@@ -67,7 +68,7 @@ class _EditEmployeePageState extends State<EditEmployeePage> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        appBar: AdminAppBar(title: 'Edit Employee'),
+        appBar: AdminAppBar(title: 'Edit ${widget.title}'),
         body: SafeArea(
           child: Form(
             key: _formKey,
@@ -211,7 +212,7 @@ class _EditEmployeePageState extends State<EditEmployeePage> {
                 AppButton(
                   isLoading: _isLoading,
                   onTap: _editEmployee,
-                  text: 'Update Employee',
+                  text: 'Update ${widget.title}',
                 ),
                 const SizedBox(height: 40),
               ],

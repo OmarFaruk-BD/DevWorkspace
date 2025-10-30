@@ -3,18 +3,18 @@ import 'package:workspace/core/helper/navigation.dart';
 import 'package:workspace/core/components/app_bar.dart';
 import 'package:workspace/core/components/app_button.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
-import 'package:workspace/features/admin/screen/employee_detail.dart';
+import 'package:workspace/features/admin/screen/manager_detail.dart';
 import 'package:workspace/features/admin/service/employee_service.dart';
 
-class EmployeeListPage extends StatefulWidget {
-  const EmployeeListPage({super.key, this.hasBackButton = true});
+class ManagerListPage extends StatefulWidget {
+  const ManagerListPage({super.key, this.hasBackButton = true});
   final bool hasBackButton;
 
   @override
-  State<EmployeeListPage> createState() => _EmployeeListPageState();
+  State<ManagerListPage> createState() => _ManagerListPageState();
 }
 
-class _EmployeeListPageState extends State<EmployeeListPage> {
+class _ManagerListPageState extends State<ManagerListPage> {
   final EmployeeService _employeeService = EmployeeService();
   List<UserModel> employees = [];
   bool isLoading = true;
@@ -26,7 +26,7 @@ class _EmployeeListPageState extends State<EmployeeListPage> {
   }
 
   Future<void> fetchEmployees() async {
-    employees = await _employeeService.getAllEmployees('employee');
+    employees = await _employeeService.getAllEmployees('admin');
     setState(() => isLoading = false);
   }
 
@@ -34,7 +34,7 @@ class _EmployeeListPageState extends State<EmployeeListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AdminAppBar(
-        title: 'Employee List',
+        title: 'Manager List',
         hasBackButton: widget.hasBackButton,
       ),
       body: SafeArea(
@@ -49,12 +49,12 @@ class _EmployeeListPageState extends State<EmployeeListPage> {
                 Center(child: Text('No employees found.'))
               else
                 ...employees.map((employee) {
-                  return EmployeItem(
+                  return ManagerItem(
                     employee: employee,
                     onTap: () {
                       AppNavigator.pushTo(
                         context,
-                        EmployeeDetailPage(userModel: employee),
+                        ManagerDetailPage(userModel: employee),
                         onBack: fetchEmployees,
                       );
                     },
@@ -68,8 +68,8 @@ class _EmployeeListPageState extends State<EmployeeListPage> {
   }
 }
 
-class EmployeItem extends StatelessWidget {
-  const EmployeItem({super.key, required this.employee, this.onTap});
+class ManagerItem extends StatelessWidget {
+  const ManagerItem({super.key, required this.employee, this.onTap});
   final UserModel employee;
   final VoidCallback? onTap;
 
