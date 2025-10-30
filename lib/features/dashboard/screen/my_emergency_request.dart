@@ -96,7 +96,8 @@ class _MyEmergencyRequestState extends State<MyEmergencyRequest> {
             'Today My Emergency Requests',
             style: TextStyle(fontWeight: FontWeight.w600),
           ),
-          if (todayList.isEmpty) const Text('No requests found'),
+          if (todayList.isEmpty && isLoading == false)
+            const Text('No requests found'),
           SizedBox(height: 10),
           ...List.generate(todayList.length, (index) {
             return RequestItem(
@@ -106,10 +107,11 @@ class _MyEmergencyRequestState extends State<MyEmergencyRequest> {
             );
           }),
           Text(
-            'Previous Notifications',
+            'Previous Emergency Requests',
             style: TextStyle(fontWeight: FontWeight.w600),
           ),
-          if (previousList.isEmpty) const Text('No notifications found'),
+          if (previousList.isEmpty && isLoading == false)
+            const Text('No requests found'),
           SizedBox(height: 10),
           ...List.generate(previousList.length, (index) {
             return RequestItem(

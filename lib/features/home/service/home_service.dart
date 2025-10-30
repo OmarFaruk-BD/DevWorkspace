@@ -86,7 +86,7 @@ class HomeService {
         return null;
       } else {
         final data = assignLocation.last;
-        // _logger.e(data);
+        _logger.e(data);
 
         final myArea = MyAreaModel(
           longitude: data['long'],
