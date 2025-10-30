@@ -90,7 +90,6 @@ class EmployeeTaskService {
       final querySnapshot = await _firestore
           .collection('tasks')
           .where('assignedTo', isEqualTo: assignedTo)
-          // .orderBy('createdAt', descending: true)
           .get();
 
       final tasks = querySnapshot.docs.map((doc) {
