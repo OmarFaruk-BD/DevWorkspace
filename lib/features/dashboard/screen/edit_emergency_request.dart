@@ -200,7 +200,7 @@ class _EditEmergencyRequestState extends State<EditEmergencyRequest> {
   void _deleteNotification() async {
     Navigator.pop(context);
     setState(() => _isLoading2 = true);
-    final result = await _service.deleterequest(widget.request?.id ?? '');
+    final result = await _service.deleteRequest(widget.request?.id ?? '');
     setState(() => _isLoading2 = false);
     result.fold((error) => AppSnackBar.show(context, error), (data) {
       AppSnackBar.show(context, data);

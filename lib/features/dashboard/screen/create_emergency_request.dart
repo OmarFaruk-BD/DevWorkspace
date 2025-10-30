@@ -23,7 +23,6 @@ class _CreateEmergencyRequestState extends State<CreateEmergencyRequest> {
   final _notificationService = EmergencyRequestService();
   final AppValidator _validator = AppValidator();
   final _description = TextEditingController();
-  final _comments = TextEditingController();
   final _title = TextEditingController();
   final DateTime _date = DateTime.now();
   String _priority = 'Emergency';
@@ -106,14 +105,16 @@ class _CreateEmergencyRequestState extends State<CreateEmergencyRequest> {
     setState(() => _isLoading = true);
     final result = await _notificationService.createRequest(
       title: _title.text,
+      priority: _priority,
       assignedTo: _assignedTo,
       description: _description.text,
-      priority: _priority,
       date: _date.toDateString() ?? '',
-      comments: _comments.text,
+      userName: widget.user?.name ?? '',
     );
     setState(() => _isLoading = false);
     result.fold((error) => AppSnackBar.show(context, error), (data) {
+      _title.clear();
+      _description.clear();
       AppSnackBar.show(context, data);
     });
   }

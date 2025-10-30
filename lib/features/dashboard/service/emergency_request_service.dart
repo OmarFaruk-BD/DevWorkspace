@@ -14,14 +14,15 @@ class EmergencyRequestService {
     required String description,
     required String priority,
     required String date,
-    required String comments,
+    required String userName,
   }) async {
     try {
       final Map<String, dynamic> requestData = {
         'date': date,
         'title': title,
+        'comments': '',
         'priority': priority,
-        'comments': comments,
+        'userName': userName,
         'assignedTo': assignedTo,
         'description': description,
         'createdAt': FieldValue.serverTimestamp(),
@@ -63,7 +64,7 @@ class EmergencyRequestService {
   }
 
   /// 🗑️ Delete a request by its document ID
-  Future<Either<String, String>> deleterequest(String id) async {
+  Future<Either<String, String>> deleteRequest(String id) async {
     try {
       await _firestore.collection('request').doc(id).delete();
       return const Right('request deleted successfully.');
@@ -93,6 +94,7 @@ class EmergencyRequestService {
           id: doc.id,
           date: data['date'],
           title: data['title'],
+          userName: data['userName'],
           comments: data['comments'],
           priority: data['priority'],
           content: data['description'],
@@ -134,6 +136,7 @@ class EmergencyRequestService {
         id: request['id'],
         date: request['date'],
         title: request['title'],
+        userName: request['userName'],
         comments: request['comments'],
         priority: request['priority'],
         content: request['description'],

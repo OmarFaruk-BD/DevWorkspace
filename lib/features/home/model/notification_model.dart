@@ -39,6 +39,7 @@ class NotificationModelV2 {
   final String? content;
   final String? comments;
   final String? priority;
+  final String? userName;
   final String? createdAt;
   final String? assignedTo;
 
@@ -49,6 +50,7 @@ class NotificationModelV2 {
     this.content,
     this.comments,
     this.priority,
+    this.userName,
     this.createdAt,
     this.assignedTo,
   });
@@ -60,6 +62,7 @@ class NotificationModelV2 {
     String? content,
     String? comments,
     String? priority,
+    String? userName,
     String? createdAt,
     String? assignedTo,
   }) => NotificationModelV2(
@@ -67,6 +70,7 @@ class NotificationModelV2 {
     date: date ?? this.date,
     title: title ?? this.title,
     content: content ?? this.content,
+    userName: userName ?? this.userName,
     comments: comments ?? this.comments,
     priority: priority ?? this.priority,
     createdAt: createdAt ?? this.createdAt,
