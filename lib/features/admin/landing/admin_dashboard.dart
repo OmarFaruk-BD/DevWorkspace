@@ -7,10 +7,17 @@ import 'package:workspace/core/components/approval_popup.dart';
 import 'package:workspace/features/admin/screen/add_employee.dart';
 import 'package:workspace/features/admin/screen/employe_list.dart';
 import 'package:workspace/features/admin/widget/employee_popup.dart';
+import 'package:workspace/features/admin/task/add_employee_task.dart';
+import 'package:workspace/features/admin/task/employee_task_list.dart';
 import 'package:workspace/features/admin/screen/admin_login_page.dart';
 import 'package:workspace/features/admin/screen/manager_list_page.dart';
 import 'package:workspace/features/admin/service/admin_auth_service.dart';
+import 'package:workspace/features/admin/attendance/employee_attendance.dart';
+import 'package:workspace/features/admin/attendance/e_attendance_history.dart';
+import 'package:workspace/features/admin/notification/e_emergency_request.dart';
 import 'package:workspace/features/admin/attendance/employee_location_list.dart';
+import 'package:workspace/features/admin/notification/add_employee_notification.dart';
+import 'package:workspace/features/admin/notification/employee_notification_list.dart';
 
 class AdminDashboardPage extends StatefulWidget {
   const AdminDashboardPage({super.key});
@@ -43,7 +50,59 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
             onTap: () => AppNavigator.push(context, ManagerListPage()),
           ),
           SizedBox(height: 20),
-          AdminButton(text: 'Assign Location', onTap: () {}),
+          AdminButton(
+            text: 'Assign Task',
+            onTap: () async {
+              await AppPopup.show(
+                child: EmployeePopup(
+                  onSelected: (employee) {
+                    if (!mounted) return;
+                    AppNavigator.push(
+                      context,
+                      AddEmployeeTaskPage(user: employee),
+                    );
+                  },
+                ),
+                context: context,
+              );
+            },
+          ),
+          SizedBox(height: 20),
+          AdminButton(
+            text: 'See Assigned Task',
+            onTap: () async {
+              await AppPopup.show(
+                child: EmployeePopup(
+                  onSelected: (employee) {
+                    if (!mounted) return;
+                    AppNavigator.push(
+                      context,
+                      EmployeeTaskList(user: employee),
+                    );
+                  },
+                ),
+                context: context,
+              );
+            },
+          ),
+          SizedBox(height: 20),
+          AdminButton(
+            text: 'Assign Location',
+            onTap: () async {
+              await AppPopup.show(
+                child: EmployeePopup(
+                  onSelected: (employee) {
+                    if (!mounted) return;
+                    AppNavigator.push(
+                      context,
+                      AddEmployeeAttendancePage(user: employee),
+                    );
+                  },
+                ),
+                context: context,
+              );
+            },
+          ),
           SizedBox(height: 20),
           AdminButton(
             text: 'See Assigned Location',
@@ -63,11 +122,77 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
             },
           ),
           SizedBox(height: 20),
-          AdminButton(text: 'Assign Task', onTap: () {}),
+          AdminButton(
+            text: 'Attendance History',
+            onTap: () async {
+              await AppPopup.show(
+                child: EmployeePopup(
+                  onSelected: (employee) {
+                    if (!mounted) return;
+                    AppNavigator.push(
+                      context,
+                      EAttendanceHistory(user: employee),
+                    );
+                  },
+                ),
+                context: context,
+              );
+            },
+          ),
           SizedBox(height: 20),
-          AdminButton(text: 'Notification', onTap: () {}),
+          AdminButton(
+            text: 'Emergency Request List',
+            onTap: () async {
+              await AppPopup.show(
+                child: EmployeePopup(
+                  onSelected: (employee) {
+                    if (!mounted) return;
+                    AppNavigator.push(
+                      context,
+                      EEmergencyRequest(user: employee),
+                    );
+                  },
+                ),
+                context: context,
+              );
+            },
+          ),
           SizedBox(height: 20),
-          AdminButton(text: 'Report', onTap: () {}),
+          AdminButton(
+            text: 'Send Notification',
+            onTap: () async {
+              await AppPopup.show(
+                child: EmployeePopup(
+                  onSelected: (employee) {
+                    if (!mounted) return;
+                    AppNavigator.push(
+                      context,
+                      AddEmployeeNotificationPage(user: employee),
+                    );
+                  },
+                ),
+                context: context,
+              );
+            },
+          ),
+          SizedBox(height: 20),
+          AdminButton(
+            text: 'See Notifications',
+            onTap: () async {
+              await AppPopup.show(
+                child: EmployeePopup(
+                  onSelected: (employee) {
+                    if (!mounted) return;
+                    AppNavigator.push(
+                      context,
+                      EmployeeNotificationList(user: employee),
+                    );
+                  },
+                ),
+                context: context,
+              );
+            },
+          ),
           SizedBox(height: 20),
           AdminButton(text: 'Sign Out', onTap: _signOut),
         ],
