@@ -38,7 +38,7 @@ class _MyTaskListState extends State<MyTaskList> {
         child: RefreshIndicator(
           onRefresh: fetchEmployeeTask,
           child: ListView(
-            padding: EdgeInsets.all(25),
+            padding: EdgeInsets.all(15),
             children: [
               LoadingOrEmptyText(
                 isLoading: _isLoading,
