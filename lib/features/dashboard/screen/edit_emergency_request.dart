@@ -9,63 +9,56 @@ import 'package:workspace/core/components/approval_popup.dart';
 import 'package:workspace/core/components/app_text_field.dart';
 import 'package:workspace/core/components/item_selection_popup.dart';
 import 'package:workspace/features/home/model/notification_model.dart';
-import 'package:workspace/features/admin/service/notification_service.dart';
+import 'package:workspace/features/dashboard/service/emergency_request_service.dart';
 
-class EditEmployeeNotificationPage extends StatefulWidget {
-  const EditEmployeeNotificationPage({
-    super.key,
-    this.assignedTo,
-    this.notification,
-  });
+class EditEmergencyRequest extends StatefulWidget {
+  const EditEmergencyRequest({super.key, this.assignedTo, this.request});
   final String? assignedTo;
-  final NotificationModel? notification;
+  final NotificationModelV2? request;
 
   @override
-  State<EditEmployeeNotificationPage> createState() =>
-      _EditEmployeeNotificationPageState();
+  State<EditEmergencyRequest> createState() => _EditEmergencyRequestState();
 }
 
-class _EditEmployeeNotificationPageState
-    extends State<EditEmployeeNotificationPage> {
+class _EditEmergencyRequestState extends State<EditEmergencyRequest> {
+  final EmergencyRequestService _service = EmergencyRequestService();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final _notificationService = EmployeeNotificationService();
   final AppValidator _validator = AppValidator();
   final _description = TextEditingController();
   final _comments = TextEditingController();
   final _title = TextEditingController();
-  NotificationModel? notification;
   DateTime _date = DateTime.now();
-  String _priority = 'General';
+  String _priority = 'Emergency';
+  NotificationModelV2? request;
   bool _isLoading2 = false;
   String _assignedTo = '';
   bool _isLoading = false;
 
-  final List<String> _priorities = ['General', 'Emergency', 'Urgent'];
+  final List<String> _priorities = ['Minor', 'Urgent', 'Emergency'];
 
   @override
   void initState() {
     super.initState();
     _assignedTo = widget.assignedTo ?? '';
-    notification = widget.notification;
+    request = widget.request;
     initDataLoad();
     getDetails();
   }
 
   void getDetails() async {
-    final result = await _notificationService.getNotificationDetails(
+    final result = await _service.getrequestDetails(
       assignedTo: widget.assignedTo ?? '',
-      notificationId: widget.notification?.id ?? '',
+      requestId: widget.request?.id ?? '',
     );
-    setState(() => notification = result);
+    setState(() => request = result);
   }
 
   void initDataLoad() {
     _date =
-        DateTime.tryParse(widget.notification?.createdAt ?? '') ??
-        DateTime.now();
-    _title.text = widget.notification?.title ?? '';
-    _description.text = widget.notification?.content ?? '';
-    _priority = widget.notification?.priority ?? '';
+        DateTime.tryParse(widget.request?.createdAt ?? '') ?? DateTime.now();
+    _title.text = widget.request?.title ?? '';
+    _description.text = widget.request?.content ?? '';
+    _priority = widget.request?.priority ?? '';
   }
 
   @override
@@ -73,7 +66,7 @@ class _EditEmployeeNotificationPageState
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        appBar: AdminAppBar(title: 'Notification Details'),
+        appBar: CustomAppBar(title: 'Emergency Request Details'),
         body: Form(
           key: _formKey,
           child: SingleChildScrollView(
@@ -84,7 +77,7 @@ class _EditEmployeeNotificationPageState
                 Card(
                   child: ListTile(
                     title: Text(
-                      'Title: ${notification?.title ?? ''}',
+                      'Title: ${request?.title ?? ''}',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -94,11 +87,11 @@ class _EditEmployeeNotificationPageState
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: 6),
-                        Text(notification?.content ?? ''),
+                        Text(request?.content ?? ''),
                         SizedBox(height: 12),
-                        Text('Priority: ${notification?.priority ?? ''}'),
+                        Text('Priority: ${request?.priority ?? ''}'),
                         SizedBox(height: 2),
-                        Text('Date: ${notification?.createdAt ?? ''}'),
+                        Text('Date: ${request?.createdAt ?? ''}'),
                         SizedBox(height: 4),
                       ],
                     ),
@@ -106,27 +99,27 @@ class _EditEmployeeNotificationPageState
                 ),
                 SizedBox(height: 35),
                 Text(
-                  'Edit Notification',
+                  'Edit Emergency Request',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
                 SizedBox(height: 8),
-                Text('Notification Title'),
+                Text('Emergency Request Title'),
                 SizedBox(height: 8),
                 AppTextField(
                   controller: _title,
-                  hintText: 'Enter notification title',
+                  hintText: 'Enter request title',
                   validator: _validator.validate,
                 ),
                 SizedBox(height: 20),
-                Text('Notification Description'),
+                Text('Emergency Request Description'),
                 SizedBox(height: 8),
                 AppTextField(
                   controller: _description,
-                  hintText: 'Enter notification description',
+                  hintText: 'Enter emergency description',
                   validator: _validator.validate,
                 ),
                 SizedBox(height: 20),
-                Text('Notification Priority'),
+                Text('Emergency Request Priority'),
                 SizedBox(height: 8),
                 AppTextField(
                   readOnly: true,
@@ -193,8 +186,8 @@ class _EditEmployeeNotificationPageState
       'assignedTo': _assignedTo,
       'description': _description.text,
     };
-    final result = await _notificationService.editNotification(
-      notificationId: widget.notification?.id ?? '',
+    final result = await _service.editrequest(
+      requestId: widget.request?.id ?? '',
       updatedFields: updatedFields,
     );
     setState(() => _isLoading = false);
@@ -207,9 +200,7 @@ class _EditEmployeeNotificationPageState
   void _deleteNotification() async {
     Navigator.pop(context);
     setState(() => _isLoading2 = true);
-    final result = await _notificationService.deleteNotification(
-      widget.notification?.id ?? '',
-    );
+    final result = await _service.deleterequest(widget.request?.id ?? '');
     setState(() => _isLoading2 = false);
     result.fold((error) => AppSnackBar.show(context, error), (data) {
       AppSnackBar.show(context, data);

@@ -1,10 +1,12 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:workspace/core/helper/navigation.dart';
 import 'package:workspace/core/components/app_bar.dart';
 import 'package:workspace/core/components/app_button.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
 import 'package:workspace/core/components/loading_or_empty.dart';
 import 'package:workspace/features/home/model/notification_model.dart';
+import 'package:workspace/features/dashboard/screen/edit_emergency_request.dart';
 import 'package:workspace/features/dashboard/service/emergency_request_service.dart';
 
 class MyEmergencyRequest extends StatefulWidget {
@@ -138,14 +140,11 @@ class RequestItem extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(bottom: 20),
       child: InkWell(
-        // onTap: () => AppNavigator.pushTo(
-        //   context,
-        //   EditEmployeeNotificationPage(
-        //     notification: data,
-        //     assignedTo: assignedTo,
-        //   ),
-        //   onBack: () => onEdit?.call(),
-        // ),
+        onTap: () => AppNavigator.pushTo(
+          context,
+          EditEmergencyRequest(request: data, assignedTo: assignedTo),
+          onBack: () => onEdit?.call(),
+        ),
         child: Container(
           padding: EdgeInsets.all(16),
           decoration: BoxDecoration(

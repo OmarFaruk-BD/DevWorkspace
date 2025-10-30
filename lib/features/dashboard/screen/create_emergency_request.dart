@@ -80,7 +80,7 @@ class _CreateEmergencyRequestState extends State<CreateEmergencyRequest> {
                         list: _priorities,
                         selectedItem: _priority,
                         onSelected: (value) =>
-                            setState(() => _priority = value ?? 'General'),
+                            setState(() => _priority = value ?? 'Emergency'),
                       ),
                     );
                   },
