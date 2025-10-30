@@ -3,7 +3,6 @@ import 'package:workspace/core/utils/app_colors.dart';
 import 'package:workspace/core/components/app_bar.dart';
 import 'package:workspace/core/components/app_network_image.dart';
 import 'package:workspace/features/home/model/notification_model.dart';
-import 'package:workspace/features/home/service/notification_service.dart';
 
 class NotificationDetail extends StatefulWidget {
   const NotificationDetail({super.key, required this.model});
@@ -22,12 +21,7 @@ class _NotificationDetailState extends State<NotificationDetail> {
     _getDeatails();
   }
 
-  void _getDeatails() async {
-    final getData = await NotificationService().getNotificationDetail(
-      widget.model.comments,
-    );
-    if (getData != null) setState(() => model = getData);
-  }
+  void _getDeatails() async {}
 
   @override
   Widget build(BuildContext context) {

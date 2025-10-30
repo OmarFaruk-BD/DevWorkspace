@@ -220,11 +220,11 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
               SizedBox(width: 20),
               Expanded(
                 child: AdminButton(
-                  text: 'Send Message',
+                  text: 'Send Notification',
                   onTap: () {
                     AppNavigator.push(
                       context,
-                      EmployeeAddNotificationPage(user: user),
+                      AddEmployeeNotificationPage(user: user),
                     );
                   },
                 ),
@@ -232,7 +232,7 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
               SizedBox(width: 20),
               Expanded(
                 child: AdminButton(
-                  text: 'See Messages',
+                  text: 'Notification List',
                   onTap: () {
                     AppSnackBar.show(context, 'Coming soon');
                   },

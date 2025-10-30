@@ -40,17 +40,14 @@ class EmployeeNotificationService {
 
   /// ✏️ Edit (update) an existing task by its document ID
   Future<Either<String, String>> editNotification({
-    required String taskId,
+    required String id,
     required Map<String, dynamic> updatedFields,
   }) async {
     try {
       updatedFields['updatedAt'] = FieldValue.serverTimestamp();
       _logger.e(updatedFields);
 
-      await _firestore
-          .collection('notification')
-          .doc(taskId)
-          .update(updatedFields);
+      await _firestore.collection('notification').doc(id).update(updatedFields);
 
       return const Right('Task updated successfully.');
     } on FirebaseException catch (e) {
@@ -63,9 +60,9 @@ class EmployeeNotificationService {
   }
 
   /// 🗑️ Delete a task by its document ID
-  Future<Either<String, String>> deleteDelete(String taskId) async {
+  Future<Either<String, String>> deleteNotification(String id) async {
     try {
-      await _firestore.collection('notification').doc(taskId).delete();
+      await _firestore.collection('notification').doc(id).delete();
       return const Right('Notification deleted successfully.');
     } on FirebaseException catch (e) {
       _logger.e('Firebase error deleting notification: ${e.message}');
@@ -77,19 +74,19 @@ class EmployeeNotificationService {
   }
 
   /// 📋 Get all notification assigned to a specific employee
-  Future<List<NotificationModel>> getnotificationByEmployee(
+  Future<List<NotificationModel>> getNotificationByEmployee(
     String assignedTo,
   ) async {
     try {
       final querySnapshot = await _firestore
           .collection('notification')
           .where('assignedTo', isEqualTo: assignedTo)
-          // .orderBy('createdAt', descending: true)
           .get();
 
       final notification = querySnapshot.docs.map((doc) {
         final data = doc.data();
         return NotificationModel(
+          id: doc.id,
           title: data['title'],
           createdAt: data['date'],
           comments: data['comments'],

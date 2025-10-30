@@ -10,27 +10,29 @@ import 'package:workspace/features/auth/model/user_model.dart';
 import 'package:workspace/core/components/item_selection_popup.dart';
 import 'package:workspace/features/admin/service/notification_service.dart';
 
-class EmployeeAddNotificationPage extends StatefulWidget {
-  const EmployeeAddNotificationPage({super.key, this.user});
+class AddEmployeeNotificationPage extends StatefulWidget {
+  const AddEmployeeNotificationPage({super.key, this.user});
   final UserModel? user;
 
   @override
-  State<EmployeeAddNotificationPage> createState() =>
-      _EmployeeAddNotificationPageState();
+  State<AddEmployeeNotificationPage> createState() =>
+      _AddEmployeeNotificationPageState();
 }
 
-class _EmployeeAddNotificationPageState
-    extends State<EmployeeAddNotificationPage> {
+class _AddEmployeeNotificationPageState
+    extends State<AddEmployeeNotificationPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final _taskService = EmployeeNotificationService();
+  final _notificationService = EmployeeNotificationService();
   final AppValidator _validator = AppValidator();
   final _description = TextEditingController();
   final _comments = TextEditingController();
   final _title = TextEditingController();
   final DateTime _date = DateTime.now();
-  String _priority = 'Low';
+  String _priority = 'General';
   String _assignedTo = '';
   bool _isLoading = false;
+
+  final List<String> _priorities = ['General', 'Emergency', 'Urgent'];
 
   @override
   void initState() {
@@ -43,7 +45,7 @@ class _EmployeeAddNotificationPageState
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        appBar: AdminAppBar(title: 'Add Employee Task'),
+        appBar: AdminAppBar(title: 'Add Notification'),
         body: Form(
           key: _formKey,
           child: SingleChildScrollView(
@@ -77,10 +79,10 @@ class _EmployeeAddNotificationPageState
                     await AppPopup.show(
                       context: context,
                       child: ItemSelectionPopUp(
+                        list: _priorities,
                         selectedItem: _priority,
-                        list: const ['Low', 'Medium', 'High'],
                         onSelected: (value) =>
-                            setState(() => _priority = value ?? 'Low'),
+                            setState(() => _priority = value ?? 'General'),
                       ),
                     );
                   },
@@ -90,7 +92,7 @@ class _EmployeeAddNotificationPageState
                   text: 'Create Notification',
                   isLoading: _isLoading,
                   width: double.maxFinite,
-                  onTap: _createTask,
+                  onTap: _createNotification,
                 ),
                 SizedBox(height: 100),
               ],
@@ -101,10 +103,10 @@ class _EmployeeAddNotificationPageState
     );
   }
 
-  void _createTask() async {
+  void _createNotification() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
-    final result = await _taskService.createNotification(
+    final result = await _notificationService.createNotification(
       title: _title.text,
       assignedTo: _assignedTo,
       description: _description.text,

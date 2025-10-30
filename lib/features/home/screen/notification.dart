@@ -29,7 +29,7 @@ class _NotificationPageState extends State<NotificationPage> {
   void getNtifications() async {
     setState(() => isLoading = true);
     final user = context.read<AuthCubit>().state.user;
-    notifications = await _service.getnotificationByEmployee(user?.id ?? '');
+    notifications = await _service.getNotificationByEmployee(user?.id ?? '');
     setState(() => isLoading = false);
   }
 
