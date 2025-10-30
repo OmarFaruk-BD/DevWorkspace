@@ -72,4 +72,38 @@ class EAssignLocationService {
       return null;
     }
   }
+
+  /// ✅ Get all assigned locations (descending by createdAt)
+  Future<List<MyAreaModel>> getAllAssignLocationsByEmployee(
+    String assignedTo,
+  ) async {
+    try {
+      final querySnapshot = await _firestore
+          .collection('assignLocation')
+          .where('assignedTo', isEqualTo: assignedTo)
+          .orderBy('createdAt', descending: true)
+          .get();
+
+      final List<MyAreaModel> areas = querySnapshot.docs.map((doc) {
+        final data = doc.data();
+
+        return MyAreaModel(
+          longitude: data['long'],
+          radius: data['radius'],
+          latitude: data['lat'],
+          start: data['start'],
+          end: data['end'],
+        );
+      }).toList();
+
+      _logger.i('Fetched ${areas.length} assigned locations for $assignedTo');
+      return areas;
+    } on FirebaseException catch (e) {
+      _logger.e('Firebase error fetching all assignLocations: ${e.message}');
+      return [];
+    } catch (e) {
+      _logger.e('Error fetching all assignLocations: $e');
+      return [];
+    }
+  }
 }

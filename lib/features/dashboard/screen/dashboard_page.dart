@@ -6,7 +6,9 @@ import 'package:workspace/core/utils/app_images.dart';
 import 'package:workspace/core/helper/navigation.dart';
 import 'package:workspace/features/home/widget/header.dart';
 import 'package:workspace/features/auth/cubit/auth_cubit.dart';
+import 'package:workspace/features/home/screen/notification.dart';
 import 'package:workspace/features/dashboard/screen/my_task_list.dart';
+import 'package:workspace/features/dashboard/screen/assigned_area.dart';
 import 'package:workspace/features/history/screen/attendance_history.dart';
 import 'package:workspace/features/dashboard/screen/my_emergency_request.dart';
 import 'package:workspace/features/dashboard/screen/create_emergency_request.dart';
@@ -50,25 +52,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   ],
                 ),
               ),
-              // Padding(
-              //   padding: const EdgeInsets.all(25).copyWith(bottom: 0),
-              //   child: Row(
-              //     children: [
-              //       DashboardItem(
-              //         text: 'Leave\nRequest',
-              //         icon: AppImages.overview_2,
-              //         onTap: () =>
-              //             AppNavigator.push(context, LeaveRequestPage()),
-              //       ),
-              //       SizedBox(width: MediaQuery.of(context).size.width * 0.1),
-              //       DashboardItem(
-              //         text: 'Leave\nApproval',
-              //         icon: AppImages.overview_2,
-              //         onTap: () => AppNavigator.push(context, LeaveApproval()),
-              //       ),
-              //     ],
-              //   ),
-              // ),
+
               Padding(
                 padding: const EdgeInsets.all(25).copyWith(bottom: 0),
                 child: Row(
@@ -89,6 +73,28 @@ class _DashboardPageState extends State<DashboardPage> {
                         context,
                         MyEmergencyRequest(user: state.user),
                       ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(25).copyWith(bottom: 0),
+                child: Row(
+                  children: [
+                    DashboardItem(
+                      text: 'Assigned\nArea',
+                      icon: AppImages.overview_2,
+                      onTap: () => AppNavigator.push(
+                        context,
+                        MyAssignedArea(user: state.user),
+                      ),
+                    ),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.1),
+                    DashboardItem(
+                      text: 'My\nNotification',
+                      icon: AppImages.overview_2,
+                      onTap: () =>
+                          AppNavigator.push(context, NotificationPage()),
                     ),
                   ],
                 ),
