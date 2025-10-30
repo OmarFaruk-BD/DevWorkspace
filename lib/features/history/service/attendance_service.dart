@@ -1,11 +1,8 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:logger/logger.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:workspace/core/helper/extention.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:workspace/features/auth/cubit/auth_cubit.dart';
 import 'package:workspace/features/history/model/attendance_detail_model.dart';
 import 'package:workspace/features/history/model/attendance_history_model.dart';
 
@@ -46,12 +43,9 @@ class AttendanceService {
   }
 
   Future<AttendanceDetailModel?> getTodayAttendanceEmployee(
-    BuildContext context,
+    String assignedTo,
   ) async {
     try {
-      final user = context.read<AuthCubit>().state.user;
-      final assignedTo = user?.id ?? '';
-
       final querySnapshot = await _firestore.collection('eAttendance').get();
       final attendanceList = querySnapshot.docs
           .map((doc) => doc.data())
@@ -132,15 +126,10 @@ class AttendanceService {
     }
   }
 
-  Future<List<AttendanceHistoryModel>> getAttendanceHistory({
-    required BuildContext context,
-    DateTime? startDate,
-    DateTime? endDate,
-  }) async {
+  Future<List<AttendanceHistoryModel>> getAttendanceHistory(
+    String assignedTo,
+  ) async {
     try {
-      final user = context.read<AuthCubit>().state.user;
-      final assignedTo = user?.id ?? '';
-
       final querySnapshot = await _firestore.collection('eAttendance').get();
 
       final attendanceList = querySnapshot.docs.map((doc) {

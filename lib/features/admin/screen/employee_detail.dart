@@ -9,6 +9,7 @@ import 'package:workspace/core/components/app_bar.dart';
 import 'package:workspace/core/components/app_button.dart';
 import 'package:workspace/core/components/app_snack_bar.dart';
 import 'package:workspace/core/components/approval_popup.dart';
+import 'package:workspace/features/admin/attendance/e_attendance_history.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
 import 'package:workspace/core/components/app_network_image.dart';
 import 'package:workspace/features/admin/screen/edit_employe.dart';
@@ -16,6 +17,7 @@ import 'package:workspace/features/admin/task/add_employee_task.dart';
 import 'package:workspace/features/admin/task/employee_task_list.dart';
 import 'package:workspace/features/admin/service/employee_service.dart';
 import 'package:workspace/features/admin/attendance/employee_attendance.dart';
+import 'package:workspace/features/admin/attendance/employee_location_list.dart';
 import 'package:workspace/features/admin/notification/add_employee_notification.dart';
 import 'package:workspace/features/admin/notification/employee_notification_list.dart';
 
@@ -103,6 +105,8 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
           _buildItem('Phone', user?.phone ?? 'N/A'),
           _buildDivider(),
           InkWell(
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
             onTap: () async {
               setState(() => showPassword = !showPassword);
               await Future.delayed(const Duration(seconds: 3));
@@ -110,7 +114,7 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
             },
             child: _buildItem(
               'Password',
-              showPassword ? user?.password ?? '' : '*********',
+              showPassword ? user?.password ?? '' : '(tap to see)',
             ),
           ),
           _buildDivider(),
@@ -202,13 +206,39 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
               SizedBox(width: 20),
               Expanded(
                 child: AdminButton(
-                  text: 'See Attendance',
+                  text: 'See Assign Location',
                   onTap: () {
-                    AppSnackBar.show(context, 'Coming soon');
-                    // AppNavigator.push(
-                    //   context,
-                    //   EmployeeAttendaceList(user: user),
-                    // );
+                    AppNavigator.push(
+                      context,
+                      EmployeeLocationList(user: user),
+                    );
+                  },
+                ),
+              ),
+              SizedBox(width: 20),
+            ],
+          ),
+          SizedBox(height: 20),
+          Row(
+            children: [
+              SizedBox(width: 20),
+              Expanded(
+                child: AdminButton(
+                  text: 'Attendance History',
+                  onTap: () {
+                    AppNavigator.push(context, EAttendanceHistory(user: user));
+                  },
+                ),
+              ),
+              SizedBox(width: 20),
+              Expanded(
+                child: AdminButton(
+                  text: 'Notification List',
+                  onTap: () {
+                    AppNavigator.push(
+                      context,
+                      EmployeeNotificationList(user: user),
+                    );
                   },
                 ),
               ),

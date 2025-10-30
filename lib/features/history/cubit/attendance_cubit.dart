@@ -1,5 +1,6 @@
-import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:workspace/features/auth/cubit/auth_cubit.dart';
 import 'package:workspace/features/history/service/attendance_service.dart';
 import 'package:workspace/features/history/model/attendance_detail_model.dart';
 import 'package:workspace/features/history/model/attendance_history_model.dart';
@@ -11,25 +12,18 @@ class AttendanceCubit extends Cubit<AttendanceState> {
   final AttendanceService _attendanceService = AttendanceService();
 
   void updateAttendanceDetails(BuildContext context) async {
+    final user = context.read<AuthCubit>().state.user;
+    final assignedTo = user?.id ?? '';
     final attendanceDetail = await _attendanceService
-        .getTodayAttendanceEmployee(context);
+        .getTodayAttendanceEmployee(assignedTo);
     emit(state.copyWith(attendanceDetail: attendanceDetail));
   }
 
-  void updateAttendanceHistory({
-    required BuildContext context,
-    DateTime? startDate,
-    DateTime? endDate,
-  }) async {
-    if (startDate == null || endDate == null) {
-      return;
-    }
+  void updateAttendanceHistory(BuildContext context) async {
+    final user = context.read<AuthCubit>().state.user;
+    final assignedTo = user?.id ?? '';
     emit(state.copyWith(isLoading: true));
-    final dataList = await AttendanceService().getAttendanceHistory(
-      context: context,
-      startDate: startDate,
-      endDate: endDate,
-    );
+    final dataList = await _attendanceService.getAttendanceHistory(assignedTo);
     dataList.sort((a, b) {
       final aDate = a.punchDate ?? DateTime.fromMillisecondsSinceEpoch(0);
       final bDate = b.punchDate ?? DateTime.fromMillisecondsSinceEpoch(0);

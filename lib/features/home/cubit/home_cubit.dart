@@ -48,8 +48,10 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   void checkPunchIn(BuildContext context) async {
+    final user = context.read<AuthCubit>().state.user;
+    final assignedTo = user?.id ?? '';
     final attendanceDetail = await _attendanceService
-        .getTodayAttendanceEmployee(context);
+        .getTodayAttendanceEmployee(assignedTo);
     if (attendanceDetail?.punchIn != null &&
         attendanceDetail?.punchOut == null) {
       punch(true);

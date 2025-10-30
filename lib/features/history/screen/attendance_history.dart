@@ -26,11 +26,7 @@ class _AttendanceHistoryPageState extends State<AttendanceHistoryPage> {
   }
 
   void _initDateList() {
-    context.read<AttendanceCubit>().updateAttendanceHistory(
-      context: context,
-      startDate: DateTime.now().subtract(const Duration(days: 365)),
-      endDate: DateTime.now(),
-    );
+    context.read<AttendanceCubit>().updateAttendanceHistory(context);
   }
 
   @override
@@ -44,42 +40,6 @@ class _AttendanceHistoryPageState extends State<AttendanceHistoryPage> {
         padding: EdgeInsets.all(24),
         child: Column(
           children: [
-            // SfDateRangePicker(
-            //   view: DateRangePickerView.month,
-            //   backgroundColor: AppColors.white,
-            //   todayHighlightColor: AppColors.red,
-            //   endRangeSelectionColor: AppColors.red,
-            //   startRangeSelectionColor: AppColors.red,
-            //   selectionMode: DateRangePickerSelectionMode.range,
-            //   rangeSelectionColor: AppColors.red.withAlpha(40),
-            //   headerStyle: DateRangePickerHeaderStyle(
-            //     backgroundColor: AppColors.white,
-            //   ),
-            //   monthViewSettings: DateRangePickerMonthViewSettings(
-            //     showTrailingAndLeadingDates: true,
-            //   ),
-            //   initialSelectedRange: PickerDateRange(
-            //     DateTime.now().subtract(const Duration(days: 6)),
-            //     DateTime.now(),
-            //   ),
-            //   onSelectionChanged: (dateRangePickerSelectionChangedArgs) {
-            //     if (dateRangePickerSelectionChangedArgs.value
-            //         is PickerDateRange) {
-            //       final PickerDateRange range =
-            //           dateRangePickerSelectionChangedArgs.value;
-            //       setState(() {
-            //         if (range.startDate != null && range.endDate != null) {
-            //           context.read<AttendanceCubit>().updateAttendanceHistory(
-            //             context: context,
-            //             startDate: range.startDate,
-            //             endDate: range.endDate,
-            //           );
-            //         }
-            //       });
-            //     }
-            //   },
-            // ),
-            // SizedBox(height: 25),
             BlocBuilder<AttendanceCubit, AttendanceState>(
               builder: (context, state) {
                 return Column(
