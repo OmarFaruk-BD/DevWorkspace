@@ -6,7 +6,7 @@ import 'package:workspace/core/utils/app_images.dart';
 import 'package:workspace/core/helper/navigation.dart';
 import 'package:workspace/features/home/widget/header.dart';
 import 'package:workspace/features/auth/cubit/auth_cubit.dart';
-import 'package:workspace/features/admin/task/employee_task_list.dart';
+import 'package:workspace/features/dashboard/screen/my_task_list.dart';
 import 'package:workspace/features/dashboard/screen/leave_request.dart';
 import 'package:workspace/features/dashboard/screen/leave_approval.dart';
 import 'package:workspace/features/history/screen/attendance_history.dart';
@@ -37,7 +37,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       icon: AppImages.overview,
                       onTap: () => AppNavigator.push(
                         context,
-                        EmployeeTaskList(user: state.user),
+                        MyTaskList(user: state.user),
                       ),
                     ),
                     SizedBox(width: MediaQuery.of(context).size.width * 0.1),
