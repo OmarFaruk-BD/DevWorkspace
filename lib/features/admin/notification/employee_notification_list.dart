@@ -105,6 +105,7 @@ class _EmployeeNotificationListState extends State<EmployeeNotificationList> {
             return NotificationItem(
               data: todayList[index],
               assignedTo: widget.user?.id,
+              onEdit: () => getNtifications(),
             );
           }),
           Text(
@@ -117,6 +118,7 @@ class _EmployeeNotificationListState extends State<EmployeeNotificationList> {
             return NotificationItem(
               data: previousList[index],
               assignedTo: widget.user?.id,
+              onEdit: () => getNtifications(),
             );
           }),
         ],
@@ -126,21 +128,28 @@ class _EmployeeNotificationListState extends State<EmployeeNotificationList> {
 }
 
 class NotificationItem extends StatelessWidget {
-  const NotificationItem({super.key, required this.data, this.assignedTo});
-  final NotificationModel data;
+  const NotificationItem({
+    super.key,
+    this.onEdit,
+    this.assignedTo,
+    required this.data,
+  });
   final String? assignedTo;
+  final VoidCallback? onEdit;
+  final NotificationModel data;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(bottom: 20),
       child: InkWell(
-        onTap: () => AppNavigator.push(
+        onTap: () => AppNavigator.pushTo(
           context,
           EditEmployeeNotificationPage(
             notification: data,
             assignedTo: assignedTo,
           ),
+          onBack: () => onEdit?.call(),
         ),
         child: Container(
           padding: EdgeInsets.all(16),

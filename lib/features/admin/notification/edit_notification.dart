@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:workspace/core/components/approval_popup.dart';
 import 'package:workspace/core/helper/extention.dart';
 import 'package:workspace/core/components/app_bar.dart';
 import 'package:workspace/core/components/app_popup.dart';
@@ -35,6 +36,7 @@ class _EditEmployeeNotificationPageState
   NotificationModel? notification;
   DateTime _date = DateTime.now();
   String _priority = 'General';
+  bool _isLoading2 = false;
   String _assignedTo = '';
   bool _isLoading = false;
 
@@ -149,6 +151,28 @@ class _EditEmployeeNotificationPageState
                   width: double.maxFinite,
                   onTap: _editNotification,
                 ),
+                SizedBox(height: 45),
+                Text(
+                  'Delete Notification',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+                SizedBox(height: 8),
+                AppButton(
+                  text: 'Delete Notification',
+                  isLoading: _isLoading2,
+                  width: double.maxFinite,
+                  onTap: () {
+                    AppPopup.show(
+                      context: context,
+                      child: ApprovalWidget(
+                        onApprove: _deleteNotification,
+                        title: 'Delete Notification',
+                        description:
+                            'Are you sure you want to delete this notification?',
+                      ),
+                    );
+                  },
+                ),
                 SizedBox(height: 100),
               ],
             ),
@@ -177,6 +201,19 @@ class _EditEmployeeNotificationPageState
     result.fold((error) => AppSnackBar.show(context, error), (data) {
       AppSnackBar.show(context, data);
       getDetails();
+    });
+  }
+
+  void _deleteNotification() async {
+    Navigator.pop(context);
+    setState(() => _isLoading2 = true);
+    final result = await _notificationService.deleteNotification(
+      widget.notification?.id ?? '',
+    );
+    setState(() => _isLoading2 = false);
+    result.fold((error) => AppSnackBar.show(context, error), (data) {
+      AppSnackBar.show(context, data);
+      Navigator.pop(context);
     });
   }
 }
