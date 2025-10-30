@@ -6,8 +6,8 @@ import 'package:workspace/core/components/app_button.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
 import 'package:workspace/core/components/loading_or_empty.dart';
 import 'package:workspace/features/home/model/notification_model.dart';
-import 'package:workspace/features/home/screen/notification_detail.dart';
 import 'package:workspace/features/admin/service/notification_service.dart';
+import 'package:workspace/features/admin/notification/edit_notification.dart';
 
 class EmployeeNotificationList extends StatefulWidget {
   const EmployeeNotificationList({super.key, this.user});
@@ -83,14 +83,13 @@ class _EmployeeNotificationListState extends State<EmployeeNotificationList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: AdminAppBar(
         title: 'Notifications',
         onBackTap: () => Navigator.pop(context),
       ),
       body: ListView(
         padding: EdgeInsets.all(24),
         children: [
-          if (isLoading) const Center(child: CircularProgressIndicator()),
           LoadingOrEmptyText(
             isLoading: isLoading,
             isEmpty: notifications.isEmpty,
@@ -103,7 +102,10 @@ class _EmployeeNotificationListState extends State<EmployeeNotificationList> {
           if (todayList.isEmpty) const Text('No notifications found'),
           SizedBox(height: 10),
           ...List.generate(todayList.length, (index) {
-            return NotificationItem(data: todayList[index]);
+            return NotificationItem(
+              data: todayList[index],
+              assignedTo: widget.user?.id,
+            );
           }),
           Text(
             'Previous Notifications',
@@ -112,7 +114,10 @@ class _EmployeeNotificationListState extends State<EmployeeNotificationList> {
           if (previousList.isEmpty) const Text('No notifications found'),
           SizedBox(height: 10),
           ...List.generate(previousList.length, (index) {
-            return NotificationItem(data: previousList[index]);
+            return NotificationItem(
+              data: previousList[index],
+              assignedTo: widget.user?.id,
+            );
           }),
         ],
       ),
@@ -121,16 +126,22 @@ class _EmployeeNotificationListState extends State<EmployeeNotificationList> {
 }
 
 class NotificationItem extends StatelessWidget {
-  const NotificationItem({super.key, required this.data});
+  const NotificationItem({super.key, required this.data, this.assignedTo});
   final NotificationModel data;
+  final String? assignedTo;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(bottom: 20),
       child: InkWell(
-        onTap: () =>
-            AppNavigator.push(context, NotificationDetail(model: data)),
+        onTap: () => AppNavigator.push(
+          context,
+          EditEmployeeNotificationPage(
+            notification: data,
+            assignedTo: assignedTo,
+          ),
+        ),
         child: Container(
           padding: EdgeInsets.all(16),
           decoration: BoxDecoration(
@@ -170,7 +181,7 @@ class NotificationItem extends StatelessWidget {
                   ],
                 ),
               ),
-              AppButton(
+              AdminButton(
                 text: data.priority ?? '',
                 radius: 20,
                 vPadding: 6,

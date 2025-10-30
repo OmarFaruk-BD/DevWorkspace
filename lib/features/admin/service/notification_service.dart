@@ -7,7 +7,7 @@ class EmployeeNotificationService {
   final Logger _logger = Logger();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  /// ✅ Create a new task document
+  /// ✅ Create a new Notification document
   Future<Either<String, String>> createNotification({
     required String assignedTo,
     required String title,
@@ -17,7 +17,7 @@ class EmployeeNotificationService {
     required String comments,
   }) async {
     try {
-      final Map<String, dynamic> taskData = {
+      final Map<String, dynamic> notificationData = {
         'date': date,
         'title': title,
         'priority': priority,
@@ -27,9 +27,9 @@ class EmployeeNotificationService {
         'createdAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
       };
-      _logger.e(taskData);
+      _logger.e(notificationData);
 
-      await _firestore.collection('notification').add(taskData);
+      await _firestore.collection('notification').add(notificationData);
 
       return const Right('Notification created successfully.');
     } catch (e) {
@@ -38,28 +38,31 @@ class EmployeeNotificationService {
     }
   }
 
-  /// ✏️ Edit (update) an existing task by its document ID
+  /// ✏️ Edit (update) an existing Notification by its document ID
   Future<Either<String, String>> editNotification({
-    required String id,
+    required String notificationId,
     required Map<String, dynamic> updatedFields,
   }) async {
     try {
       updatedFields['updatedAt'] = FieldValue.serverTimestamp();
       _logger.e(updatedFields);
 
-      await _firestore.collection('notification').doc(id).update(updatedFields);
+      await _firestore
+          .collection('notification')
+          .doc(notificationId)
+          .update(updatedFields);
 
-      return const Right('Task updated successfully.');
+      return const Right('Notification updated successfully.');
     } on FirebaseException catch (e) {
-      _logger.e('Firebase error editing task: ${e.message}');
-      return Left('Failed to update task: ${e.message}');
+      _logger.e('Firebase error editing Notification: ${e.message}');
+      return Left('Failed to update Notification: ${e.message}');
     } catch (e) {
-      _logger.e('Error editing task: $e');
-      return Left('Failed to edit task: $e');
+      _logger.e('Error editing Notification: $e');
+      return Left('Failed to edit Notification: $e');
     }
   }
 
-  /// 🗑️ Delete a task by its document ID
+  /// 🗑️ Delete a Notification by its document ID
   Future<Either<String, String>> deleteNotification(String id) async {
     try {
       await _firestore.collection('notification').doc(id).delete();
