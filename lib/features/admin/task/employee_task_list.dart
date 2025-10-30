@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:workspace/core/components/app_bar.dart';
+import 'package:workspace/features/admin/widget/task_item.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
 import 'package:workspace/features/admin/service/employee_task_service.dart';
 
@@ -47,42 +48,6 @@ class _EmployeeTaskListState extends State<EmployeeTaskList> {
                 }),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class TaskItem extends StatelessWidget {
-  const TaskItem({super.key, required this.task});
-  final Map<String, dynamic> task;
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.only(bottom: 15),
-      child: ListTile(
-        title: Text(
-          task['title'] ?? '',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 4),
-            if (task['description'] != null) Text(task['description'] ?? ''),
-            SizedBox(height: 4),
-            if (task['priority'] != null)
-              Text('Priority: ${task['priority'] ?? ''}'),
-            SizedBox(height: 4),
-            Text('Task Type: ${task['taskType'] ?? ''}'),
-            SizedBox(height: 4),
-            if (task['client'] != null) Text('Client: ${task['client'] ?? ''}'),
-            if (task['client'] != null) SizedBox(height: 4),
-            if (task['amount'] != null)
-              Text('Amount: ${task['amount'] ?? ''} BDT'),
-            if (task['amount'] != null) SizedBox(height: 4),
-          ],
         ),
       ),
     );
