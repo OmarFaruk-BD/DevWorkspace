@@ -6,9 +6,11 @@ import 'package:workspace/core/components/app_button.dart';
 import 'package:workspace/core/components/approval_popup.dart';
 import 'package:workspace/features/admin/screen/add_employee.dart';
 import 'package:workspace/features/admin/screen/employe_list.dart';
+import 'package:workspace/features/admin/widget/employee_popup.dart';
 import 'package:workspace/features/admin/screen/admin_login_page.dart';
 import 'package:workspace/features/admin/screen/manager_list_page.dart';
 import 'package:workspace/features/admin/service/admin_auth_service.dart';
+import 'package:workspace/features/admin/attendance/employee_location_list.dart';
 
 class AdminDashboardPage extends StatefulWidget {
   const AdminDashboardPage({super.key});
@@ -41,7 +43,25 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
             onTap: () => AppNavigator.push(context, ManagerListPage()),
           ),
           SizedBox(height: 20),
-          AdminButton(text: 'Area Management', onTap: () {}),
+          AdminButton(text: 'Assign Location', onTap: () {}),
+          SizedBox(height: 20),
+          AdminButton(
+            text: 'See Assigned Location',
+            onTap: () async {
+              await AppPopup.show(
+                child: EmployeePopup(
+                  onSelected: (employee) {
+                    if (!mounted) return;
+                    AppNavigator.push(
+                      context,
+                      EmployeeLocationList(user: employee),
+                    );
+                  },
+                ),
+                context: context,
+              );
+            },
+          ),
           SizedBox(height: 20),
           AdminButton(text: 'Assign Task', onTap: () {}),
           SizedBox(height: 20),
