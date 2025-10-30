@@ -4,8 +4,9 @@ import 'package:workspace/core/components/app_button.dart';
 import 'package:workspace/features/admin/task/task_detail.dart';
 
 class TaskItem extends StatelessWidget {
-  const TaskItem({super.key, required this.task});
+  const TaskItem({super.key, required this.task, this.onBack});
   final Map<String, dynamic> task;
+  final VoidCallback? onBack;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +49,11 @@ class TaskItem extends StatelessWidget {
                 hPadding: 25,
                 text: 'Detail',
                 onTap: () {
-                  AppNavigator.push(context, TaskDetailPage(task: task));
+                  AppNavigator.pushTo(
+                    context,
+                    TaskDetailPage(task: task),
+                    onBack: () => onBack?.call(),
+                  );
                 },
               ),
             ),

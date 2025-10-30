@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:workspace/core/components/app_popup.dart';
+import 'package:workspace/core/components/approval_popup.dart';
 import 'package:workspace/core/helper/extention.dart';
 import 'package:workspace/core/helper/navigation.dart';
 import 'package:workspace/core/components/app_bar.dart';
 import 'package:workspace/core/components/app_button.dart';
+import 'package:workspace/core/components/app_snack_bar.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
 import 'package:workspace/features/admin/task/edit_employee_task.dart';
 import 'package:workspace/features/admin/service/employee_service.dart';
@@ -21,6 +24,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
   final EmployeeTaskService _taskService = EmployeeTaskService();
   final EmployeeService _employeeService = EmployeeService();
   late Map<String, dynamic> task;
+  bool isLoading = false;
   UserModel? user;
 
   @override
@@ -46,6 +50,16 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
     setState(() {});
   }
 
+  void deleteTask() async {
+    setState(() => isLoading = true);
+    final result = await _taskService.deleteTask(task['taskId']);
+    setState(() => isLoading = false);
+    result.fold((error) => AppSnackBar.show(context, error), (data) {
+      AppSnackBar.show(context, data);
+      Navigator.pop(context);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,7 +81,23 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
             },
           ),
           SizedBox(height: 15),
-          AppButton(text: 'Delete Task', onTap: () {}),
+          AppButton(
+            text: 'Delete Task',
+            isLoading: isLoading,
+            onTap: () {
+              AppPopup.show(
+                context: context,
+                child: ApprovalWidget(
+                  title: 'Delete Task!',
+                  description: 'Are you sure you want to delete this task?',
+                  onApprove: () {
+                    Navigator.pop(context);
+                    deleteTask();
+                  },
+                ),
+              );
+            },
+          ),
         ],
       ),
     );

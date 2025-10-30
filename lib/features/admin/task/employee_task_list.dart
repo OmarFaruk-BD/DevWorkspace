@@ -44,7 +44,7 @@ class _EmployeeTaskListState extends State<EmployeeTaskList> {
                 Center(child: Text('No tasks found.'))
               else
                 ..._tasks.map((item) {
-                  return TaskItem(task: item);
+                  return TaskItem(task: item, onBack: fetchEmployeeTask);
                 }),
             ],
           ),
