@@ -33,7 +33,7 @@ class _MyTaskListState extends State<MyTaskList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AdminAppBar(title: 'My Task List'),
+      appBar: CustomAppBar(title: 'My Task List'),
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: fetchEmployeeTask,

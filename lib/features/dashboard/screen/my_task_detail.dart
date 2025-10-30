@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:workspace/core/components/app_popup.dart';
+import 'package:workspace/core/components/app_snack_bar.dart';
+import 'package:workspace/core/components/item_selection_popup.dart';
 import 'package:workspace/core/helper/extention.dart';
 import 'package:workspace/core/components/app_bar.dart';
-import 'package:workspace/core/components/app_snack_bar.dart';
+import 'package:workspace/core/components/app_button.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
 import 'package:workspace/features/dashboard/model/task_model.dart';
 import 'package:workspace/features/admin/service/employee_service.dart';
@@ -18,9 +21,18 @@ class MyTaskDetail extends StatefulWidget {
 class _MyTaskDetailState extends State<MyTaskDetail> {
   final EmployeeTaskService _taskService = EmployeeTaskService();
   final EmployeeService _employeeService = EmployeeService();
-  bool isLoading = false;
+  String _status = 'Pending';
+  bool _isLoading = false;
   late TaskModel task;
   UserModel? user;
+
+  final List<String> statusList = [
+    'Pending',
+    'In Progress',
+    'Completed',
+    'Cancelled',
+    'Failed',
+  ];
 
   @override
   void initState() {
@@ -45,25 +57,46 @@ class _MyTaskDetailState extends State<MyTaskDetail> {
     setState(() {});
   }
 
-  void deleteTask() async {
-    setState(() => isLoading = true);
-    final result = await _taskService.deleteTask(task.taskId);
-    setState(() => isLoading = false);
-    result.fold((error) => AppSnackBar.show(context, error), (data) {
+  void _editTask() async {
+    setState(() => _isLoading = true);
+    final result = await _taskService.editTask(
+      taskId: widget.task.taskId,
+      updatedFields: {'status': _status},
+    );
+    setState(() => _isLoading = false);
+    result.fold((error) => AppSnackBar.error(context, error), (data) {
+      geTaskDetail();
       AppSnackBar.show(context, data);
-      Navigator.pop(context);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AdminAppBar(title: 'Task Detail'),
+      appBar: CustomAppBar(title: 'My Task Detail'),
       body: ListView(
         padding: EdgeInsets.all(20),
         children: [
           if (user != null) _EmployeItem(user!),
           TaskDetailItem(task: task),
+          SizedBox(height: 15),
+          AppButton(
+            text: 'Update Task Status',
+            isLoading: _isLoading,
+            onTap: () {
+              AppPopup.show(
+                context: context,
+                child: ItemSelectionPopUp(
+                  list: statusList,
+                  selectedItem: _status,
+                  onSelected: (value) {
+                    _status = value ?? 'Pending';
+                    _editTask();
+                  },
+                ),
+              );
+            },
+          ),
           SizedBox(height: 15),
         ],
       ),
@@ -81,19 +114,27 @@ class TaskDetailItem extends StatelessWidget {
       padding: EdgeInsets.only(bottom: 15),
       child: Card(
         child: ListTile(
-          title: Text('Task Detail:'),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Task Detail:'),
+              Text(
+                'Status: ${task.status}',
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              SizedBox(height: 8),
               Text(
                 task.title,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
-              SizedBox(height: 4),
+              SizedBox(height: 10),
               Text(task.description),
-              SizedBox(height: 4),
-              Text('Status: ${task.status}'),
-              SizedBox(height: 4),
+              SizedBox(height: 15),
               Text('Due Date: ${task.dueDate}'),
               SizedBox(height: 4),
               Text('Priority: ${task.priority}'),
