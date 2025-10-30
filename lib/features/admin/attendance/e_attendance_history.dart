@@ -111,6 +111,7 @@ class _ToDayAttendanceHistoryState extends State<ToDayAttendanceHistory> {
   void initState() {
     super.initState();
     todayAttendanceHistory = widget.todayAttendanceHistory;
+    getAddress();
   }
 
   void getAddress() async {
@@ -226,6 +227,7 @@ class _ToDayAttendanceHistoryState extends State<ToDayAttendanceHistory> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
+            if (address != null) SizedBox(height: 8),
             Text(
               'Date: ${todayAttendanceHistory?.date ?? ''}',
               style: TextStyle(

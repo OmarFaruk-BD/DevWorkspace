@@ -104,11 +104,14 @@ class AttendanceService {
       final date = firstPunchIn['date'];
       final dayName = DateFormat('EEEE').format(today);
 
+      final totalHours = _calculateTotalHours(punchInTime, punchOutTime);
+
       // ✅ Build model
       final attendanceDetail = AttendanceDetailModel(
         date: date,
         day: dayName,
         punchIn: punchInTime,
+        totalHours: totalHours,
         punchOut: punchOutTime,
         punchInLocation: punchInLat,
         punchOutLocation: punchOutLng,
