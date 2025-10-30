@@ -96,17 +96,14 @@ class _AttendanceDetailPageState extends State<AttendanceDetailPage> {
               ),
               SizedBox(height: 50),
               if (state.attendanceDetail?.dutyLocation?.isNotEmpty == true)
-                ...List.generate(
-                  state.attendanceDetail?.dutyLocation?.length ?? 0,
-                  (index) {
-                    final item = state.attendanceDetail?.dutyLocation?[index];
-                    return _buildPunchInItem(
-                      image: AppImages.duty,
-                      title: 'Your Duty Location: ',
-                      subtitle: item?.address ?? '',
-                    );
-                  },
-                ),
+                ...List.generate(1, (index) {
+                  final item = state.attendanceDetail?.dutyLocation?[index];
+                  return _buildPunchInItem(
+                    image: AppImages.duty,
+                    title: 'Your Duty Location: ',
+                    subtitle: item?.address ?? '',
+                  );
+                }),
               if (state.attendanceDetail?.dutyLocation == null ||
                   state.attendanceDetail!.dutyLocation!.isEmpty)
                 BlocBuilder<HomeCubit, HomeState>(
