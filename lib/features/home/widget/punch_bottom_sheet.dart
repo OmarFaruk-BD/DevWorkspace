@@ -12,7 +12,9 @@ import 'package:workspace/features/home/cubit/home_cubit.dart';
 import 'package:workspace/features/history/service/attendance_service.dart';
 
 class BottomSheetWidget extends StatelessWidget {
-  const BottomSheetWidget({super.key});
+  BottomSheetWidget({super.key});
+  final AttendanceService _attendanceService = AttendanceService();
+  final LocationService _locationService = LocationService();
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +64,7 @@ class BottomSheetWidget extends StatelessWidget {
     required ActionSliderController controller,
   }) async {
     controller.loading();
-    final location = await LocationService().getMyLocation();
+    final location = await _locationService.getMyLocation();
     if (!context.mounted) return;
     final user = context.read<AuthCubit>().state.user;
     if (location?.latitude == null || location?.longitude == null) {
@@ -73,8 +75,8 @@ class BottomSheetWidget extends StatelessWidget {
       return;
     }
     final isPunchIn = state.punchedIn ?? false;
-    final result = await AttendanceService().createAttendance(
-      isPunchIn: isPunchIn,
+    final result = await _attendanceService.createAttendance(
+      isPunchIn: !isPunchIn,
       assignTo: user?.id ?? '',
       address: location?.fullAddress ?? '',
       latitude: location?.latitude?.toString() ?? '',
