@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:workspace/core/helper/navigation.dart';
 import 'package:workspace/core/components/app_button.dart';
-import 'package:workspace/features/admin/task/employee_task_detail.dart';
+import 'package:workspace/features/admin/task/employee_task_details.dart';
 
 class TaskItem extends StatelessWidget {
   const TaskItem({super.key, required this.task, this.onBack});
