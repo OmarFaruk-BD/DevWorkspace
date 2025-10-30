@@ -23,7 +23,6 @@ class _AddEmployeeTaskPageState extends State<AddEmployeeTaskPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final AppValidator _validator = AppValidator();
   final _description = TextEditingController();
-  final _comments = TextEditingController();
   final _client = TextEditingController();
   final _amount = TextEditingController();
   final _title = TextEditingController();
@@ -31,9 +30,14 @@ class _AddEmployeeTaskPageState extends State<AddEmployeeTaskPage> {
   final String _status = 'Pending';
   final String _attachments = '';
   String _taskType = 'Sales';
+  String _dayType = 'Daily';
   String _priority = 'Low';
   String _assignedTo = '';
   bool _isLoading = false;
+
+  final List<String> _taskTypeList = ['Sales', 'Support', 'Marketing'];
+  final List<String> _dayTypeList = ['Daily', 'Weekly', 'Monthly'];
+  final List<String> _priorityList = ['Low', 'Medium', 'High'];
 
   @override
   void initState() {
@@ -85,10 +89,6 @@ class _AddEmployeeTaskPageState extends State<AddEmployeeTaskPage> {
                   textInputType: TextInputType.number,
                 ),
                 SizedBox(height: 20),
-                Text('Comments (Optional)'),
-                SizedBox(height: 8),
-                AppTextField(controller: _comments, hintText: 'Enter comments'),
-                SizedBox(height: 20),
                 Text('Due Date'),
                 SizedBox(height: 8),
                 AppTextField(
@@ -110,6 +110,25 @@ class _AddEmployeeTaskPageState extends State<AddEmployeeTaskPage> {
                   },
                 ),
                 SizedBox(height: 20),
+                Text('Schedule Type'),
+                SizedBox(height: 8),
+                AppTextField(
+                  readOnly: true,
+                  controller: TextEditingController(text: _dayType),
+                  validator: _validator.validate,
+                  onTap: () async {
+                    await AppPopup.show(
+                      context: context,
+                      child: ItemSelectionPopUp(
+                        list: _dayTypeList,
+                        selectedItem: _dayType,
+                        onSelected: (value) =>
+                            setState(() => _dayType = value ?? 'Daily'),
+                      ),
+                    );
+                  },
+                ),
+                SizedBox(height: 20),
                 Text('Task Type'),
                 SizedBox(height: 8),
                 AppTextField(
@@ -120,8 +139,8 @@ class _AddEmployeeTaskPageState extends State<AddEmployeeTaskPage> {
                     await AppPopup.show(
                       context: context,
                       child: ItemSelectionPopUp(
+                        list: _taskTypeList,
                         selectedItem: _taskType,
-                        list: const ['Sales', 'Marketing', 'Support'],
                         onSelected: (value) =>
                             setState(() => _taskType = value ?? 'Sales'),
                       ),
@@ -139,8 +158,8 @@ class _AddEmployeeTaskPageState extends State<AddEmployeeTaskPage> {
                     await AppPopup.show(
                       context: context,
                       child: ItemSelectionPopUp(
+                        list: _priorityList,
                         selectedItem: _priority,
-                        list: const ['Low', 'Medium', 'High'],
                         onSelected: (value) =>
                             setState(() => _priority = value ?? 'Low'),
                       ),
@@ -176,7 +195,7 @@ class _AddEmployeeTaskPageState extends State<AddEmployeeTaskPage> {
       client: _client.text,
       amount: _amount.text,
       dueDate: _dueDate.toDateString() ?? '',
-      comments: _comments.text,
+      comments: _dayType,
       attachments: _attachments,
     );
     setState(() => _isLoading = false);
