@@ -113,6 +113,36 @@ class EmergencyRequestService {
     }
   }
 
+  Future<List<NotificationModelV2>> getAllRequest() async {
+    try {
+      final querySnapshot = await _firestore.collection('request').get();
+
+      final request = querySnapshot.docs.map((doc) {
+        final data = doc.data();
+        _logger.e(data);
+        return NotificationModelV2(
+          id: doc.id,
+          date: data['date'],
+          title: data['title'],
+          userName: data['userName'],
+          comments: data['comments'],
+          priority: data['priority'],
+          content: data['description'],
+          assignedTo: data['assignedTo'],
+          createdAt: data['date'],
+        );
+      }).toList();
+
+      return request;
+    } on FirebaseException catch (e) {
+      _logger.e('Firebase error fetching request: ${e.message}');
+      return [];
+    } catch (e) {
+      _logger.e('Error fetching request: $e');
+      return [];
+    }
+  }
+
   Future<NotificationModelV2?> getrequestDetails({
     required String assignedTo,
     required String requestId,
