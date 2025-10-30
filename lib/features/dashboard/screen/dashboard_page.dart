@@ -7,9 +7,9 @@ import 'package:workspace/core/helper/navigation.dart';
 import 'package:workspace/features/home/widget/header.dart';
 import 'package:workspace/features/auth/cubit/auth_cubit.dart';
 import 'package:workspace/features/dashboard/screen/my_task_list.dart';
-import 'package:workspace/features/dashboard/screen/leave_request.dart';
-import 'package:workspace/features/dashboard/screen/leave_approval.dart';
 import 'package:workspace/features/history/screen/attendance_history.dart';
+import 'package:workspace/features/dashboard/screen/my_emergency_request.dart';
+import 'package:workspace/features/dashboard/screen/create_emergency_request.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -50,21 +50,45 @@ class _DashboardPageState extends State<DashboardPage> {
                   ],
                 ),
               ),
+              // Padding(
+              //   padding: const EdgeInsets.all(25).copyWith(bottom: 0),
+              //   child: Row(
+              //     children: [
+              //       DashboardItem(
+              //         text: 'Leave\nRequest',
+              //         icon: AppImages.overview_2,
+              //         onTap: () =>
+              //             AppNavigator.push(context, LeaveRequestPage()),
+              //       ),
+              //       SizedBox(width: MediaQuery.of(context).size.width * 0.1),
+              //       DashboardItem(
+              //         text: 'Leave\nApproval',
+              //         icon: AppImages.overview_2,
+              //         onTap: () => AppNavigator.push(context, LeaveApproval()),
+              //       ),
+              //     ],
+              //   ),
+              // ),
               Padding(
                 padding: const EdgeInsets.all(25).copyWith(bottom: 0),
                 child: Row(
                   children: [
                     DashboardItem(
-                      text: 'Leave\nRequest',
+                      text: 'Emergency\nRequest',
                       icon: AppImages.overview_2,
-                      onTap: () =>
-                          AppNavigator.push(context, LeaveRequestPage()),
+                      onTap: () => AppNavigator.push(
+                        context,
+                        CreateEmergencyRequest(user: state.user),
+                      ),
                     ),
                     SizedBox(width: MediaQuery.of(context).size.width * 0.1),
                     DashboardItem(
-                      text: 'Leave\nApproval',
+                      text: 'My Emergency\nRequest',
                       icon: AppImages.overview_2,
-                      onTap: () => AppNavigator.push(context, LeaveApproval()),
+                      onTap: () => AppNavigator.push(
+                        context,
+                        MyEmergencyRequest(user: state.user),
+                      ),
                     ),
                   ],
                 ),

@@ -31,3 +31,45 @@ class NotificationModel {
     createdAt: createdAt ?? this.createdAt,
   );
 }
+
+class NotificationModelV2 {
+  final String? id;
+  final String? date;
+  final String? title;
+  final String? content;
+  final String? comments;
+  final String? priority;
+  final String? createdAt;
+  final String? assignedTo;
+
+  NotificationModelV2({
+    this.id,
+    this.date,
+    this.title,
+    this.content,
+    this.comments,
+    this.priority,
+    this.createdAt,
+    this.assignedTo,
+  });
+
+  NotificationModelV2 copyWith({
+    String? id,
+    String? date,
+    String? title,
+    String? content,
+    String? comments,
+    String? priority,
+    String? createdAt,
+    String? assignedTo,
+  }) => NotificationModelV2(
+    id: id ?? this.id,
+    date: date ?? this.date,
+    title: title ?? this.title,
+    content: content ?? this.content,
+    comments: comments ?? this.comments,
+    priority: priority ?? this.priority,
+    createdAt: createdAt ?? this.createdAt,
+    assignedTo: assignedTo ?? this.assignedTo,
+  );
+}
