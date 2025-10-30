@@ -1,8 +1,8 @@
-import 'package:flutter_svg/svg.dart';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:workspace/core/utils/app_colors.dart';
-import 'package:workspace/core/utils/app_images.dart';
 import 'package:workspace/core/utils/app_styles.dart';
 import 'package:workspace/core/helper/navigation.dart';
 import 'package:workspace/core/components/app_text.dart';
@@ -10,8 +10,19 @@ import 'package:workspace/features/auth/cubit/auth_cubit.dart';
 import 'package:workspace/features/home/screen/notification.dart';
 import 'package:workspace/features/home/screen/profile_page.dart';
 
-class HeaderWidget extends StatelessWidget {
+class HeaderWidget extends StatefulWidget {
   const HeaderWidget({super.key});
+
+  @override
+  State<HeaderWidget> createState() => _HeaderWidgetState();
+}
+
+class _HeaderWidgetState extends State<HeaderWidget> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<AuthCubit>().updateUserImage();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +50,14 @@ class HeaderWidget extends StatelessWidget {
                     color: AppColors.white,
                     borderRadius: BorderRadius.circular(70),
                   ),
-                  child: Icon(Icons.person, size: 40, color: AppColors.primary),
+                  child: state.user?.imageUrl != null
+                      ? CircleAvatar(
+                          radius: 40,
+                          backgroundImage: MemoryImage(
+                            base64Decode(state.user?.imageUrl ?? ''),
+                          ),
+                        )
+                      : Icon(Icons.person, size: 40, color: AppColors.primary),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
@@ -66,12 +84,20 @@ class HeaderWidget extends StatelessWidget {
                 IconButton(
                   onPressed: () =>
                       AppNavigator.push(context, NotificationPage()),
-                  icon: SvgPicture.asset(AppImages.notification),
+                  icon: Icon(
+                    Icons.notifications,
+                    color: AppColors.white,
+                    size: 28,
+                  ),
                 ),
                 IconButton(
                   onPressed: () =>
                       AppNavigator.push(context, ProfilePage(user: state.user)),
-                  icon: SvgPicture.asset(AppImages.menu),
+                  icon: Icon(
+                    Icons.account_circle,
+                    color: AppColors.white,
+                    size: 28,
+                  ),
                 ),
               ],
             ),
@@ -107,7 +133,14 @@ class HeaderWidgetV2 extends StatelessWidget {
                   color: AppColors.white,
                   borderRadius: BorderRadius.circular(70),
                 ),
-                child: Icon(Icons.person, size: 40, color: AppColors.primary),
+                child: state.user?.imageUrl != null
+                    ? CircleAvatar(
+                        radius: 40,
+                        backgroundImage: MemoryImage(
+                          base64Decode(state.user?.imageUrl ?? ''),
+                        ),
+                      )
+                    : Icon(Icons.person, size: 40, color: AppColors.primary),
               ),
               const SizedBox(width: 10),
               Expanded(
@@ -133,12 +166,20 @@ class HeaderWidgetV2 extends StatelessWidget {
               ),
               IconButton(
                 onPressed: () => AppNavigator.push(context, NotificationPage()),
-                icon: SvgPicture.asset(AppImages.notification),
+                icon: Icon(
+                  Icons.notifications,
+                  color: AppColors.white,
+                  size: 28,
+                ),
               ),
               IconButton(
                 onPressed: () =>
                     AppNavigator.push(context, ProfilePage(user: state.user)),
-                icon: SvgPicture.asset(AppImages.menu),
+                icon: Icon(
+                  Icons.account_circle,
+                  color: AppColors.white,
+                  size: 28,
+                ),
               ),
             ],
           ),
