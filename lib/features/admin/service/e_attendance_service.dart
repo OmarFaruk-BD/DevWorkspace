@@ -38,39 +38,8 @@ class EAssignLocationService {
   }
 
   Future<MyAreaModel?> getAssignLocationByEmployee(String assignedTo) async {
-    try {
-      final querySnapshot = await _firestore
-          .collection('assignLocation')
-          .where('assignedTo', isEqualTo: assignedTo)
-          .get();
-
-      final assignLocation = querySnapshot.docs.map((doc) {
-        final data = doc.data();
-        return {'taskId': doc.id, ...data};
-      }).toList();
-      if (assignLocation.isEmpty) {
-        return null;
-      } else {
-        final data = assignLocation.last;
-        _logger.e(data);
-
-        final myArea = MyAreaModel(
-          longitude: data['long'],
-          radius: data['radius'],
-          latitude: data['lat'],
-          start: data['start'],
-          end: data['end'],
-        );
-        _logger.e(myArea.toString());
-        return myArea;
-      }
-    } on FirebaseException catch (e) {
-      _logger.e('Firebase error fetching assignLocation: ${e.message}');
-      return null;
-    } catch (e) {
-      _logger.e('Error fetching assignLocation: $e');
-      return null;
-    }
+    final dataList = await getAllAssignLocationsByEmployee(assignedTo);
+    return dataList.isNotEmpty ? dataList.first : null;
   }
 
   /// ✅ Get all assigned locations (descending by createdAt)
@@ -93,6 +62,7 @@ class EAssignLocationService {
           latitude: data['lat'],
           start: data['start'],
           end: data['end'],
+          date: data['createdAt'].toDate(),
         );
       }).toList();
 

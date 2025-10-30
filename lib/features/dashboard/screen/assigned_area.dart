@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:workspace/core/components/app_bar.dart';
+import 'package:workspace/core/helper/extention.dart';
+import 'package:workspace/core/service/location_service.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
 import 'package:workspace/core/components/loading_or_empty.dart';
 import 'package:workspace/features/area/model/my_area_model.dart';
@@ -45,12 +47,87 @@ class _MyAssignedAreaState extends State<MyAssignedArea> {
           ),
           ...List.generate(areas.length, (index) {
             final area = areas[index];
-            return ListTile(
-              title: Text(area.start ?? ''),
-              subtitle: Text(area.end ?? ''),
-            );
+            return MyAssignedAreaItem(area: area);
           }),
         ],
+      ),
+    );
+  }
+}
+
+class MyAssignedAreaItem extends StatefulWidget {
+  const MyAssignedAreaItem({super.key, required this.area});
+  final MyAreaModel area;
+
+  @override
+  State<MyAssignedAreaItem> createState() => _MyAssignedAreaItemState();
+}
+
+class _MyAssignedAreaItemState extends State<MyAssignedAreaItem> {
+  final LocationService _service = LocationService();
+  MyAreaModel? area;
+  String? address;
+
+  @override
+  void initState() {
+    super.initState();
+    area = widget.area;
+    getAddress();
+  }
+
+  void getAddress() async {
+    final lat = double.tryParse(area?.latitude ?? '');
+    final long = double.tryParse(area?.longitude ?? '');
+    if (lat != null && long != null) {
+      final location = await _service.getLocationDetail(lat, long);
+      setState(() => address = location?.fullAddress);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 15),
+      child: Card(
+        child: ListTile(
+          title: Text(
+            address ?? 'My Assigned Area',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          ),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Area Range: ${area?.radius ?? ''} km'),
+              SizedBox(height: 15),
+              Row(
+                children: [
+                  Expanded(child: Text('Start Time: ${area?.start ?? ''}')),
+                  Expanded(
+                    child: Text(
+                      'Latitude:    ${area?.latitude ?? ''}',
+                      textAlign: TextAlign.end,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(child: Text('End Time: ${area?.end ?? ''}')),
+                  Expanded(
+                    child: Text(
+                      'Longitude: ${area?.longitude ?? ''}',
+                      textAlign: TextAlign.end,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 15),
+              Text(
+                'Created At: ${area?.date?.toDateString('EEE, MMM dd yyyy')}',
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
