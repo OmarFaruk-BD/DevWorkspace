@@ -1,3 +1,4 @@
+import 'package:fpdart/fpdart.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,6 +12,38 @@ import 'package:workspace/features/history/model/attendance_history_model.dart';
 class AttendanceService {
   final Logger _logger = Logger();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<Either<String, String>> createAttendance({
+    required String longitude,
+    required String latitude,
+    required String assignTo,
+    required String address,
+    required bool isPunchIn,
+  }) async {
+    try {
+      final dateTime = DateTime.now();
+      String? date = dateTime.toDateString('yyyy-MM-dd');
+      String? time = dateTime.toDateString('hh:mm:ss');
+      Map<String, dynamic> payload = {
+        'date': date,
+        'time': time,
+        'address': address,
+        'latitude': latitude,
+        'assignTo': assignTo,
+        'longitude': longitude,
+        'isPunchIn': isPunchIn,
+        'createdAt': FieldValue.serverTimestamp(),
+      };
+      _logger.e(payload);
+
+      await _firestore.collection('eAttendance').add(payload);
+
+      return const Right('Attendance created successfully.');
+    } catch (e) {
+      _logger.e('Error creating task: $e');
+      return Left('Failed to create attendance: $e');
+    }
+  }
 
   Future<AttendanceDetailModel?> getTodayAttendanceEmployee(
     BuildContext context,

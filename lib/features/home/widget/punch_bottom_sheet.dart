@@ -9,7 +9,7 @@ import 'package:workspace/core/components/app_snack_bar.dart';
 import 'package:workspace/core/service/location_service.dart';
 import 'package:workspace/features/auth/cubit/auth_cubit.dart';
 import 'package:workspace/features/home/cubit/home_cubit.dart';
-import 'package:workspace/features/home/service/home_service.dart';
+import 'package:workspace/features/history/service/attendance_service.dart';
 
 class BottomSheetWidget extends StatelessWidget {
   const BottomSheetWidget({super.key});
@@ -73,7 +73,7 @@ class BottomSheetWidget extends StatelessWidget {
       return;
     }
     final isPunchIn = state.punchedIn ?? false;
-    final result = await HomeService().createAttendance(
+    final result = await AttendanceService().createAttendance(
       isPunchIn: isPunchIn,
       assignTo: user?.id ?? '',
       address: location?.fullAddress ?? '',

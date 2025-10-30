@@ -190,7 +190,7 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
               SizedBox(width: 20),
               Expanded(
                 child: AdminButton(
-                  text: 'Assign Attendance',
+                  text: 'Assign Location',
                   onTap: () {
                     AppNavigator.push(
                       context,
