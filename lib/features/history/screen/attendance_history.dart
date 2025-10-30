@@ -28,7 +28,7 @@ class _AttendanceHistoryPageState extends State<AttendanceHistoryPage> {
   void _initDateList() {
     context.read<AttendanceCubit>().updateAttendanceHistory(
       context: context,
-      startDate: DateTime.now().subtract(const Duration(days: 6)),
+      startDate: DateTime.now().subtract(const Duration(days: 365)),
       endDate: DateTime.now(),
     );
   }
@@ -36,7 +36,7 @@ class _AttendanceHistoryPageState extends State<AttendanceHistoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AdminAppBar(
+      appBar: CustomAppBar(
         title: 'Attendance History',
         onBackTap: () => Navigator.pop(context),
       ),

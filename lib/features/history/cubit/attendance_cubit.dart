@@ -30,6 +30,11 @@ class AttendanceCubit extends Cubit<AttendanceState> {
       startDate: startDate,
       endDate: endDate,
     );
+    dataList.sort((a, b) {
+      final aDate = a.punchDate ?? DateTime.fromMillisecondsSinceEpoch(0);
+      final bDate = b.punchDate ?? DateTime.fromMillisecondsSinceEpoch(0);
+      return bDate.compareTo(aDate);
+    });
     emit(state.copyWith(attendanceHistoryList: dataList, isLoading: false));
   }
 }
