@@ -8,7 +8,7 @@ import 'package:workspace/core/components/app_snack_bar.dart';
 import 'package:workspace/core/components/app_text_field.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
 import 'package:workspace/core/components/item_selection_popup.dart';
-import 'package:workspace/features/dashboard/service/emergency_request_service.dart';
+import 'package:workspace/features/dashboard/service/leave_request_service.dart';
 
 class CreateLeaveRequest extends StatefulWidget {
   const CreateLeaveRequest({super.key, this.user});
@@ -19,30 +19,24 @@ class CreateLeaveRequest extends StatefulWidget {
 }
 
 class _CreateLeaveRequestState extends State<CreateLeaveRequest> {
+  final DateTime _toDate = DateTime.now().add(Duration(days: 1));
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final _notificationService = EmergencyRequestService();
   final AppValidator _validator = AppValidator();
   final _description = TextEditingController();
+  final _leaveService = LeaveRequestService();
+  final DateTime _fromDate = DateTime.now();
   final _title = TextEditingController();
-  final DateTime _date = DateTime.now();
-  String _priority = 'Emergency';
-  String _assignedTo = '';
+  String _leaveType = 'Casual';
   bool _isLoading = false;
 
-  final List<String> _priorities = ['Minor', 'Urgent', 'Emergency'];
-
-  @override
-  void initState() {
-    super.initState();
-    _assignedTo = widget.user?.id ?? '';
-  }
+  final List<String> _leaveTypeList = ['Sick', 'Vacation', 'Casual', 'Other'];
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        appBar: CustomAppBar(title: 'Create Emergency Request'),
+        appBar: CustomAppBar(title: 'Create Leave Request'),
         body: Form(
           key: _formKey,
           child: SingleChildScrollView(
@@ -50,46 +44,46 @@ class _CreateLeaveRequestState extends State<CreateLeaveRequest> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Emergency Request Title'),
+                Text('Leave Request Title'),
                 SizedBox(height: 8),
                 AppTextField(
                   controller: _title,
-                  hintText: 'Enter request title',
+                  hintText: 'Enter leave request title',
                   validator: _validator.validate,
                 ),
                 SizedBox(height: 20),
-                Text('Emergency Request Description'),
+                Text('Leave Request Description'),
                 SizedBox(height: 8),
                 AppTextField(
                   controller: _description,
-                  hintText: 'Enter request description',
+                  hintText: 'Enter leave request description',
                   validator: _validator.validate,
                 ),
                 SizedBox(height: 20),
-                Text('Emergency Request Priority'),
+                Text('Leave Request Type'),
                 SizedBox(height: 8),
                 AppTextField(
                   readOnly: true,
-                  controller: TextEditingController(text: _priority),
+                  controller: TextEditingController(text: _leaveType),
                   validator: _validator.validate,
                   onTap: () async {
                     await AppPopup.show(
                       context: context,
                       child: ItemSelectionPopUp(
-                        list: _priorities,
-                        selectedItem: _priority,
+                        list: _leaveTypeList,
+                        selectedItem: _leaveType,
                         onSelected: (value) =>
-                            setState(() => _priority = value ?? 'Emergency'),
+                            setState(() => _leaveType = value ?? 'Casual'),
                       ),
                     );
                   },
                 ),
                 SizedBox(height: 30),
                 AppButton(
-                  text: 'Create Emergency Request',
+                  text: 'Create Leave Request',
                   isLoading: _isLoading,
                   width: double.maxFinite,
-                  onTap: _createRequest,
+                  onTap: _createLeaveRequest,
                 ),
                 SizedBox(height: 100),
               ],
@@ -100,16 +94,20 @@ class _CreateLeaveRequestState extends State<CreateLeaveRequest> {
     );
   }
 
-  void _createRequest() async {
+  void _createLeaveRequest() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
-    final result = await _notificationService.createRequest(
-      title: _title.text,
-      priority: _priority,
-      assignedTo: _assignedTo,
-      description: _description.text,
-      date: _date.toDateString() ?? '',
+    final result = await _leaveService.createLeaveRequest(
       userName: widget.user?.name ?? '',
+      userId: widget.user?.id ?? '',
+      title: _title.text,
+      description: _description.text,
+      type: _leaveType,
+      fromDate: _fromDate.toDateString() ?? '',
+      toDate: _toDate.toDateString() ?? '',
+      status: 'Pending',
+      comment: '',
+      note: '',
     );
     setState(() => _isLoading = false);
     result.fold((error) => AppSnackBar.show(context, error), (data) {
