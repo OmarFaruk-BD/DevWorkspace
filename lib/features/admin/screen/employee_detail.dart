@@ -15,6 +15,7 @@ import 'package:workspace/features/admin/screen/edit_employe.dart';
 import 'package:workspace/features/admin/task/add_employee_task.dart';
 import 'package:workspace/features/admin/task/employee_task_list.dart';
 import 'package:workspace/features/admin/service/employee_service.dart';
+import 'package:workspace/features/admin/notification/e_leave_request.dart';
 import 'package:workspace/features/admin/attendance/employee_attendance.dart';
 import 'package:workspace/features/admin/attendance/e_attendance_history.dart';
 import 'package:workspace/features/admin/notification/e_emergency_request.dart';
@@ -269,6 +270,25 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
                     );
                   },
                 ),
+              ),
+              SizedBox(width: 20),
+            ],
+          ),
+          SizedBox(height: 20),
+          Row(
+            children: [
+              SizedBox(width: 20),
+              Expanded(
+                child: AdminButton(
+                  text: 'Leave Request List',
+                  onTap: () {
+                    AppNavigator.push(context, ELeaveRequest(user: user));
+                  },
+                ),
+              ),
+              SizedBox(width: 20),
+              Expanded(
+                child: AdminButton(text: 'Shop Visit List', onTap: () {}),
               ),
               SizedBox(width: 20),
             ],
