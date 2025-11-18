@@ -8,9 +8,11 @@ import 'package:workspace/features/home/widget/header.dart';
 import 'package:workspace/features/auth/cubit/auth_cubit.dart';
 import 'package:workspace/features/home/screen/notification.dart';
 import 'package:workspace/features/dashboard/screen/my_task_list.dart';
+import 'package:workspace/features/dashboard/visit/my_shop_visit.dart';
 import 'package:workspace/features/dashboard/screen/assigned_area.dart';
 import 'package:workspace/features/dashboard/screen/my_leave_request.dart';
 import 'package:workspace/features/history/screen/attendance_history.dart';
+import 'package:workspace/features/dashboard/visit/create_shop_visit.dart';
 import 'package:workspace/features/dashboard/screen/create_leave_request.dart';
 import 'package:workspace/features/dashboard/screen/my_emergency_request.dart';
 import 'package:workspace/features/dashboard/screen/create_emergency_request.dart';
@@ -120,6 +122,30 @@ class _DashboardPageState extends State<DashboardPage> {
                       onTap: () => AppNavigator.push(
                         context,
                         MyLeaveRequest(user: state.user),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(25).copyWith(bottom: 0),
+                child: Row(
+                  children: [
+                    DashboardItem(
+                      text: 'Create\nShop Visit',
+                      icon: AppImages.overview_2,
+                      onTap: () => AppNavigator.push(
+                        context,
+                        CreateShopVisit(user: state.user),
+                      ),
+                    ),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.1),
+                    DashboardItem(
+                      text: 'My Shop\nVisit List',
+                      icon: AppImages.overview_2,
+                      onTap: () => AppNavigator.push(
+                        context,
+                        MyShopVisitPage(user: state.user),
                       ),
                     ),
                   ],
