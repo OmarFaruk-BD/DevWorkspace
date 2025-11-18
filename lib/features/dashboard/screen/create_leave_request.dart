@@ -19,15 +19,15 @@ class CreateLeaveRequest extends StatefulWidget {
 }
 
 class _CreateLeaveRequestState extends State<CreateLeaveRequest> {
-  final DateTime _toDate = DateTime.now().add(Duration(days: 1));
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final AppValidator _validator = AppValidator();
   final _description = TextEditingController();
   final _leaveService = LeaveRequestService();
-  final DateTime _fromDate = DateTime.now();
   final _title = TextEditingController();
   String _leaveType = 'Casual';
   bool _isLoading = false;
+  DateTime? _fromDate;
+  DateTime? _toDate;
 
   final List<String> _leaveTypeList = ['Sick', 'Vacation', 'Casual', 'Other'];
 
@@ -58,6 +58,32 @@ class _CreateLeaveRequestState extends State<CreateLeaveRequest> {
                   controller: _description,
                   hintText: 'Enter leave request description',
                   validator: _validator.validate,
+                ),
+                SizedBox(height: 20),
+                Text('Leave Duration'),
+                SizedBox(height: 8),
+                AppTextField(
+                  readOnly: true,
+                  controller: TextEditingController(
+                    text: getDurationText(_fromDate, _toDate),
+                  ),
+                  hintText: 'Pick leave duration',
+                  validator: _validator.validate,
+                  onTap: () async {
+                    final dateRange = await showDateRangePicker(
+                      context: context,
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime.now().add(Duration(days: 365)),
+                      initialDateRange: DateTimeRange(
+                        start: _fromDate ?? DateTime.now(),
+                        end: _toDate ?? DateTime.now(),
+                      ),
+                    );
+                    setState(() {
+                      _fromDate = dateRange?.start;
+                      _toDate = dateRange?.end;
+                    });
+                  },
                 ),
                 SizedBox(height: 20),
                 Text('Leave Request Type'),
@@ -92,6 +118,11 @@ class _CreateLeaveRequestState extends State<CreateLeaveRequest> {
         ),
       ),
     );
+  }
+
+  String? getDurationText(DateTime? fromDate, DateTime? toDate) {
+    if (fromDate == null || toDate == null) return null;
+    return '${fromDate.toDateString() ?? ''} - ${toDate.toDateString() ?? ''}';
   }
 
   void _createLeaveRequest() async {

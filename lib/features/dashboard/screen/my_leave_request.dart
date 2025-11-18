@@ -114,6 +114,7 @@ class _MyLeaveRequestState extends State<MyLeaveRequest> {
           SizedBox(height: 10),
           ...List.generate(previousList.length, (index) {
             return LeaveRequestItem(
+              isPrevious: true,
               data: previousList[index],
               assignedTo: widget.user?.id,
               onEdit: () => getNtifications(),
@@ -131,21 +132,28 @@ class LeaveRequestItem extends StatelessWidget {
     this.onEdit,
     this.assignedTo,
     required this.data,
+    this.isPrevious = false,
   });
+
+  final bool isPrevious;
+  final LeaveModelV2 data;
   final String? assignedTo;
   final VoidCallback? onEdit;
-  final LeaveModelV2 data;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(bottom: 20),
       child: InkWell(
-        onTap: () => AppNavigator.pushTo(
-          context,
-          EditLeaveRequest(leave: data, assignedTo: assignedTo),
-          onBack: () => onEdit?.call(),
-        ),
+        onTap: () {
+          if (!isPrevious) {
+            AppNavigator.pushTo(
+              context,
+              EditLeaveRequest(leave: data, assignedTo: assignedTo),
+              onBack: () => onEdit?.call(),
+            );
+          }
+        },
         child: Container(
           padding: EdgeInsets.all(16),
           decoration: BoxDecoration(
@@ -190,6 +198,11 @@ class LeaveRequestItem extends StatelessWidget {
                           style: TextStyle(color: Colors.grey),
                         ),
                       ],
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      'Status: ${data.status ?? ''}',
+                      style: TextStyle(color: Colors.grey),
                     ),
                   ],
                 ),

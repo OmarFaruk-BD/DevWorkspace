@@ -36,6 +36,13 @@ extension StringExtensions on String? {
     if (dateTime == null) return null;
     return TimeOfDay.fromDateTime(dateTime);
   }
+
+  DateTime? stringToDate() {
+    if (this == null || this!.isEmpty) return null;
+    final formatter = DateFormat('MM-dd-yyyy');
+    DateTime? dateTime = formatter.tryParse(this!);
+    return dateTime;
+  }
 }
 
 extension DateTimeFormatting on DateTime? {

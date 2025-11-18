@@ -26,12 +26,13 @@ class _EditLeaveRequestState extends State<EditLeaveRequest> {
   final AppValidator _validator = AppValidator();
   final _description = TextEditingController();
   final _title = TextEditingController();
-  DateTime _fromDate = DateTime.now();
-  DateTime _toDate = DateTime.now();
+  final _date = TextEditingController();
   String _leaveType = 'Casual';
   LeaveModelV2? leaveModel;
   bool _isLoading2 = false;
   bool _isLoading = false;
+  DateTime? _fromDate;
+  DateTime? _toDate;
 
   final List<String> _leaveTypeList = ['Sick', 'Vacation', 'Casual', 'Other'];
 
@@ -51,13 +52,14 @@ class _EditLeaveRequestState extends State<EditLeaveRequest> {
     setState(() => leaveModel = result);
   }
 
-  void initDataLoad() {
-    _fromDate =
-        DateTime.tryParse(widget.leave?.fromDate ?? '') ?? DateTime.now();
-    _toDate = DateTime.tryParse(widget.leave?.toDate ?? '') ?? DateTime.now();
-    _title.text = widget.leave?.title ?? '';
+  void initDataLoad() async {
+    _fromDate = widget.leave?.fromDate.stringToDate() ?? DateTime.now();
+    _toDate = widget.leave?.toDate.stringToDate() ?? DateTime.now();
     _description.text = widget.leave?.description ?? '';
+    _date.text = getDurationText(_fromDate, _toDate);
     _leaveType = widget.leave?.type ?? 'Casual';
+    _title.text = widget.leave?.title ?? '';
+    setState(() {});
   }
 
   @override
@@ -92,6 +94,8 @@ class _EditLeaveRequestState extends State<EditLeaveRequest> {
                         SizedBox(height: 2),
                         Text('To Date: ${leaveModel?.toDate ?? ''}'),
                         SizedBox(height: 4),
+                        Text('Status: ${leaveModel?.status ?? ''}'),
+                        SizedBox(height: 4),
                       ],
                     ),
                   ),
@@ -116,6 +120,33 @@ class _EditLeaveRequestState extends State<EditLeaveRequest> {
                   controller: _description,
                   hintText: 'Enter leave description',
                   validator: _validator.validate,
+                ),
+                SizedBox(height: 20),
+                Text('Leave Duration'),
+                SizedBox(height: 8),
+                AppTextField(
+                  readOnly: true,
+                  controller: _date,
+                  hintText: 'Pick leave duration',
+                  validator: _validator.validate,
+                  onTap: () async {
+                    final dateRange = await showDateRangePicker(
+                      context: context,
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime.now().add(Duration(days: 365)),
+                      initialDateRange: DateTimeRange(
+                        start: _fromDate ?? DateTime.now(),
+                        end: _toDate ?? DateTime.now(),
+                      ),
+                    );
+                    if (dateRange != null) {
+                      setState(() {
+                        _fromDate = dateRange.start;
+                        _toDate = dateRange.end;
+                      });
+                      _date.text = getDurationText(_fromDate, _toDate);
+                    }
+                  },
                 ),
                 SizedBox(height: 20),
                 Text('Leave Request Type'),
@@ -172,6 +203,11 @@ class _EditLeaveRequestState extends State<EditLeaveRequest> {
         ),
       ),
     );
+  }
+
+  String getDurationText(DateTime? fromDate, DateTime? toDate) {
+    if (fromDate == null || toDate == null) return 'Pick leave duration';
+    return '${fromDate.toDateString() ?? ''} - ${toDate.toDateString() ?? ''}';
   }
 
   void _editNotification() async {
