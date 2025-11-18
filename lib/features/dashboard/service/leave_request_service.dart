@@ -119,7 +119,7 @@ class LeaveRequestService {
 
   Future<List<LeaveModelV2>> getAllRequest() async {
     try {
-      final querySnapshot = await _firestore.collection('request').get();
+      final querySnapshot = await _firestore.collection('leave').get();
 
       final request = querySnapshot.docs.map((doc) {
         final data = doc.data();
@@ -155,7 +155,7 @@ class LeaveRequestService {
   }) async {
     try {
       final querySnapshot = await _firestore
-          .collection('request')
+          .collection('leave')
           .where('userId', isEqualTo: userId)
           .get();
 

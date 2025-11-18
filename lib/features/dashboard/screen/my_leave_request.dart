@@ -5,9 +5,9 @@ import 'package:workspace/core/components/app_bar.dart';
 import 'package:workspace/core/components/app_button.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
 import 'package:workspace/core/components/loading_or_empty.dart';
-import 'package:workspace/features/home/model/notification_model.dart';
-import 'package:workspace/features/dashboard/screen/edit_emergency_request.dart';
-import 'package:workspace/features/dashboard/service/emergency_request_service.dart';
+import 'package:workspace/features/dashboard/model/leave_model_v2.dart';
+import 'package:workspace/features/dashboard/screen/edit_leave_request.dart';
+import 'package:workspace/features/dashboard/service/leave_request_service.dart';
 
 class MyLeaveRequest extends StatefulWidget {
   const MyLeaveRequest({super.key, this.user});
@@ -18,10 +18,10 @@ class MyLeaveRequest extends StatefulWidget {
 }
 
 class _MyLeaveRequestState extends State<MyLeaveRequest> {
-  final EmergencyRequestService _service = EmergencyRequestService();
-  List<NotificationModelV2> notifications = [];
-  List<NotificationModelV2> previousList = [];
-  List<NotificationModelV2> todayList = [];
+  final LeaveRequestService _service = LeaveRequestService();
+  List<LeaveModelV2> leaveRequestList = [];
+  List<LeaveModelV2> previousList = [];
+  List<LeaveModelV2> todayList = [];
   bool isLoading = false;
 
   @override
@@ -32,46 +32,45 @@ class _MyLeaveRequestState extends State<MyLeaveRequest> {
 
   void getNtifications() async {
     setState(() => isLoading = true);
-    notifications = await _service.getRequestByEmployee(widget.user?.id ?? '');
+    leaveRequestList = await _service.getLeaveRequestByEmployee(
+      widget.user?.id ?? '',
+    );
     setState(() => isLoading = false);
-    final split = splitNotifications(notifications);
+    final split = splitNotifications(leaveRequestList);
     previousList = split.previous;
     todayList = split.today;
     setState(() {});
   }
 
-  ({List<NotificationModelV2> today, List<NotificationModelV2> previous})
-  splitNotifications(List<NotificationModelV2> notifications) {
+  ({List<LeaveModelV2> today, List<LeaveModelV2> previous}) splitNotifications(
+    List<LeaveModelV2> notifications,
+  ) {
     try {
       final today = DateTime.now();
       final dateFormat = DateFormat('MM-dd-yyyy');
 
-      final todayNotificationList = <NotificationModelV2>[];
-      final previousNotificationList = <NotificationModelV2>[];
+      final upcomingList = <LeaveModelV2>[];
+      final previousList = <LeaveModelV2>[];
 
       for (final n in notifications) {
-        if (n.createdAt == null) continue;
+        if (n.toDate == null) continue;
 
-        final createdDate = dateFormat.parse(n.createdAt!);
-        final isToday =
-            createdDate.year == today.year &&
-            createdDate.month == today.month &&
-            createdDate.day == today.day;
+        final toDate = dateFormat.parse(n.toDate!);
 
-        if (isToday) {
-          todayNotificationList.add(n);
-        } else if (createdDate.isBefore(today)) {
-          previousNotificationList.add(n);
+        if (toDate.isBefore(today)) {
+          previousList.add(n);
+        } else {
+          upcomingList.add(n);
         }
       }
 
-      previousNotificationList.sort((a, b) {
-        final aDate = dateFormat.parse(a.createdAt!);
-        final bDate = dateFormat.parse(b.createdAt!);
+      previousList.sort((a, b) {
+        final aDate = dateFormat.parse(a.toDate!);
+        final bDate = dateFormat.parse(b.toDate!);
         return bDate.compareTo(aDate);
       });
 
-      return (today: todayNotificationList, previous: previousNotificationList);
+      return (today: upcomingList, previous: previousList);
     } catch (e) {
       return (today: [], previous: []);
     }
@@ -81,7 +80,7 @@ class _MyLeaveRequestState extends State<MyLeaveRequest> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'My Emergency Requests',
+        title: 'My Leave Requests',
         onBackTap: () => Navigator.pop(context),
       ),
       body: ListView(
@@ -89,32 +88,32 @@ class _MyLeaveRequestState extends State<MyLeaveRequest> {
         children: [
           LoadingOrEmptyText(
             isLoading: isLoading,
-            isEmpty: notifications.isEmpty,
-            emptyText: 'No requests found.',
+            isEmpty: leaveRequestList.isEmpty,
+            emptyText: 'No leave requests found.',
           ),
           Text(
-            'Today My Emergency Requests',
+            'Upcoming Leave Requests',
             style: TextStyle(fontWeight: FontWeight.w600),
           ),
           if (todayList.isEmpty && isLoading == false)
-            const Text('No requests found'),
+            const Text('No leave requests found'),
           SizedBox(height: 10),
           ...List.generate(todayList.length, (index) {
-            return RequestItem(
+            return LeaveRequestItem(
               data: todayList[index],
               assignedTo: widget.user?.id,
               onEdit: () => getNtifications(),
             );
           }),
           Text(
-            'Previous Emergency Requests',
+            'Previous Leave Requests',
             style: TextStyle(fontWeight: FontWeight.w600),
           ),
           if (previousList.isEmpty && isLoading == false)
-            const Text('No requests found'),
+            const Text('No leave requests found'),
           SizedBox(height: 10),
           ...List.generate(previousList.length, (index) {
-            return RequestItem(
+            return LeaveRequestItem(
               data: previousList[index],
               assignedTo: widget.user?.id,
               onEdit: () => getNtifications(),
@@ -126,8 +125,8 @@ class _MyLeaveRequestState extends State<MyLeaveRequest> {
   }
 }
 
-class RequestItem extends StatelessWidget {
-  const RequestItem({
+class LeaveRequestItem extends StatelessWidget {
+  const LeaveRequestItem({
     super.key,
     this.onEdit,
     this.assignedTo,
@@ -135,7 +134,7 @@ class RequestItem extends StatelessWidget {
   });
   final String? assignedTo;
   final VoidCallback? onEdit;
-  final NotificationModelV2 data;
+  final LeaveModelV2 data;
 
   @override
   Widget build(BuildContext context) {
@@ -144,7 +143,7 @@ class RequestItem extends StatelessWidget {
       child: InkWell(
         onTap: () => AppNavigator.pushTo(
           context,
-          EditEmergencyRequest(request: data, assignedTo: assignedTo),
+          EditLeaveRequest(leave: data, assignedTo: assignedTo),
           onBack: () => onEdit?.call(),
         ),
         child: Container(
@@ -173,21 +172,30 @@ class RequestItem extends StatelessWidget {
                       style: TextStyle(fontWeight: FontWeight.w600),
                     ),
                     Text(
-                      data.content ?? '',
+                      data.description ?? '',
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(color: Colors.grey),
                     ),
                     SizedBox(height: 10),
-                    Text(
-                      data.createdAt ?? '',
-                      style: TextStyle(color: Colors.grey),
+                    Row(
+                      children: [
+                        Text(
+                          'From: ${data.fromDate ?? ''},',
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          'To: ${data.toDate ?? ''}',
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
               AppButton(
-                text: data.priority ?? '',
+                text: data.type ?? '',
                 radius: 20,
                 vPadding: 6,
                 textSize: 12,
