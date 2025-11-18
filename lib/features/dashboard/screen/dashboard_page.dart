@@ -9,7 +9,9 @@ import 'package:workspace/features/auth/cubit/auth_cubit.dart';
 import 'package:workspace/features/home/screen/notification.dart';
 import 'package:workspace/features/dashboard/screen/my_task_list.dart';
 import 'package:workspace/features/dashboard/screen/assigned_area.dart';
+import 'package:workspace/features/dashboard/screen/my_leave_request.dart';
 import 'package:workspace/features/history/screen/attendance_history.dart';
+import 'package:workspace/features/dashboard/screen/create_leave_request.dart';
 import 'package:workspace/features/dashboard/screen/my_emergency_request.dart';
 import 'package:workspace/features/dashboard/screen/create_emergency_request.dart';
 
@@ -99,6 +101,31 @@ class _DashboardPageState extends State<DashboardPage> {
                   ],
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.all(25).copyWith(bottom: 0),
+                child: Row(
+                  children: [
+                    DashboardItem(
+                      text: 'Create\nLeave Request',
+                      icon: AppImages.overview_2,
+                      onTap: () => AppNavigator.push(
+                        context,
+                        CreateLeaveRequest(user: state.user),
+                      ),
+                    ),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.1),
+                    DashboardItem(
+                      text: 'My Leave\nRequest',
+                      icon: AppImages.overview_2,
+                      onTap: () => AppNavigator.push(
+                        context,
+                        MyLeaveRequest(user: state.user),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 50),
             ],
           ),
         );
