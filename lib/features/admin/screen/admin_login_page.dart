@@ -31,11 +31,11 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-      child: Scaffold(
-        body: Form(
-          key: _formKey,
+    return Scaffold(
+      body: Form(
+        key: _formKey,
+        child: GestureDetector(
+          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
           child: ListView(
             padding: const EdgeInsets.all(24),
             children: [
