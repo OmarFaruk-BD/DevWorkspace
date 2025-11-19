@@ -34,7 +34,6 @@ class _CreateShopVisitState extends State<CreateShopVisit> {
   final DateTime _date = DateTime.now();
   String? _visitType = 'Sales';
   bool _isLoading = false;
-  String? _attachments;
   TaskModel? _task;
   File? _imageFile;
 
@@ -56,7 +55,6 @@ class _CreateShopVisitState extends State<CreateShopVisit> {
               Text('Select a task to create a shop visit (Optional)'),
               SizedBox(height: 8),
               AppTextField(
-                maxLine: 3,
                 readOnly: true,
                 controller: TextEditingController(text: getTaskDetails(_task)),
                 onTap: () {
@@ -65,7 +63,21 @@ class _CreateShopVisitState extends State<CreateShopVisit> {
                     child: TaskSelectionPopup(
                       selectedTask: _task,
                       userId: widget.user?.id ?? '',
-                      onSelected: (value) => setState(() => _task = value),
+                      onSelected: (value) {
+                        setState(() => _task = value);
+                        if (_client.text.isEmpty) {
+                          _client.text = _task?.client ?? '';
+                        }
+                        if (_amount.text.isEmpty) {
+                          _amount.text = _task?.amount ?? '';
+                        }
+                        if (_title.text.isEmpty) {
+                          _title.text = _task?.title ?? '';
+                        }
+                        if (_description.text.isEmpty) {
+                          _description.text = _task?.description ?? '';
+                        }
+                      },
                     ),
                   );
                 },
@@ -206,7 +218,7 @@ class _CreateShopVisitState extends State<CreateShopVisit> {
       svDate: _date.toDateString() ?? '',
       svClient: _client.text,
       svAmount: _amount.text,
-      svAttachment: _attachments ?? '',
+      imageFile: _imageFile,
       svType: _visitType ?? '',
       svTaskId: _task?.taskId ?? '',
       status: _task?.status ?? '',
@@ -224,6 +236,13 @@ class _CreateShopVisitState extends State<CreateShopVisit> {
     setState(() => _isLoading = false);
     result.fold((error) => AppSnackBar.show(context, error), (data) {
       AppSnackBar.show(context, data);
+      _task = null;
+      _title.clear();
+      _description.clear();
+      _client.clear();
+      _amount.clear();
+      _imageFile = null;
+      setState(() {});
     });
   }
 

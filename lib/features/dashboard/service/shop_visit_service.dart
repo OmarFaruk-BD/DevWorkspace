@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:fpdart/fpdart.dart';
 import 'package:logger/logger.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:workspace/core/components/app_image_helper.dart';
 import 'package:workspace/features/dashboard/model/task_model.dart';
 
 class ShopVisitService {
   final Logger _logger = Logger();
+  final AppImageHelper _compressor = AppImageHelper();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   /// ✅ Create a new task document
@@ -14,9 +18,9 @@ class ShopVisitService {
     required String svDate,
     required String svClient,
     required String svAmount,
-    required String svAttachment,
     required String svType,
     required String svTaskId,
+    File? imageFile,
 
     ///
     required String assignedTo,
@@ -32,13 +36,17 @@ class ShopVisitService {
     required String attachments,
   }) async {
     try {
+      final compressedBytes = await _compressor.compressImageToBase64(
+        imageFile,
+      );
+
       final Map<String, dynamic> shopVisitData = {
         'svTitle': svTitle,
         'svDescription': svDescription,
         'svDate': svDate,
         'svClient': svClient,
         'svAmount': svAmount,
-        'svAttachment': svAttachment,
+        'svAttachment': compressedBytes,
         'svType': svType,
         'svTaskId': svTaskId,
 
@@ -62,6 +70,9 @@ class ShopVisitService {
       await _firestore.collection('shopVisits').add(shopVisitData);
 
       return const Right('Shop visit created successfully.');
+    } on FirebaseException catch (e) {
+      _logger.e('Firebase error creating shop visit: ${e.message}');
+      return Left('Firebase error creating shop visit: ${e.message}');
     } catch (e) {
       _logger.e('Error creating shop visit: $e');
       return Left('Failed to create shop visit: $e');
@@ -149,7 +160,6 @@ class ShopVisitService {
       return null;
     }
   }
-
 
   Future<TaskModel?> getTaskByEmployeeAndIdV2({
     String? assignedTo,
