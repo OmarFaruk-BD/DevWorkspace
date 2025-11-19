@@ -7,7 +7,7 @@ class ShopVisitModel {
   final String? svDate;
   final String? svClient;
   final String? svAmount;
-  final String? compressedBytes;
+  final String? svAttachment;
   final String? svType;
   final String? svTaskId;
   final TaskModel? task;
@@ -18,7 +18,7 @@ class ShopVisitModel {
     this.svDate,
     this.svClient,
     this.svAmount,
-    this.compressedBytes,
+    this.svAttachment,
     this.svType,
     this.svTaskId,
     this.task,
@@ -31,7 +31,7 @@ class ShopVisitModel {
     String? svDate,
     String? svClient,
     String? svAmount,
-    String? compressedBytes,
+    String? svAttachment,
     String? svType,
     String? svTaskId,
     TaskModel? task,
@@ -43,7 +43,7 @@ class ShopVisitModel {
       svDate: svDate ?? this.svDate,
       svClient: svClient ?? this.svClient,
       svAmount: svAmount ?? this.svAmount,
-      compressedBytes: compressedBytes ?? this.compressedBytes,
+      svAttachment: svAttachment ?? this.svAttachment,
       svType: svType ?? this.svType,
       svTaskId: svTaskId ?? this.svTaskId,
       task: task ?? this.task,
@@ -58,7 +58,7 @@ class ShopVisitModel {
       svDate: map['svDate'] as String,
       svClient: map['svClient'] as String,
       svAmount: map['svAmount'] as String,
-      compressedBytes: map['svAttachment'] as String,
+      svAttachment: map['svAttachment'] as String,
       svType: map['svType'] as String,
       svTaskId: map['svTaskId'] as String,
       task: map['task'] != null
@@ -84,7 +84,7 @@ class ShopVisitModel {
 
   @override
   String toString() {
-    return 'ShopVisitModel(svTitle: $svTitle, svDescription: $svDescription, svDate: $svDate, svClient: $svClient, svAmount: $svAmount, compressedBytes: $compressedBytes, svType: $svType, svTaskId: $svTaskId, task: $task)';
+    return 'ShopVisitModel(svTitle: $svTitle, svDescription: $svDescription, svDate: $svDate, svClient: $svClient, svAmount: $svAmount, compressedBytes: $svAttachment, svType: $svType, svTaskId: $svTaskId, task: $task)';
   }
 
   @override
@@ -96,7 +96,7 @@ class ShopVisitModel {
         other.svDate == svDate &&
         other.svClient == svClient &&
         other.svAmount == svAmount &&
-        other.compressedBytes == compressedBytes &&
+        other.svAttachment == svAttachment &&
         other.svType == svType &&
         other.svTaskId == svTaskId &&
         other.task == task;
@@ -109,7 +109,7 @@ class ShopVisitModel {
         svDate.hashCode ^
         svClient.hashCode ^
         svAmount.hashCode ^
-        compressedBytes.hashCode ^
+        svAttachment.hashCode ^
         svType.hashCode ^
         svTaskId.hashCode ^
         task.hashCode;

@@ -1,7 +1,8 @@
+import 'dart:convert';
+
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:workspace/core/components/app_bar.dart';
-import 'package:workspace/core/components/app_button.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
 import 'package:workspace/core/components/loading_or_empty.dart';
 import 'package:workspace/features/dashboard/model/shop_visit_model.dart';
@@ -161,7 +162,19 @@ class ShopVisitItem extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(width: 5),
+              Container(
+                width: 80,
+                height: 120,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade200,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Image.memory(
+                  base64Decode(data.svAttachment ?? ''),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              const SizedBox(width: 10),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -176,20 +189,31 @@ class ShopVisitItem extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(color: Colors.grey),
                     ),
-                    SizedBox(height: 10),
+                    if (data.svClient != null && data.svClient!.isNotEmpty)
+                      Text(
+                        'Client: ${data.svClient ?? ''}',
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    if (data.svAmount != null && data.svAmount!.isNotEmpty)
+                      Text(
+                        'Amount: ${data.svAmount ?? ''}',
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: Colors.grey),
+                      ),
+
                     Text(
-                      data.svDate ?? '',
+                      'Shop Visit Type: ${data.svType ?? ''}',
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: Colors.grey),
+                    ),
+
+                    Text(
+                      'Date: ${data.svDate ?? ''}',
                       style: TextStyle(color: Colors.grey),
                     ),
                   ],
                 ),
-              ),
-              AppButton(
-                text: data.svType ?? '',
-                radius: 20,
-                vPadding: 6,
-                textSize: 12,
-                hPadding: 10,
               ),
             ],
           ),
