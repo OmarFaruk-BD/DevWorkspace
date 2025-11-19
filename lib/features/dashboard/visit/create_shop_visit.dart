@@ -13,6 +13,7 @@ import 'package:workspace/core/components/app_image_picker.dart';
 import 'package:workspace/features/dashboard/model/task_model.dart';
 import 'package:workspace/core/components/item_selection_popup.dart';
 import 'package:workspace/features/dashboard/service/shop_visit_service.dart';
+import 'package:workspace/features/dashboard/visit/task_selection_popup.dart';
 
 class CreateShopVisit extends StatefulWidget {
   const CreateShopVisit({super.key, this.user});
@@ -31,9 +32,9 @@ class _CreateShopVisitState extends State<CreateShopVisit> {
   final ShopVisitService _service = ShopVisitService();
   final AppValidator _validator = AppValidator();
   final DateTime _date = DateTime.now();
+  String? _visitType = 'Sales';
   bool _isLoading = false;
   String? _attachments;
-  String? _visitType;
   TaskModel? _task;
   File? _imageFile;
 
@@ -52,6 +53,24 @@ class _CreateShopVisitState extends State<CreateShopVisit> {
           child: ListView(
             padding: EdgeInsets.all(20),
             children: [
+              Text('Select a task to create a shop visit (Optional)'),
+              SizedBox(height: 8),
+              AppTextField(
+                maxLine: 3,
+                readOnly: true,
+                controller: TextEditingController(text: getTaskDetails(_task)),
+                onTap: () {
+                  AppPopup.show(
+                    context: context,
+                    child: TaskSelectionPopup(
+                      selectedTask: _task,
+                      userId: widget.user?.id ?? '',
+                      onSelected: (value) => setState(() => _task = value),
+                    ),
+                  );
+                },
+              ),
+              SizedBox(height: 20),
               Text('Shop Visit Title'),
               SizedBox(height: 8),
               AppTextField(
@@ -206,5 +225,12 @@ class _CreateShopVisitState extends State<CreateShopVisit> {
     result.fold((error) => AppSnackBar.show(context, error), (data) {
       AppSnackBar.show(context, data);
     });
+  }
+
+  String getTaskDetails(TaskModel? task) {
+    if (task == null) return 'Select a task';
+    String detsil =
+        '${task.title}\nClient: ${task.client}\nAmount: ${task.amount}';
+    return detsil;
   }
 }
