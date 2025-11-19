@@ -1,6 +1,11 @@
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:workspace/core/components/app_bar.dart';
+import 'package:workspace/core/components/app_button.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
+import 'package:workspace/core/components/loading_or_empty.dart';
+import 'package:workspace/features/dashboard/model/shop_visit_model.dart';
+import 'package:workspace/features/dashboard/service/shop_visit_service.dart';
 
 class MyShopVisitPage extends StatefulWidget {
   const MyShopVisitPage({super.key, this.user});
@@ -11,17 +16,184 @@ class MyShopVisitPage extends StatefulWidget {
 }
 
 class _MyShopVisitPageState extends State<MyShopVisitPage> {
+  final ShopVisitService _service = ShopVisitService();
+  List<ShopVisitModel> shopVisitList = [];
+  List<ShopVisitModel> previousList = [];
+  List<ShopVisitModel> thisMonthList = [];
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    getShopVisitList();
+  }
+
+  void getShopVisitList() async {
+    setState(() => isLoading = true);
+    shopVisitList = await _service.getShopVisitByEmployee(
+      widget.user?.id ?? '',
+    );
+    setState(() => isLoading = false);
+    final split = splitNotifications(shopVisitList);
+    previousList = split.previous;
+    thisMonthList = split.today;
+    setState(() {});
+  }
+
+  ({List<ShopVisitModel> today, List<ShopVisitModel> previous})
+  splitNotifications(List<ShopVisitModel> notifications) {
+    try {
+      final thisMonth = DateTime(DateTime.now().year, DateTime.now().month);
+      final dateFormat = DateFormat('MM-dd-yyyy');
+
+      final todayNotificationList = <ShopVisitModel>[];
+      final previousNotificationList = <ShopVisitModel>[];
+
+      for (final n in notifications) {
+        if (n.svDate == null) continue;
+
+        final createdDate = dateFormat.parse(n.svDate!);
+
+        if (createdDate.isBefore(thisMonth)) {
+          previousNotificationList.add(n);
+        } else {
+          todayNotificationList.add(n);
+        }
+      }
+
+      // previousNotificationList.sort((a, b) {
+      //   final aDate = dateFormat.parse(a.svDate!);
+      //   final bDate = dateFormat.parse(b.svDate!);
+      //   return bDate.compareTo(aDate);
+      // });
+
+      return (today: todayNotificationList, previous: previousNotificationList);
+    } catch (e) {
+      return (today: [], previous: []);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'My Shop Visit'),
+      appBar: CustomAppBar(
+        title: 'My Shop Visit',
+        onBackTap: () => Navigator.pop(context),
+      ),
       body: ListView(
-        padding: EdgeInsets.all(20),
+        padding: EdgeInsets.all(24),
         children: [
-          Text('My Shop Visit'),
-          Text('My Shop Visit'),
-          Text('My Shop Visit'),
+          LoadingOrEmptyText(
+            isLoading: isLoading,
+            isEmpty: shopVisitList.isEmpty,
+            emptyText: 'No shop visit found.',
+          ),
+          Text(
+            'This Month Shop Visits',
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
+          if (thisMonthList.isEmpty && isLoading == false)
+            const Text('No shop visit found this month'),
+          SizedBox(height: 10),
+          ...List.generate(thisMonthList.length, (index) {
+            return ShopVisitItem(
+              data: thisMonthList[index],
+              assignedTo: widget.user?.id,
+              onEdit: () => getShopVisitList(),
+            );
+          }),
+          Text(
+            'Previous Shop Visits',
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
+          if (previousList.isEmpty && isLoading == false)
+            const Text('No shop visit found previously'),
+          SizedBox(height: 10),
+          ...List.generate(previousList.length, (index) {
+            return ShopVisitItem(
+              data: previousList[index],
+              assignedTo: widget.user?.id,
+              onEdit: () => getShopVisitList(),
+            );
+          }),
         ],
+      ),
+    );
+  }
+}
+
+class ShopVisitItem extends StatelessWidget {
+  const ShopVisitItem({
+    super.key,
+    this.onEdit,
+    this.assignedTo,
+    required this.data,
+  });
+  final String? assignedTo;
+  final VoidCallback? onEdit;
+  final ShopVisitModel data;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 20),
+      child: InkWell(
+        onTap: () {
+          //   AppNavigator.pushTo(
+          //   context,
+          //   EditEmergencyRequest(request: data, assignedTo: assignedTo),
+          //   onBack: () => onEdit?.call(),
+          // );
+        },
+        child: Container(
+          padding: EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.shade200,
+                blurRadius: 5,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(width: 5),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      data.svTitle ?? '',
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    Text(
+                      data.svDescription ?? '',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      data.svDate ?? '',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ),
+              AppButton(
+                text: data.svType ?? '',
+                radius: 20,
+                vPadding: 6,
+                textSize: 12,
+                hPadding: 10,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

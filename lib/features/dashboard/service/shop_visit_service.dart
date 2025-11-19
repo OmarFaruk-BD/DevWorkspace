@@ -4,7 +4,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:logger/logger.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:workspace/core/components/app_image_helper.dart';
-import 'package:workspace/features/dashboard/model/task_model.dart';
+import 'package:workspace/features/dashboard/model/shop_visit_model.dart';
 
 class ShopVisitService {
   final Logger _logger = Logger();
@@ -118,21 +118,21 @@ class ShopVisitService {
   }
 
   /// 📋 Get all tasks assigned to a specific employee
-  Future<List<Map<String, dynamic>>> getShopVisitByEmployee(
-    String assignedTo,
-  ) async {
+  Future<List<ShopVisitModel>> getShopVisitByEmployee(String assignedTo) async {
     try {
       final querySnapshot = await _firestore
           .collection('shopVisits')
           .where('assignedTo', isEqualTo: assignedTo)
           .get();
 
-      final tasks = querySnapshot.docs.map((doc) {
+      final shopVisitList = querySnapshot.docs.map((doc) {
         final data = doc.data();
-        return {'id': doc.id, ...data};
+        final mapData = {'id': doc.id, ...data};
+        _logger.e(mapData);
+        return ShopVisitModel.fromMap(mapData);
       }).toList();
 
-      return tasks;
+      return shopVisitList;
     } on FirebaseException catch (e) {
       _logger.e('Firebase error fetching shop visits: ${e.message}');
       return [];
@@ -142,16 +142,20 @@ class ShopVisitService {
     }
   }
 
-  Future<Map<String, dynamic>?> getShopVisitDetail(String? id) async {
+  Future<ShopVisitModel?> getShopVisitDetail(String? id) async {
     try {
       final querySnapshot = await _firestore
           .collection('shopVisits')
           .doc(id)
           .get();
 
-      final getTask = querySnapshot.data();
+      final getData = querySnapshot.data();
+      if (getData != null && getData.isNotEmpty) {
+        final mapData = {'id': id, ...getData};
+        return ShopVisitModel.fromMap(mapData);
+      }
 
-      return getTask;
+      return null;
     } on FirebaseException catch (e) {
       _logger.e('Firebase error fetching shop visits: ${e.message}');
       return null;
@@ -161,36 +165,36 @@ class ShopVisitService {
     }
   }
 
-  Future<TaskModel?> getTaskByEmployeeAndIdV2({
-    String? assignedTo,
-    String? taskId,
-  }) async {
-    try {
-      final querySnapshot = await _firestore
-          .collection('tasks')
-          .where('assignedTo', isEqualTo: assignedTo)
-          .get();
+  // Future<ShopVisitModel?> getShopVisitByEmployeeAndIdV2({
+  //   String? assignedTo,
+  //   String? taskId,
+  // }) async {
+  //   try {
+  //     final querySnapshot = await _firestore
+  //         .collection('shopVisits')
+  //         .where('assignedTo', isEqualTo: assignedTo)
+  //         .get();
 
-      final tasks = querySnapshot.docs.map((doc) {
-        final data = doc.data();
-        return {'taskId': doc.id, ...data};
-      }).toList();
+  //     final tasks = querySnapshot.docs.map((doc) {
+  //       final data = doc.data();
+  //       return {'taskId': doc.id, ...data};
+  //     }).toList();
 
-      if (tasks.isEmpty) return null;
+  //     if (tasks.isEmpty) return null;
 
-      Map<String, dynamic>? getTask = tasks.firstWhere(
-        (element) => element['taskId'] == taskId,
-      );
+  //     Map<String, dynamic>? getTask = tasks.firstWhere(
+  //       (element) => element['taskId'] == taskId,
+  //     );
 
-      final getData = TaskModel.fromMap(getTask);
+  //     final getData = TaskModel.fromMap(getTask);
 
-      return getData;
-    } on FirebaseException catch (e) {
-      _logger.e('Firebase error fetching tasks: ${e.message}');
-      return null;
-    } catch (e) {
-      _logger.e('Error fetching tasks: $e');
-      return null;
-    }
-  }
+  //     return getData;
+  //   } on FirebaseException catch (e) {
+  //     _logger.e('Firebase error fetching tasks: ${e.message}');
+  //     return null;
+  //   } catch (e) {
+  //     _logger.e('Error fetching tasks: $e');
+  //     return null;
+  //   }
+  // }
 }
