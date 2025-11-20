@@ -15,6 +15,7 @@ import 'package:workspace/features/admin/widget/action_button.dart';
 import 'package:workspace/features/admin/task/add_employee_task.dart';
 import 'package:workspace/features/admin/task/employee_task_list.dart';
 import 'package:workspace/features/admin/service/employee_service.dart';
+import 'package:workspace/features/dashboard/visit/e_shop_visit_list.dart';
 import 'package:workspace/features/admin/notification/e_leave_request.dart';
 import 'package:workspace/features/admin/attendance/employee_attendance.dart';
 import 'package:workspace/features/admin/attendance/e_attendance_history.dart';
@@ -182,7 +183,14 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
           ///
           SectionWidget(
             title: 'Shop Visit Related Actions',
-            children: [ActionButton(text: 'Shop Visit List', onTap: () {})],
+            children: [
+              ActionButton(
+                text: 'Shop Visit List',
+                onTap: () {
+                  AppNavigator.push(context, EmployeeShopVisitList(user: user));
+                },
+              ),
+            ],
           ),
 
           ///

@@ -152,6 +152,32 @@ class ShopVisitService {
     }
   }
 
+  /// ✏️ Edit (update) an existing task by its document ID
+  Future<Either<String, String>> editShopVisitV2({
+    required String shopVisitId,
+    required String comments,
+  }) async {
+    try {
+      Map<String, dynamic> shopVisitData = {'comments': comments};
+
+      _logger.e(shopVisitData);
+      _logger.e(shopVisitId);
+
+      await _firestore
+          .collection('shopVisits')
+          .doc(shopVisitId)
+          .update(shopVisitData);
+
+      return const Right('Shop visit updated successfully.');
+    } on FirebaseException catch (e) {
+      _logger.e('Firebase error editing shop visit: ${e.message}');
+      return Left('Failed to update shop visit: ${e.message}');
+    } catch (e) {
+      _logger.e('Error editing shop visit: $e');
+      return Left('Failed to edit shop visit: $e');
+    }
+  }
+
   /// 🗑️ Delete a task by its document ID
   Future<Either<String, String>> deleteShopVisit(String id) async {
     try {

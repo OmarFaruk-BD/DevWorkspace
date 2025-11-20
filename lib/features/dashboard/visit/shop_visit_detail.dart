@@ -93,6 +93,33 @@ class _ShopVisitDetailState extends State<ShopVisitDetail> {
                 ],
               ),
             ),
+          if (widget.shopVisit?.task?.comments != null)
+            Container(
+              margin: const EdgeInsets.only(top: 20),
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.shade300,
+                    blurRadius: 8,
+                    offset: const Offset(0, 1),
+                  ),
+                ],
+              ),
+              child: Column(
+                spacing: 4,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(child: Text('Management Comments')),
+                  Text(
+                    widget.shopVisit?.task?.comments ?? '',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
           SizedBox(height: 20),
           SizedBox(height: MediaQuery.of(context).padding.bottom),
         ],

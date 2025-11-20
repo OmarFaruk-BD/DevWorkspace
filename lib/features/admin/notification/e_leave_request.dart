@@ -183,21 +183,12 @@ class LeaveRequestItem extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(color: Colors.grey),
                     ),
-                    SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Text(
-                          'From: ${data.fromDate ?? ''},',
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                        SizedBox(width: 10),
-                        Text(
-                          'To: ${data.toDate ?? ''}',
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      ],
+                    SizedBox(height: 8),
+                    Text(
+                      'From: ${data.fromDate ?? ''}\n To: ${data.toDate ?? ''}',
+                      style: TextStyle(color: Colors.grey),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 4),
                     Text(
                       'Status: ${data.status ?? ''}',
                       style: TextStyle(color: Colors.grey),
