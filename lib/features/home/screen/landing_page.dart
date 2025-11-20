@@ -5,8 +5,8 @@ import 'package:workspace/core/utils/app_images.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:workspace/features/area/screen/area_page.dart';
 import 'package:workspace/features/home/screen/home_page.dart';
+import 'package:workspace/features/dashboard/screen/my_task_list.dart';
 import 'package:workspace/features/dashboard/screen/dashboard_page.dart';
-import 'package:workspace/features/history/screen/attendance_detail.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key, this.index});
@@ -22,7 +22,7 @@ class _LandingPageState extends State<LandingPage> {
   static const List<Widget> _screens = <Widget>[
     HomePage(),
     AreaPage(),
-    AttendanceDetailPage(),
+    MyTaskListV2(),
     DashboardPage(),
   ];
 
@@ -65,8 +65,8 @@ class _LandingPageState extends State<LandingPage> {
                   onTap: () => setState(() => _index = 1),
                 ),
                 _buildBottomNavBar2(
-                  icon: AppImages.calander,
-                  label: context.tr('history'),
+                  icon: AppImages.task,
+                  label: 'Tasks',
                   isSelected: _index == 2,
                   onTap: () => setState(() => _index = 2),
                 ),

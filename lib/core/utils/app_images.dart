@@ -16,6 +16,7 @@ class AppImages {
   static const String arrow = 'assets/svg/arrow.svg';
   static const String arrow2 = 'assets/svg/arrow_2.svg';
   static const String calander = 'assets/svg/calander.svg';
+  static const String task = 'assets/svg/task.svg';
   static const String clock = 'assets/svg/clock.svg';
   static const String dashboard = 'assets/svg/dashboard.svg';
   static const String home = 'assets/svg/home.svg';
