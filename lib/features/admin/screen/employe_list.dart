@@ -76,10 +76,22 @@ class EmployeItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 15),
+      padding: EdgeInsets.only(bottom: 25),
       child: InkWell(
         onTap: onTap,
-        child: Card(
+        child: Container(
+          padding: EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.shade400,
+                blurRadius: 5,
+                offset: const Offset(0, 1),
+              ),
+            ],
+          ),
           child: ListTile(
             title: Text(
               employee.name ?? '',

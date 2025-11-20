@@ -6,12 +6,12 @@ import 'package:workspace/core/utils/app_colors.dart';
 import 'package:workspace/core/utils/app_images.dart';
 import 'package:workspace/core/helper/navigation.dart';
 import 'package:workspace/core/components/app_bar.dart';
-import 'package:workspace/core/components/app_button.dart';
 import 'package:workspace/core/components/app_snack_bar.dart';
 import 'package:workspace/core/components/approval_popup.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
 import 'package:workspace/core/components/app_network_image.dart';
 import 'package:workspace/features/admin/screen/edit_employe.dart';
+import 'package:workspace/features/admin/widget/action_button.dart';
 import 'package:workspace/features/admin/task/add_employee_task.dart';
 import 'package:workspace/features/admin/task/employee_task_list.dart';
 import 'package:workspace/features/admin/service/employee_service.dart';
@@ -127,173 +127,131 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
           _buildItem('Department', user?.department ?? 'N/A'),
           _buildDivider(),
           SizedBox(height: 40),
-          Row(
+          SectionWidget(
+            title: 'Profile Related Actions',
             children: [
-              SizedBox(width: 20),
-              Expanded(
-                child: AdminButton(
-                  text: 'Edit Profile',
-                  onTap: () {
-                    AppNavigator.pushTo(
-                      context,
-                      EditEmployeePage(user: user),
-                      onBack: fetchEmployees,
-                    );
-                  },
-                ),
+              ActionButton(
+                text: 'Edit Profile',
+                onTap: () {
+                  AppNavigator.pushTo(
+                    context,
+                    EditEmployeePage(user: user),
+                    onBack: fetchEmployees,
+                  );
+                },
               ),
-              SizedBox(width: 20),
-              Expanded(
-                child: AdminButton(
-                  text: 'Delete Profile',
-                  isLoading: isDeleting,
-                  onTap: () async {
-                    final text =
-                        'Are you sure you want to delete this profile?';
-                    await showDialog(
-                      context: context,
-                      builder: (context) {
-                        return ApprovalWidget(
-                          title: 'Delete Profile!',
-                          description: text,
-                          onApprove: _deleteEmployee,
-                        );
-                      },
-                    );
-                  },
-                ),
+              ActionButton(
+                text: 'Delete Profile',
+                onTap: () async {
+                  if (isDeleting) return;
+                  final text = 'Are you sure you want to delete this profile?';
+                  await showDialog(
+                    context: context,
+                    builder: (context) {
+                      return ApprovalWidget(
+                        title: 'Delete Profile!',
+                        description: text,
+                        onApprove: _deleteEmployee,
+                      );
+                    },
+                  );
+                },
               ),
-              SizedBox(width: 20),
             ],
           ),
-          SizedBox(height: 20),
-          Row(
+
+          ///
+          SectionWidget(
+            title: 'Task Related Actions',
             children: [
-              SizedBox(width: 20),
-              Expanded(
-                child: AdminButton(
-                  text: 'Add Task',
-                  onTap: () {
-                    AppNavigator.push(context, AddEmployeeTaskPage(user: user));
-                  },
-                ),
+              ActionButton(
+                text: 'Add Task',
+                onTap: () {
+                  AppNavigator.push(context, AddEmployeeTaskPage(user: user));
+                },
               ),
-              SizedBox(width: 20),
-              Expanded(
-                child: AdminButton(
-                  text: 'See Tasks',
-                  onTap: () {
-                    AppNavigator.push(context, EmployeeTaskList(user: user));
-                  },
-                ),
+              ActionButton(
+                text: 'See Tasks',
+                onTap: () {
+                  AppNavigator.push(context, EmployeeTaskList(user: user));
+                },
               ),
-              SizedBox(width: 20),
             ],
           ),
-          SizedBox(height: 20),
-          Row(
+
+          ///
+          SectionWidget(
+            title: 'Shop Visit Related Actions',
+            children: [ActionButton(text: 'Shop Visit List', onTap: () {})],
+          ),
+
+          ///
+          SectionWidget(
+            title: 'Attendance and Location Related Actions',
             children: [
-              SizedBox(width: 20),
-              Expanded(
-                child: AdminButton(
-                  text: 'Assign Location',
-                  onTap: () {
-                    AppNavigator.push(
-                      context,
-                      AddEmployeeAttendancePage(user: user),
-                    );
-                  },
-                ),
+              ActionButton(
+                text: 'Attendance History',
+                onTap: () {
+                  AppNavigator.push(context, EAttendanceHistory(user: user));
+                },
               ),
-              SizedBox(width: 20),
-              Expanded(
-                child: AdminButton(
-                  text: 'See Assign Location',
-                  onTap: () {
-                    AppNavigator.push(
-                      context,
-                      EmployeeLocationList(user: user),
-                    );
-                  },
-                ),
+              ActionButton(text: 'See On Map', onTap: () {}),
+              ActionButton(
+                text: 'Assign Location',
+                onTap: () {
+                  AppNavigator.push(
+                    context,
+                    AddEmployeeAttendancePage(user: user),
+                  );
+                },
               ),
-              SizedBox(width: 20),
+              ActionButton(
+                text: 'See Assign Location',
+                onTap: () {
+                  AppNavigator.push(context, EmployeeLocationList(user: user));
+                },
+              ),
             ],
           ),
-          SizedBox(height: 20),
-          Row(
+
+          ///
+          SectionWidget(
+            title: 'Request Related Actions',
             children: [
-              SizedBox(width: 20),
-              Expanded(
-                child: AdminButton(
-                  text: 'Attendance History',
-                  onTap: () {
-                    AppNavigator.push(context, EAttendanceHistory(user: user));
-                  },
-                ),
+              ActionButton(
+                text: 'Send Notification',
+                onTap: () {
+                  AppNavigator.push(
+                    context,
+                    AddEmployeeNotificationPage(user: user),
+                  );
+                },
               ),
-              SizedBox(width: 20),
-              Expanded(
-                child: AdminButton(
-                  text: 'Emergency Request List',
-                  onTap: () {
-                    AppNavigator.push(context, EEmergencyRequest(user: user));
-                  },
-                ),
+              ActionButton(
+                text: 'See Notifications',
+                onTap: () {
+                  AppNavigator.push(
+                    context,
+                    EmployeeNotificationList(user: user),
+                  );
+                },
               ),
-              SizedBox(width: 20),
+              ActionButton(
+                text: 'Emergency Request List',
+                onTap: () {
+                  AppNavigator.push(context, EEmergencyRequest(user: user));
+                },
+              ),
+
+              ActionButton(
+                text: 'Leave Request List',
+                onTap: () {
+                  AppNavigator.push(context, ELeaveRequest(user: user));
+                },
+              ),
             ],
           ),
-          SizedBox(height: 20),
-          Row(
-            children: [
-              SizedBox(width: 20),
-              Expanded(
-                child: AdminButton(
-                  text: 'Send Notification',
-                  onTap: () {
-                    AppNavigator.push(
-                      context,
-                      AddEmployeeNotificationPage(user: user),
-                    );
-                  },
-                ),
-              ),
-              SizedBox(width: 20),
-              Expanded(
-                child: AdminButton(
-                  text: 'See Notifications',
-                  onTap: () {
-                    AppNavigator.push(
-                      context,
-                      EmployeeNotificationList(user: user),
-                    );
-                  },
-                ),
-              ),
-              SizedBox(width: 20),
-            ],
-          ),
-          SizedBox(height: 20),
-          Row(
-            children: [
-              SizedBox(width: 20),
-              Expanded(
-                child: AdminButton(
-                  text: 'Leave Request List',
-                  onTap: () {
-                    AppNavigator.push(context, ELeaveRequest(user: user));
-                  },
-                ),
-              ),
-              SizedBox(width: 20),
-              Expanded(
-                child: AdminButton(text: 'Shop Visit List', onTap: () {}),
-              ),
-              SizedBox(width: 20),
-            ],
-          ),
-          SizedBox(height: MediaQuery.of(context).padding.bottom + 20),
+          SizedBox(height: MediaQuery.of(context).padding.bottom),
         ],
       ),
     );
