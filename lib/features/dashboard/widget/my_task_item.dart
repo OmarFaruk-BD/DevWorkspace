@@ -12,7 +12,7 @@ class MyTaskItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 15),
+      padding: EdgeInsets.only(bottom: 22),
       child: InkWell(
         onTap: () {
           AppNavigator.pushTo(
@@ -21,7 +21,19 @@ class MyTaskItem extends StatelessWidget {
             onBack: () => onBack?.call(),
           );
         },
-        child: Card(
+        child: Container(
+          padding: EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.shade300,
+                blurRadius: 8,
+                offset: const Offset(0, 1),
+              ),
+            ],
+          ),
           child: ListTile(
             title: Text(
               task.title,
@@ -55,9 +67,9 @@ class MyTaskItem extends StatelessWidget {
                 Center(
                   child: AppButton(
                     radius: 50,
-                    vPadding: 8,
+                    vPadding: 6,
                     hPadding: 25,
-                    text: 'Detail',
+                    text: 'Details',
                   ),
                 ),
               ],

@@ -7,7 +7,6 @@ import 'package:workspace/core/components/app_bar.dart';
 import 'package:workspace/core/components/app_text.dart';
 import 'package:workspace/core/components/app_button.dart';
 import 'package:workspace/core/components/app_snack_bar.dart';
-import 'package:workspace/features/area/widget/info_row.dart';
 import 'package:workspace/features/home/cubit/home_cubit.dart';
 import 'package:workspace/core/service/permission_service.dart';
 import 'package:workspace/features/area/screen/map_widget.dart';
@@ -115,7 +114,12 @@ class _AreaPageState extends State<AreaPage> {
               ),
               BlocBuilder<HomeCubit, HomeState>(
                 builder: (context, state) {
-                  return state.punchedIn == true ? InfoRow() : SizedBox();
+                  return state.punchedIn == true
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 24),
+                          child: DutyLocation(),
+                        )
+                      : SizedBox();
                 },
               ),
               Spacer(),
