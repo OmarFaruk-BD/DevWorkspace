@@ -6,12 +6,15 @@ import 'package:workspace/core/components/app_button.dart';
 import 'package:workspace/core/components/approval_popup.dart';
 import 'package:workspace/features/admin/screen/add_employee.dart';
 import 'package:workspace/features/admin/screen/employe_list.dart';
+import 'package:workspace/features/admin/widget/action_button.dart';
 import 'package:workspace/features/admin/widget/employee_popup.dart';
 import 'package:workspace/features/admin/task/add_employee_task.dart';
 import 'package:workspace/features/admin/task/employee_task_list.dart';
 import 'package:workspace/features/admin/screen/admin_login_page.dart';
 import 'package:workspace/features/admin/screen/manager_list_page.dart';
 import 'package:workspace/features/admin/service/admin_auth_service.dart';
+import 'package:workspace/features/dashboard/visit/e_shop_visit_list.dart';
+import 'package:workspace/features/admin/notification/e_leave_request.dart';
 import 'package:workspace/features/admin/attendance/employee_attendance.dart';
 import 'package:workspace/features/admin/attendance/e_attendance_history.dart';
 import 'package:workspace/features/admin/notification/e_emergency_request.dart';
@@ -31,170 +34,222 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AdminAppBar(title: 'Admin Dashboard', hasBackButton: false),
+      appBar: AdminAppBar(title: 'Manager Dashboard', hasBackButton: false),
       body: ListView(
-        padding: EdgeInsets.all(25),
         children: [
-          AdminButton(
-            text: 'Add Employee',
-            onTap: () => AppNavigator.push(context, AddEmployeePage()),
+          SizedBox(height: 20),
+          SectionWidget(
+            title: 'Employee Related Actions',
+            children: [
+              ActionButton(
+                text: 'Add Employee',
+                onTap: () {
+                  AppNavigator.push(context, AddEmployeePage());
+                },
+              ),
+              ActionButton(
+                text: 'Employee List',
+                onTap: () => AppNavigator.push(context, EmployeeListPage()),
+              ),
+              ActionButton(
+                text: 'Manager List',
+                onTap: () => AppNavigator.push(context, ManagerListPage()),
+              ),
+            ],
+          ),
+          SectionWidget(
+            title: 'Task Related Actions',
+            children: [
+              ActionButton(
+                text: 'Assign Task',
+                onTap: () async {
+                  await AppPopup.show(
+                    child: EmployeePopup(
+                      onSelected: (employee) {
+                        if (!mounted) return;
+                        AppNavigator.push(
+                          context,
+                          AddEmployeeTaskPage(user: employee),
+                        );
+                      },
+                    ),
+                    context: context,
+                  );
+                },
+              ),
+              ActionButton(
+                text: 'See Assigned Task',
+                onTap: () async {
+                  await AppPopup.show(
+                    child: EmployeePopup(
+                      onSelected: (employee) {
+                        if (!mounted) return;
+                        AppNavigator.push(
+                          context,
+                          EmployeeTaskList(user: employee),
+                        );
+                      },
+                    ),
+                    context: context,
+                  );
+                },
+              ),
+              ActionButton(
+                text: 'Shop Visit List',
+                onTap: () async {
+                  await AppPopup.show(
+                    child: EmployeePopup(
+                      onSelected: (employee) {
+                        if (!mounted) return;
+                        AppNavigator.push(
+                          context,
+                          EmployeeShopVisitList(user: employee),
+                        );
+                      },
+                    ),
+                    context: context,
+                  );
+                },
+              ),
+            ],
+          ),
+
+          SectionWidget(
+            title: 'Attendance and Location Related Actions',
+            children: [
+              ActionButton(
+                text: 'Assign Location',
+                onTap: () async {
+                  await AppPopup.show(
+                    child: EmployeePopup(
+                      onSelected: (employee) {
+                        if (!mounted) return;
+                        AppNavigator.push(
+                          context,
+                          AddEmployeeAttendancePage(user: employee),
+                        );
+                      },
+                    ),
+                    context: context,
+                  );
+                },
+              ),
+              ActionButton(
+                text: 'See Assigned Location',
+                onTap: () async {
+                  await AppPopup.show(
+                    child: EmployeePopup(
+                      onSelected: (employee) {
+                        if (!mounted) return;
+                        AppNavigator.push(
+                          context,
+                          EmployeeLocationList(user: employee),
+                        );
+                      },
+                    ),
+                    context: context,
+                  );
+                },
+              ),
+              ActionButton(
+                text: 'Attendance History',
+                onTap: () async {
+                  await AppPopup.show(
+                    child: EmployeePopup(
+                      onSelected: (employee) {
+                        if (!mounted) return;
+                        AppNavigator.push(
+                          context,
+                          EAttendanceHistory(user: employee),
+                        );
+                      },
+                    ),
+                    context: context,
+                  );
+                },
+              ),
+            ],
+          ),
+
+          SectionWidget(
+            title: 'Request Related Actions',
+            children: [
+              ActionButton(
+                text: 'Emergency Request List',
+                onTap: () async {
+                  await AppPopup.show(
+                    child: EmployeePopup(
+                      onSelected: (employee) {
+                        if (!mounted) return;
+                        AppNavigator.push(
+                          context,
+                          EEmergencyRequest(user: employee),
+                        );
+                      },
+                    ),
+                    context: context,
+                  );
+                },
+              ),
+              ActionButton(
+                text: 'Leave Request List',
+                onTap: () async {
+                  await AppPopup.show(
+                    child: EmployeePopup(
+                      onSelected: (employee) {
+                        if (!mounted) return;
+                        AppNavigator.push(
+                          context,
+                          ELeaveRequest(user: employee),
+                        );
+                      },
+                    ),
+                    context: context,
+                  );
+                },
+              ),
+              ActionButton(
+                text: 'Send Notification',
+                onTap: () async {
+                  await AppPopup.show(
+                    child: EmployeePopup(
+                      onSelected: (employee) {
+                        if (!mounted) return;
+                        AppNavigator.push(
+                          context,
+                          AddEmployeeNotificationPage(user: employee),
+                        );
+                      },
+                    ),
+                    context: context,
+                  );
+                },
+              ),
+              ActionButton(
+                text: 'See Notifications',
+                onTap: () async {
+                  await AppPopup.show(
+                    child: EmployeePopup(
+                      onSelected: (employee) {
+                        if (!mounted) return;
+                        AppNavigator.push(
+                          context,
+                          EmployeeNotificationList(user: employee),
+                        );
+                      },
+                    ),
+                    context: context,
+                  );
+                },
+              ),
+            ],
           ),
           SizedBox(height: 20),
-          AdminButton(
-            text: 'Employee List',
-            onTap: () => AppNavigator.push(context, EmployeeListPage()),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25),
+            child: AdminButton(text: 'Sign Out', onTap: _signOut),
           ),
           SizedBox(height: 20),
-          AdminButton(
-            text: 'Manager List',
-            onTap: () => AppNavigator.push(context, ManagerListPage()),
-          ),
-          SizedBox(height: 20),
-          AdminButton(
-            text: 'Assign Task',
-            onTap: () async {
-              await AppPopup.show(
-                child: EmployeePopup(
-                  onSelected: (employee) {
-                    if (!mounted) return;
-                    AppNavigator.push(
-                      context,
-                      AddEmployeeTaskPage(user: employee),
-                    );
-                  },
-                ),
-                context: context,
-              );
-            },
-          ),
-          SizedBox(height: 20),
-          AdminButton(
-            text: 'See Assigned Task',
-            onTap: () async {
-              await AppPopup.show(
-                child: EmployeePopup(
-                  onSelected: (employee) {
-                    if (!mounted) return;
-                    AppNavigator.push(
-                      context,
-                      EmployeeTaskList(user: employee),
-                    );
-                  },
-                ),
-                context: context,
-              );
-            },
-          ),
-          SizedBox(height: 20),
-          AdminButton(
-            text: 'Assign Location',
-            onTap: () async {
-              await AppPopup.show(
-                child: EmployeePopup(
-                  onSelected: (employee) {
-                    if (!mounted) return;
-                    AppNavigator.push(
-                      context,
-                      AddEmployeeAttendancePage(user: employee),
-                    );
-                  },
-                ),
-                context: context,
-              );
-            },
-          ),
-          SizedBox(height: 20),
-          AdminButton(
-            text: 'See Assigned Location',
-            onTap: () async {
-              await AppPopup.show(
-                child: EmployeePopup(
-                  onSelected: (employee) {
-                    if (!mounted) return;
-                    AppNavigator.push(
-                      context,
-                      EmployeeLocationList(user: employee),
-                    );
-                  },
-                ),
-                context: context,
-              );
-            },
-          ),
-          SizedBox(height: 20),
-          AdminButton(
-            text: 'Attendance History',
-            onTap: () async {
-              await AppPopup.show(
-                child: EmployeePopup(
-                  onSelected: (employee) {
-                    if (!mounted) return;
-                    AppNavigator.push(
-                      context,
-                      EAttendanceHistory(user: employee),
-                    );
-                  },
-                ),
-                context: context,
-              );
-            },
-          ),
-          SizedBox(height: 20),
-          AdminButton(
-            text: 'Emergency Request List',
-            onTap: () async {
-              await AppPopup.show(
-                child: EmployeePopup(
-                  onSelected: (employee) {
-                    if (!mounted) return;
-                    AppNavigator.push(
-                      context,
-                      EEmergencyRequest(user: employee),
-                    );
-                  },
-                ),
-                context: context,
-              );
-            },
-          ),
-          SizedBox(height: 20),
-          AdminButton(
-            text: 'Send Notification',
-            onTap: () async {
-              await AppPopup.show(
-                child: EmployeePopup(
-                  onSelected: (employee) {
-                    if (!mounted) return;
-                    AppNavigator.push(
-                      context,
-                      AddEmployeeNotificationPage(user: employee),
-                    );
-                  },
-                ),
-                context: context,
-              );
-            },
-          ),
-          SizedBox(height: 20),
-          AdminButton(
-            text: 'See Notifications',
-            onTap: () async {
-              await AppPopup.show(
-                child: EmployeePopup(
-                  onSelected: (employee) {
-                    if (!mounted) return;
-                    AppNavigator.push(
-                      context,
-                      EmployeeNotificationList(user: employee),
-                    );
-                  },
-                ),
-                context: context,
-              );
-            },
-          ),
-          SizedBox(height: 20),
-          AdminButton(text: 'Sign Out', onTap: _signOut),
         ],
       ),
     );
