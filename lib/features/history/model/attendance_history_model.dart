@@ -26,12 +26,11 @@ class AttendanceHistoryResModel {
       AttendanceHistoryResModel(
         statusCode: json["status_code"],
         message: json["message"],
-        data:
-            json["data"] == null
-                ? []
-                : List<AttendanceHistoryModel>.from(
-                  json["data"]!.map((x) => AttendanceHistoryModel.fromMap(x)),
-                ),
+        data: json["data"] == null
+            ? []
+            : List<AttendanceHistoryModel>.from(
+                json["data"]!.map((x) => AttendanceHistoryModel.fromMap(x)),
+              ),
       );
 
   Map<String, dynamic> toMap() => {
@@ -49,6 +48,8 @@ class AttendanceHistoryModel {
   final String? day;
   final String? dayName;
   final String? monthYear;
+  final String? lat;
+  final String? long;
 
   AttendanceHistoryModel({
     this.punchDate,
@@ -58,6 +59,8 @@ class AttendanceHistoryModel {
     this.day,
     this.dayName,
     this.monthYear,
+    this.lat,
+    this.long,
   });
 
   AttendanceHistoryModel copyWith({
@@ -68,6 +71,8 @@ class AttendanceHistoryModel {
     String? day,
     String? dayName,
     String? monthYear,
+    String? lat,
+    String? long,
   }) => AttendanceHistoryModel(
     punchDate: punchDate ?? this.punchDate,
     punchIn: punchIn ?? this.punchIn,
@@ -76,6 +81,8 @@ class AttendanceHistoryModel {
     day: day ?? this.day,
     dayName: dayName ?? this.dayName,
     monthYear: monthYear ?? this.monthYear,
+    lat: lat ?? this.lat,
+    long: long ?? this.long,
   );
 
   factory AttendanceHistoryModel.fromJson(String str) =>
@@ -85,10 +92,9 @@ class AttendanceHistoryModel {
 
   factory AttendanceHistoryModel.fromMap(Map<String, dynamic> json) =>
       AttendanceHistoryModel(
-        punchDate:
-            json["punch_date"] == null
-                ? null
-                : DateTime.parse(json["punch_date"]),
+        punchDate: json["punch_date"] == null
+            ? null
+            : DateTime.parse(json["punch_date"]),
         punchIn: json["punch_in"],
         punchOut: json["punch_out"],
         totalHours: json["total_hours"],

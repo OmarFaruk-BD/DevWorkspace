@@ -10,6 +10,7 @@ import 'package:workspace/core/components/app_snack_bar.dart';
 import 'package:workspace/core/components/approval_popup.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
 import 'package:workspace/core/components/app_network_image.dart';
+import 'package:workspace/features/admin/attendance/e_on_map.dart';
 import 'package:workspace/features/admin/screen/edit_employe.dart';
 import 'package:workspace/features/admin/widget/action_button.dart';
 import 'package:workspace/features/admin/task/add_employee_task.dart';
@@ -203,7 +204,12 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
                   AppNavigator.push(context, EAttendanceHistory(user: user));
                 },
               ),
-              ActionButton(text: 'See On Map', onTap: () {}),
+              ActionButton(
+                text: 'See On Google Map',
+                onTap: () {
+                  AppNavigator.push(context, EmployeeOnMap(user: user));
+                },
+              ),
               ActionButton(
                 text: 'Assign Location',
                 onTap: () {

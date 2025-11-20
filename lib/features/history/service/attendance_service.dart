@@ -203,6 +203,35 @@ class AttendanceService {
     }
   }
 
+  Future<(String? lat, String? long)> getAttendanceHistoryV2(
+    String assignedTo,
+  ) async {
+    try {
+      final querySnapshot = await _firestore.collection('eAttendance').get();
+
+      final attendanceList = querySnapshot.docs.map((doc) {
+        return doc.data();
+      }).toList();
+
+      final filteredList = attendanceList
+          .where((item) => item['assignTo'] == assignedTo)
+          .toList();
+
+      Map<String, dynamic> getData = filteredList.first;
+
+      final String? lat = getData['latitude'];
+      final String? long = getData['longitude'];
+
+      return (lat, long);
+    } on FirebaseException catch (e) {
+      _logger.e('TodayAttendanceEmployee: ${e.message}');
+      return (null, null);
+    } catch (e) {
+      _logger.e('TodayAttendanceEmployee: $e');
+      return (null, null);
+    }
+  }
+
   String _calculateTotalHours(String punchIn, String punchOut) {
     try {
       final inTime = DateFormat("HH:mm:ss").parse(punchIn);
