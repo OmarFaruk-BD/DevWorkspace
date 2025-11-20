@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'package:workspace/core/utils/app_colors.dart';
 import 'package:workspace/core/components/app_bar.dart';
+import 'package:workspace/features/admin/widget/home_report.dart';
+import 'package:workspace/features/dashboard/model/task_model.dart';
+import 'package:workspace/features/admin/service/home_task_service.dart';
 
 class AdminHomePage extends StatefulWidget {
   const AdminHomePage({super.key});
@@ -10,219 +11,203 @@ class AdminHomePage extends StatefulWidget {
   State<AdminHomePage> createState() => _AdminHomePageState();
 }
 
+//['Daily', 'Weekly', 'Monthly']
+//['Pending', 'In Progress', 'Completed', 'Cancelled', 'Failed',]
+
 class _AdminHomePageState extends State<AdminHomePage> {
+  final HomeTaskService _service = HomeTaskService();
+  List<TaskModel> tasks = [];
+  //
+  List<TaskModel> daily = [];
+  List<TaskModel> weekly = [];
+  List<TaskModel> monthly = [];
+  //
+  List<TaskModel> dailyFailed = [];
+  List<TaskModel> dailyPending = [];
+  List<TaskModel> dailyProgress = [];
+  List<TaskModel> weeklyFailed = [];
+  List<TaskModel> weeklyPending = [];
+  List<TaskModel> weeklyProgress = [];
+  List<TaskModel> monthlyFailed = [];
+  List<TaskModel> monthlyPending = [];
+  List<TaskModel> monthlyProgress = [];
+  //
+  int dailyFailedCount = 0;
+  int dailyPendingCount = 0;
+  int dailyProgressCount = 0;
+  int weeklyFailedCount = 0;
+  int weeklyPendingCount = 0;
+  int weeklyProgressCount = 0;
+  int monthlyFailedCount = 0;
+  int monthlyPendingCount = 0;
+  int monthlyProgressCount = 0;
+  //
+  Map<String, int> dailyRatio = {};
+  Map<String, int> weeklyRatio = {};
+  Map<String, int> monthlyRatio = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchTasks();
+  }
+
+  void _fetchTasks() async {
+    tasks = await _service.getTasks();
+    for (var task in tasks) {
+      if (task.comments == 'Daily') {
+        daily.add(task);
+      } else if (task.comments == 'Weekly') {
+        weekly.add(task);
+      } else {
+        monthly.add(task);
+      }
+    }
+    for (var task in daily) {
+      if (task.status == 'Failed') {
+        dailyFailed.add(task);
+      } else if (task.status == 'Pending') {
+        dailyPending.add(task);
+      } else {
+        dailyProgress.add(task);
+      }
+    }
+    for (var task in weekly) {
+      if (task.status == 'Failed') {
+        weeklyFailed.add(task);
+      } else if (task.status == 'Pending') {
+        weeklyPending.add(task);
+      } else {
+        weeklyProgress.add(task);
+      }
+    }
+
+    for (var task in monthly) {
+      if (task.status == 'Failed') {
+        monthlyFailed.add(task);
+      } else if (task.status == 'Pending') {
+        monthlyPending.add(task);
+      } else {
+        monthlyProgress.add(task);
+      }
+    }
+    dailyFailedCount = dailyFailed.length;
+    dailyPendingCount = dailyPending.length;
+    dailyProgressCount = dailyProgress.length;
+    weeklyFailedCount = weeklyFailed.length;
+    weeklyPendingCount = weeklyPending.length;
+    weeklyProgressCount = weeklyProgress.length;
+    monthlyFailedCount = monthlyFailed.length;
+    monthlyPendingCount = monthlyPending.length;
+    monthlyProgressCount = monthlyProgress.length;
+
+    dailyRatio = _toRatioWithMin(
+      dailyPendingCount,
+      dailyProgressCount,
+      dailyFailedCount,
+    );
+
+    weeklyRatio = _toRatioWithMin(
+      weeklyPendingCount,
+      weeklyProgressCount,
+      weeklyFailedCount,
+    );
+
+    monthlyRatio = _toRatioWithMin(
+      monthlyPendingCount,
+      monthlyProgressCount,
+      monthlyFailedCount,
+    );
+
+    setState(() {});
+  }
+
+  Map<String, int> _toRatioWithMin(int a, int b, int c) {
+    const int minValue = 10;
+    const int totalRatio = 100;
+
+    final total = a + b + c;
+
+    if (total == 0) {
+      return {'a': minValue, 'b': minValue, 'c': totalRatio - (minValue * 2)};
+    }
+
+    // Convert raw counts into percentages
+    double ra = (a / total) * 100;
+    double rb = (b / total) * 100;
+    double rc = (c / total) * 100;
+
+    int ia = ra.round();
+    int ib = rb.round();
+    int ic = rc.round();
+
+    // Ensure minimum 10%
+    ia = ia < minValue ? minValue : ia;
+    ib = ib < minValue ? minValue : ib;
+    ic = ic < minValue ? minValue : ic;
+
+    // Fix total sum
+    int sum = ia + ib + ic;
+
+    if (sum != totalRatio) {
+      int diff = sum - totalRatio;
+
+      // Reduce the largest bucket first
+      if (diff > 0) {
+        // Too high → decrease the largest
+        if (ia >= ib && ia >= ic && ia - diff >= minValue) {
+          ia -= diff;
+        } else if (ib >= ia && ib >= ic && ib - diff >= minValue) {
+          ib -= diff;
+        } else if (ic - diff >= minValue) {
+          ic -= diff;
+        }
+      } else {
+        // Too low → increase the smallest
+        diff = diff.abs();
+        if (ia <= ib && ia <= ic) {
+          ia += diff;
+        } else if (ib <= ia && ib <= ic) {
+          ib += diff;
+        } else {
+          ic += diff;
+        }
+      }
+    }
+
+    return {'a': ia, 'b': ib, 'c': ic};
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AdminAppBar(title: 'Work Sync', hasBackButton: false),
+      appBar: AdminAppBar(title: 'WorkSync', hasBackButton: false),
       body: ListView(
         padding: EdgeInsets.all(20),
         children: [
-          DailyReport(),
-          DailyReport(title: 'Weekly'),
-          DailyReport(title: 'Monthly'),
-        ],
-      ),
-    );
-  }
-}
-
-class DailyReport extends StatelessWidget {
-  const DailyReport({super.key, this.title = 'Daily'});
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(15),
-      margin: EdgeInsets.only(bottom: 25),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.grey.shade300),
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 12,
-            offset: const Offset(0, 2),
-            color: Colors.grey.shade200,
+          DailyReport(
+            title: 'Daily',
+            pendingCount: dailyRatio['a'] ?? 30,
+            progressCount: dailyRatio['b'] ?? 40,
+            completeCount: dailyRatio['c'] ?? 30,
+            timeList: [9.5, 8.7, 9.0, 9.2, 9.5, 8.9, 9.3, 9.1, 8.8, 9.4],
+          ),
+          DailyReport(
+            title: 'Weekly',
+            pendingCount: weeklyRatio['a'] ?? 30,
+            progressCount: weeklyRatio['b'] ?? 40,
+            completeCount: weeklyRatio['c'] ?? 30,
+            timeList: [9.0, 9.2, 8.5, 8.7, 9.3, 9.1, 9.5, 8.9, 8.8, 9.4],
+          ),
+          DailyReport(
+            title: 'Monthly',
+            pendingCount: monthlyRatio['a'] ?? 30,
+            progressCount: monthlyRatio['b'] ?? 40,
+            completeCount: monthlyRatio['c'] ?? 30,
+            timeList: [9.1, 8.8, 9.4, 8.5, 9.0, 8.7, 9.2, 9.5, 8.9, 8.5],
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-            child: Text(
-              '$title Report',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-            ),
-          ),
-          SizedBox(height: 10),
-          Text(
-            '$title Attendance Report',
-            style: TextStyle(fontWeight: FontWeight.w600),
-          ),
-          SizedBox(height: 10),
-          SizedBox(
-            height: MediaQuery.of(context).size.width * 0.4,
-            child: Row(
-              children: [
-                Expanded(
-                  child: LineChart(
-                    LineChartData(
-                      gridData: FlGridData(show: true),
-                      titlesData: FlTitlesData(
-                        topTitles: AxisTitles(
-                          sideTitles: SideTitles(showTitles: false),
-                        ),
-                        rightTitles: AxisTitles(
-                          sideTitles: SideTitles(showTitles: false),
-                        ),
-                        leftTitles: AxisTitles(
-                          sideTitles: SideTitles(
-                            showTitles: true,
-                            reservedSize: 50,
-                            interval: 0.5,
-                            getTitlesWidget: (value, meta) {
-                              final timeLabels = {
-                                8.0: '8:00 AM',
-                                8.5: '8:30 AM',
-                                9.0: '9:00 AM',
-                                9.5: '9:30 AM',
-                                10.0: '10:00 AM',
-                              };
-                              return Text(
-                                timeLabels[value] ?? '',
-                                style: const TextStyle(fontSize: 10),
-                              );
-                            },
-                          ),
-                        ),
-                        bottomTitles: AxisTitles(
-                          sideTitles: SideTitles(
-                            showTitles: true,
-                            interval: 1,
-                            getTitlesWidget: (value, meta) => Text(
-                              '${value.toInt() + 1}',
-                              style: const TextStyle(fontSize: 10),
-                            ),
-                          ),
-                        ),
-                      ),
-                      borderData: FlBorderData(
-                        show: true,
-                        border: const Border(
-                          left: BorderSide(),
-                          bottom: BorderSide(),
-                        ),
-                      ),
-                      lineBarsData: [
-                        LineChartBarData(
-                          barWidth: 2,
-                          isCurved: true,
-                          color: Colors.blue,
-                          dotData: FlDotData(show: true),
-                          spots: const [
-                            FlSpot(0, 8.5),
-                            FlSpot(1, 8.7),
-                            FlSpot(2, 9.0),
-                            FlSpot(3, 9.2),
-                            FlSpot(4, 9.5),
-                            FlSpot(5, 8.9),
-                            FlSpot(6, 9.3),
-                            FlSpot(7, 9.1),
-                            FlSpot(8, 8.8),
-                            FlSpot(9, 9.4),
-                          ],
-                        ),
-                      ],
-                      minY: 8.0,
-                      maxY: 10.0,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: 25),
-          Text(
-            '$title Task Completion',
-            style: TextStyle(fontWeight: FontWeight.w600),
-          ),
-          SizedBox(height: 10),
-          SizedBox(
-            height: MediaQuery.of(context).size.width * 0.5,
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: PieChart(
-                          PieChartData(
-                            sections: [
-                              PieChartSectionData(
-                                color: Colors.green,
-                                value: 40,
-                                title: '20%',
-                                radius: 50,
-                              ),
-                              PieChartSectionData(
-                                color: AppColors.primary,
-                                value: 60,
-                                title: '30%',
-                                radius: 50,
-                              ),
-                              PieChartSectionData(
-                                color: AppColors.secondary,
-                                value: 60,
-                                title: '50%',
-                                radius: 50,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: [
-                          ColorItem(title: 'Completed', color: Colors.green),
-                          ColorItem(title: 'Pending', color: AppColors.primary),
-                          ColorItem(
-                            title: 'Progress',
-                            color: AppColors.secondary,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class ColorItem extends StatelessWidget {
-  const ColorItem({super.key, required this.title, required this.color});
-  final Color color;
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(height: 8, width: 8, color: color),
-        SizedBox(width: 5),
-        Text(title, style: TextStyle(fontSize: 10)),
-        SizedBox(width: 15),
-      ],
     );
   }
 }
