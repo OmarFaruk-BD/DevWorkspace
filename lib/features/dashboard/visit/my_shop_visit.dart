@@ -3,10 +3,12 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:workspace/core/components/app_bar.dart';
+import 'package:workspace/core/helper/navigation.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
 import 'package:workspace/core/components/loading_or_empty.dart';
 import 'package:workspace/features/dashboard/model/shop_visit_model.dart';
 import 'package:workspace/features/dashboard/service/shop_visit_service.dart';
+import 'package:workspace/features/dashboard/visit/edit_shop_visit.dart';
 
 class MyShopVisitPage extends StatefulWidget {
   const MyShopVisitPage({super.key, this.user});
@@ -99,7 +101,7 @@ class _MyShopVisitPageState extends State<MyShopVisitPage> {
           ...List.generate(thisMonthList.length, (index) {
             return ShopVisitItem(
               data: thisMonthList[index],
-              assignedTo: widget.user?.id,
+              assignedTo: widget.user,
               onEdit: () => getShopVisitList(),
             );
           }),
@@ -113,7 +115,7 @@ class _MyShopVisitPageState extends State<MyShopVisitPage> {
           ...List.generate(previousList.length, (index) {
             return ShopVisitItem(
               data: previousList[index],
-              assignedTo: widget.user?.id,
+              assignedTo: widget.user,
               onEdit: () => getShopVisitList(),
             );
           }),
@@ -130,7 +132,7 @@ class ShopVisitItem extends StatelessWidget {
     this.assignedTo,
     required this.data,
   });
-  final String? assignedTo;
+  final UserModel? assignedTo;
   final VoidCallback? onEdit;
   final ShopVisitModel data;
 
@@ -140,11 +142,11 @@ class ShopVisitItem extends StatelessWidget {
       padding: EdgeInsets.only(bottom: 20),
       child: InkWell(
         onTap: () {
-          //   AppNavigator.pushTo(
-          //   context,
-          //   EditEmergencyRequest(request: data, assignedTo: assignedTo),
-          //   onBack: () => onEdit?.call(),
-          // );
+          AppNavigator.pushTo(
+            context,
+            EditShopVisit(shopVisit: data, user: assignedTo),
+            onBack: () => onEdit?.call(),
+          );
         },
         child: Container(
           padding: EdgeInsets.all(16),

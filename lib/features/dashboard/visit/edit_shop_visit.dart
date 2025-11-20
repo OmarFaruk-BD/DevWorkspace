@@ -7,6 +7,7 @@ import 'package:workspace/core/components/app_popup.dart';
 import 'package:workspace/core/components/app_button.dart';
 import 'package:workspace/core/service/app_validator.dart';
 import 'package:workspace/core/components/app_snack_bar.dart';
+import 'package:workspace/core/components/approval_popup.dart';
 import 'package:workspace/core/components/app_text_field.dart';
 import 'package:workspace/features/auth/model/user_model.dart';
 import 'package:workspace/core/components/app_image_picker.dart';
@@ -35,6 +36,8 @@ class _EditShopVisitState extends State<EditShopVisit> {
   final AppValidator _validator = AppValidator();
   final DateTime _date = DateTime.now();
   String? _visitType = 'Sales';
+  ShopVisitModel? shopVisit;
+  bool _isLoading2 = false;
   bool _isLoading = false;
   TaskModel? _task;
   File? _imageFile;
@@ -43,11 +46,37 @@ class _EditShopVisitState extends State<EditShopVisit> {
   @override
   void initState() {
     super.initState();
+    shopVisit = widget.shopVisit;
     _initLoadData();
+    _getShopVisit();
+  }
+
+  void _getShopVisit() async {
+    shopVisit = await _service.getShopVisitDetail(widget.shopVisit?.id);
+    setState(() {});
+  }
+
+  void _deleteShopVisit() async {
+    Navigator.pop(context);
+    setState(() => _isLoading2 = true);
+    final result = await _service.deleteShopVisit(widget.shopVisit?.id ?? '');
+    setState(() => _isLoading2 = false);
+    result.fold((error) => AppSnackBar.show(context, error), (data) {
+      AppSnackBar.show(context, data);
+      Navigator.pop(context);
+    });
   }
 
   void _initLoadData() {
-    if (widget.shopVisit != null) {}
+    if (widget.shopVisit != null) {
+      _title.text = widget.shopVisit?.svTitle ?? '';
+      _description.text = widget.shopVisit?.svDescription ?? '';
+      _client.text = widget.shopVisit?.svClient ?? '';
+      _amount.text = widget.shopVisit?.svAmount ?? '';
+      _visitType = widget.shopVisit?.svType ?? 'Sales';
+      _task = widget.shopVisit?.task;
+      setState(() {});
+    }
   }
 
   @override
@@ -55,7 +84,7 @@ class _EditShopVisitState extends State<EditShopVisit> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        appBar: CustomAppBar(title: 'Create Shop Visit'),
+        appBar: CustomAppBar(title: 'Edit Shop Visit'),
         body: Form(
           key: _formKey,
           child: ListView(
@@ -166,12 +195,6 @@ class _EditShopVisitState extends State<EditShopVisit> {
                     },
                   );
                 },
-                validator: (_) {
-                  if (_imageFile == null) {
-                    return 'Please select an image';
-                  }
-                  return null;
-                },
               ),
               if (_imageFile != null) ...[
                 const SizedBox(height: 20),
@@ -205,10 +228,32 @@ class _EditShopVisitState extends State<EditShopVisit> {
 
               SizedBox(height: 30),
               AppButton(
-                text: 'Create Shop Visit',
+                text: 'Update Shop Visit',
                 isLoading: _isLoading,
                 width: double.maxFinite,
-                onTap: _createShopVisit,
+                onTap: _editShopVisit,
+              ),
+              SizedBox(height: 40),
+              Text(
+                'Delete Shop Visit',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              ),
+              SizedBox(height: 8),
+              AppButton(
+                text: 'Delete Shop Visit',
+                isLoading: _isLoading2,
+                width: double.maxFinite,
+                onTap: () {
+                  AppPopup.show(
+                    context: context,
+                    child: ApprovalWidget(
+                      onApprove: _deleteShopVisit,
+                      title: 'Delete Shop Visit',
+                      description:
+                          'Are you sure you want to delete this shop visit?',
+                    ),
+                  );
+                },
               ),
               SizedBox(height: 100),
             ],
@@ -218,10 +263,11 @@ class _EditShopVisitState extends State<EditShopVisit> {
     );
   }
 
-  void _createShopVisit() async {
+  void _editShopVisit() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
-    final result = await _service.createShopVisit(
+    final result = await _service.editShopVisit(
+      shopVisitId: shopVisit?.id ?? '',
       svTitle: _title.text,
       svDescription: _description.text,
       svDate: _date.toDateString() ?? '',

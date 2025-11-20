@@ -82,16 +82,65 @@ class ShopVisitService {
   /// ✏️ Edit (update) an existing task by its document ID
   Future<Either<String, String>> editShopVisit({
     required String shopVisitId,
-    required Map<String, dynamic> updatedFields,
+    required String svTitle,
+    required String svDescription,
+    required String svDate,
+    required String svClient,
+    required String svAmount,
+    required String svType,
+    required String svTaskId,
+    File? imageFile,
+
+    ///
+    required String assignedTo,
+    required String title,
+    required String status,
+    required String description,
+    required String priority,
+    required String taskType,
+    required String client,
+    required String amount,
+    required String dueDate,
+    required String comments,
+    required String attachments,
   }) async {
     try {
-      updatedFields['updatedAt'] = FieldValue.serverTimestamp();
-      _logger.e(updatedFields);
+      final compressedBytes = await _compressor.compressImageToBase64(
+        imageFile,
+      );
+
+      final Map<String, dynamic> shopVisitData = {
+        'svTitle': svTitle,
+        'svDescription': svDescription,
+        'svDate': svDate,
+        'svClient': svClient,
+        'svAmount': svAmount,
+        'svType': svType,
+        'svTaskId': svTaskId,
+
+        //
+        'status': status,
+        'dueDate': dueDate,
+        'assignedTo': assignedTo,
+        'title': title,
+        'description': description,
+        'priority': priority,
+        'taskType': taskType,
+        'comments': comments,
+        'attachments': attachments,
+        'client': client,
+        'amount': amount,
+        'updatedAt': FieldValue.serverTimestamp(),
+      };
+      if (compressedBytes != null) {
+        shopVisitData['svAttachment'] = compressedBytes;
+      }
+      _logger.e(shopVisitData);
 
       await _firestore
           .collection('shopVisits')
           .doc(shopVisitId)
-          .update(updatedFields);
+          .update(shopVisitData);
 
       return const Right('Shop visit updated successfully.');
     } on FirebaseException catch (e) {
