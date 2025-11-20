@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:workspace/core/helper/extention.dart';
 import 'package:workspace/core/utils/app_colors.dart';
 import 'package:workspace/core/utils/app_images.dart';
@@ -49,6 +50,16 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
   Future<void> fetchEmployees() async {
     user = await _employeeService.getEmployeeWithImage(user?.id);
     setState(() {});
+  }
+
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri uri = Uri(scheme: 'tel', path: phoneNumber);
+
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      throw Exception('Could not launch $uri');
+    }
   }
 
   @override
@@ -129,6 +140,21 @@ class _EmployeeDetailPageState extends State<EmployeeDetailPage> {
           _buildItem('Department', user?.department ?? 'N/A'),
           _buildDivider(),
           SizedBox(height: 40),
+          SectionWidget(
+            title: 'Quick Actions',
+            children: [
+              ActionButton(
+                text: 'Make a Call',
+                onTap: () {
+                  if (user?.phone == null) {
+                    AppSnackBar.show(context, 'Phone number is not available');
+                    return;
+                  }
+                  _makePhoneCall(user?.phone ?? '');
+                },
+              ),
+            ],
+          ),
           SectionWidget(
             title: 'Profile Related Actions',
             children: [
