@@ -177,7 +177,8 @@ class ShopVisitService {
       final shopVisitList = querySnapshot.docs.map((doc) {
         final data = doc.data();
         final mapData = {'id': doc.id, ...data};
-        _logger.e(mapData);
+        // _logger.w(mapData);
+        // _logger.w(mapData);
         return ShopVisitModel.fromMap(mapData);
       }).toList();
 

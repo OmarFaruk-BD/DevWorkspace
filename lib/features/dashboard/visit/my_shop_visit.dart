@@ -9,6 +9,7 @@ import 'package:workspace/core/components/loading_or_empty.dart';
 import 'package:workspace/features/dashboard/model/shop_visit_model.dart';
 import 'package:workspace/features/dashboard/service/shop_visit_service.dart';
 import 'package:workspace/features/dashboard/visit/edit_shop_visit.dart';
+import 'package:workspace/features/dashboard/visit/shop_visit_detail.dart';
 
 class MyShopVisitPage extends StatefulWidget {
   const MyShopVisitPage({super.key, this.user});
@@ -144,8 +145,7 @@ class ShopVisitItem extends StatelessWidget {
         onTap: () {
           AppNavigator.pushTo(
             context,
-            EditShopVisit(shopVisit: data, user: assignedTo),
-            onBack: () => onEdit?.call(),
+            ShopVisitDetail(shopVisit: data, user: assignedTo),
           );
         },
         child: Container(
@@ -161,61 +161,90 @@ class ShopVisitItem extends StatelessWidget {
               ),
             ],
           ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Column(
             children: [
-              Container(
-                width: 80,
-                height: 120,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Image.memory(
-                  base64Decode(data.svAttachment ?? ''),
-                  fit: BoxFit.cover,
-                ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 80,
+                    height: 120,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Image.memory(
+                      base64Decode(data.svAttachment ?? ''),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          data.svTitle ?? '',
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                        Text(
+                          data.svDescription ?? '',
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                        if (data.svClient != null && data.svClient!.isNotEmpty)
+                          Text(
+                            'Client: ${data.svClient ?? ''}',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        if (data.svAmount != null && data.svAmount!.isNotEmpty)
+                          Text(
+                            'Amount: ${data.svAmount ?? ''}',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(color: Colors.grey),
+                          ),
+
+                        Text(
+                          'Shop Visit Type: ${data.svType ?? ''}',
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(color: Colors.grey),
+                        ),
+
+                        Text(
+                          'Date: ${data.svDate ?? ''}',
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      data.svTitle ?? '',
-                      style: TextStyle(fontWeight: FontWeight.w600),
-                    ),
-                    Text(
-                      data.svDescription ?? '',
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                    if (data.svClient != null && data.svClient!.isNotEmpty)
-                      Text(
-                        'Client: ${data.svClient ?? ''}',
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    if (data.svAmount != null && data.svAmount!.isNotEmpty)
-                      Text(
-                        'Amount: ${data.svAmount ?? ''}',
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: Colors.grey),
-                      ),
-
-                    Text(
-                      'Shop Visit Type: ${data.svType ?? ''}',
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(color: Colors.grey),
-                    ),
-
-                    Text(
-                      'Date: ${data.svDate ?? ''}',
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  ],
-                ),
+              SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      AppNavigator.pushTo(
+                        context,
+                        ShopVisitDetail(shopVisit: data, user: assignedTo),
+                      );
+                    },
+                    child: Text('Details'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      AppNavigator.pushTo(
+                        context,
+                        EditShopVisit(shopVisit: data, user: assignedTo),
+                        onBack: () => onEdit?.call(),
+                      );
+                    },
+                    child: Text('Edit'),
+                  ),
+                ],
               ),
             ],
           ),

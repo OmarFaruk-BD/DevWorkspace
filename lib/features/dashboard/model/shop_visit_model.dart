@@ -51,6 +51,7 @@ class ShopVisitModel {
   }
 
   factory ShopVisitModel.fromMap(Map<String, dynamic> map) {
+    TaskModel task = TaskModel.fromMap(map);
     return ShopVisitModel(
       id: map['id'] as String,
       svTitle: map['svTitle'] as String,
@@ -61,24 +62,7 @@ class ShopVisitModel {
       svAttachment: map['svAttachment'] as String,
       svType: map['svType'] as String,
       svTaskId: map['svTaskId'] as String,
-      task: map['task'] != null
-          ? TaskModel(
-              taskId: map['taskId'] ?? '',
-              amount: map['amount'] ?? '',
-              attachments: map['attachments'] ?? '',
-              comments: map['comments'] ?? '',
-              dueDate: map['dueDate'] ?? '',
-              description: map['description'] ?? '',
-              priority: map['priority'] ?? '',
-              title: map['title'] ?? '',
-              assignedTo: map['assignedTo'] ?? '',
-              taskType: map['taskType'] ?? '',
-              client: map['client'] ?? '',
-              status: map['status'] ?? '',
-              createdAt: DateTime.now(),
-              updatedAt: DateTime.now(),
-            )
-          : null,
+      task: task,
     );
   }
 
